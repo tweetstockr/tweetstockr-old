@@ -1,0 +1,45 @@
+extends layout
+
+title Reset your password
+
+block content
+
+  .container-fluid
+    form(
+      name="form"
+      ng-submit="send(form)"
+      ng-init="token='#{token}'"
+    )
+      
+      legend Reset Password
+      
+      input(
+        type="hidden"
+        name="token"
+        ng-model="token"
+      )
+      
+      .form-group
+        label(for="password") New Password
+        input(
+          class="form-control"
+          type="password"
+          name="password"
+          ng-model="password"
+          placeholder="New password"
+          autofocus="true"
+          value=""
+        )
+      
+      .form-group
+        label(for="confirm") Confirm Password
+        input(
+          class="form-control"
+          type="password"
+          name="confirm"
+          placeholder="Confirm password"
+          value=""
+        )
+      
+      .form-group
+        button.btn.btn-primary(type="submit") Update Password

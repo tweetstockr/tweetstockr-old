@@ -1,0 +1,110 @@
+include ../shared/messages
+
+section.slider(ng-init="getStocks()")
+  ol
+    li( ng-repeat="stock in stocks | orderBy : '-price' track by $index")
+     | {{ stock.name }} - {{ stock.count }} pts
+
+section.header
+  .header-bar
+    .container-fluid
+      .row
+        .col-md-12(ng-hide="currentUser")
+          h2.header-bar__title Don't have an account yet? 
+            a.btn.btn-twitter.btn-lg(href="/signup")
+              svg(width="22px" height="18px" viewBox="0 0 25 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns")
+                g(id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage")
+                  g(id="login" sketch:type="MSArtboardGroup" transform="translate(-624.000000, -650.000000)" fill="#FFFFFF")
+                    g(id="form" sketch:type="MSLayerGroup" transform="translate(470.000000, 123.000000)")
+                      g(id="Sign-in-with-Twitter-+-icon" transform="translate(154.000000, 526.000000)" sketch:type="MSShapeGroup")
+                        g(id="icon" transform="translate(0.000000, 1.000000)")
+                          path(d="M24.9185,2.5325 C24.013,2.935 23.0385,3.2065 22.016,3.328 C23.06,2.703 23.8605,1.713 24.238,0.532 C23.2615,1.1115 22.1805,1.532 21.029,1.759 C20.1075,0.777 18.794,0.163 17.3405,0.163 C14.55,0.163 12.2875,2.4255 12.2875,5.2165 C12.2875,5.612 12.332,5.9975 12.4185,6.368 C8.2185,6.157 4.4945,4.1455 2.002,1.088 C1.567,1.834 1.318,2.702 1.318,3.629 C1.318,5.382 2.21,6.929 3.566,7.835 C2.738,7.8085 1.9585,7.581 1.277,7.2025 C1.2765,7.2235 1.2765,7.245 1.2765,7.2665 C1.2765,9.7145 3.0185,11.7565 5.3305,12.2215 C4.9065,12.3365 4.46,12.3985 3.999,12.3985 C3.673,12.3985 3.3565,12.367 3.048,12.3075 C3.6915,14.315 5.5575,15.7765 7.7685,15.817 C6.039,17.1725 3.8605,17.9805 1.4925,17.9805 C1.085,17.9805 0.6825,17.9565 0.287,17.9095 C2.524,19.344 5.18,20.18 8.0335,20.18 C17.329,20.18 22.4115,12.48 22.4115,5.802 C22.4115,5.583 22.407,5.3645 22.3975,5.1475 C23.3845,4.4365 24.2415,3.546 24.9185,2.5325 L24.9185,2.5325 Z" id="Shape")
+              | Sign in with Twitter
+
+        .col-md-7(ng-show="currentUser")
+          .header-content
+            img.header-content__image(src="https://s3.amazonaws.com/uifaces/faces/twitter/cbillins/128.jpg", alt="")
+            
+            .header-info
+              h2.header-info__name {{ currentUser.username }}
+              h3.header-info__ranking Ranking: #7921
+        
+        .col-md-5(ng-show="currentUser")
+          .header-wallet
+            h3.header-wallet__title Wallet
+            h2.header-wallet__total
+              small Pts
+              | {{currentUser.points}}
+
+.container-fluid
+  .row
+    section(class="commodities" ng-class="currentUser ? 'col-md-6' : 'col-md-6'")
+      h2.commodities__title
+        p {{ nice }}
+        | Commodities - 
+        small {{ stocksUpdatedAt | date: "MM/dd/yyyy 'at' h:mma" }}
+
+      ul.commodities-list
+        li.commodities-item(
+          ng-repeat="stock in stocks | orderBy : '-price' track by $index"
+        )
+          header.commodities-item-header(ng-click="info = !info")
+            h2.commodities-item-header__title
+              | {{ stock.name }}
+
+            span.commodities-item-header__price
+              | {{ stock.count }} pts
+
+          section.commodities-item-content(ng-show="info")
+          
+            form(
+              class="form-inline"
+              ng-submit="buyShare(stock)"
+            )
+              fieldset.form-group
+                label Amount
+                input.form-control(type="number" ng-model="stock.amount" value="1")
+
+              fieldset.form-group
+                label Price
+                h3 {{ stock.count }} 
+                  small pts
+
+              fieldset.form-group
+                label Total
+                h3 {{ ( stock.amount || 1 ) * stock.count }} 
+                  small pts
+
+              fieldset.form-group
+                button.btn.btn-primary
+                  | Buy
+
+            i.fa.fa-spinner.fa-pulse.fa-3x.fa-fw(ng-if="!responseReceived" style="text-align: center; color: white; display: block; margin: 25px auto;")
+            chartist(class="ct-chart ct-golden-section" chartist-data="stock.chartData" chartist-chart-type="Line" chartist-chart-options="chartOptions" chartist-responsive-options="barResponsiveOptions" ng-if="responseReceived")
+
+    section(class="col-md-6" class="shares" ng-if="currentUser")
+      h2.shares__title
+        | My Shares
+
+      div(ng-repeat='share in portfolio track by $index', style="color:white; background-color:black;")
+        p {{share.stock}} 
+          span(style="color:yellow") x{{share.amount}}
+
+        p Current Value: {{share.currentPrice}} pts
+
+        p Purchase Value: {{share.purchasePrice}} pts
+        
+        p
+          span.badge.badge-success Traded at {{share.created | date:'medium'}}
+          .pull-right
+          span.badge.badge-success Traded by {{share.owner.username}}
+        
+        button.btn.btn-success(ng-click="sellShare(share._id)") Sell for {{share.currentPriceTotal}} pts
+        
+        hr
+      div(ng-hide='!portfolio || portfolio.length', style="color:white")
+        | No trades yet. 
+        br
+        |  Why don't you 
+        a(href='/shares/create') Buy One share
+        | ?

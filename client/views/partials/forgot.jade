@@ -1,0 +1,32 @@
+.container-fluid
+  .col-md-5.center-block.form-login
+    .alert.alert-danger(ng-show="error") {{error}}
+    
+    h1 Forgot my password
+    
+    form(name="form" ng-submit="send(form)")
+      //- EMAIL ---------------------------------------------------------------
+      .form-group(ng-class="{'has-warning': form.email.$dirty,\
+                 'has-success': form.email.$valid && form.email.$dirty,\
+                 'has-error': form.email.$invalid && form.email.$dirty }")
+        label Email
+        input(
+          class="form-control"
+          type="email"
+          ng-model="email"
+          ng-minlength="5"
+          required
+          name="email"
+        )
+
+      button(
+        class="btn btn-primary btn-lg.btn-block"
+        type="submit"
+        ng-disabled="loading"
+      )
+
+        span(ng-show="!loading")
+          | Send reset link
+
+        span(ng-show="loading")
+          | Sending...

@@ -1,0 +1,22 @@
+div(
+  class=" navbar navbar-dark navbar-fixed-top"
+  ng-controller="navbarController"
+  ng-class="registrationNavbar('/login') || registrationNavbar('/signup')"
+)
+  .container-fluid
+    a.navbar-brand(href="/") Tweet
+      strong stockr
+
+    ul.nav.navbar-nav
+      li.nav-item
+        a.nav-link(href="/about") About
+
+      li.nav-item
+        a.nav-link(href="/ranking") Ranking
+    
+    .pull-right(ng-show="currentUser")
+      a(href="/profile").nav-link {{ currentUser.username }}
+
+    .pull-right(ng-show="!currentUser")
+      a.btn.btn-outline(href="/login") Login
+      a.btn.btn-primary(href="/signup") Sign up

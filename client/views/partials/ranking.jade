@@ -1,0 +1,11 @@
+.container-fluid
+  h1 Ranking
+  
+  section(ng-init='find()')
+    div(ng-repeat="user in users")
+      hr
+      p
+        strong {{ $index + 1 | ordinal }}
+      p username: {{ user.username }}
+      p 
+        strong points: {{ user.points }}

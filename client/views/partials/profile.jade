@@ -1,0 +1,44 @@
+section.cover
+  .container-fluid
+    img(class="cover__photo" src="https://s3.amazonaws.com/uifaces/faces/twitter/cbillins/128.jpg", alt="")
+    h1.cover__name {{ currentUser.username }}
+
+    .cover-points
+      h2 {{ currentUser.points }} pts
+
+.container-fluid
+  .row
+    .col-md-7
+      form(action="" class="profile-information")
+        h2 Basic Information
+
+        fieldset.form-group
+          img(src="https://s3.amazonaws.com/uifaces/faces/twitter/cbillins/128.jpg", alt="")
+
+        fieldset.form-group
+          label Username
+          input(type="text" class="form-control")
+
+        fieldset.form-group
+          label Email
+          input(type="email" class="form-control")
+
+        button(class="btn btn-primary pull-left")
+          | Save
+
+        .pull-right
+          button.btn.btn-link
+            | Change password
+
+          button(class="btn btn-link" ng-click="resetAccount()")
+            | Reset my account
+    .col-md-5
+      .profile-information
+        h2 Trophys
+  
+
+  //- a(ng-click="logout()") Logout
+  //- br
+  //- a(ng-click="resetAccount()") Reset my account
+  //- br
+  //- p USER: {{currentUser}}

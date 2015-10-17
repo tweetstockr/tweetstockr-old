@@ -1,0 +1,70 @@
+.container-fluid
+  .col-md-5.center-block.form-login
+
+    //- show any messages that come back with authentication
+    .alert.alert-danger(ng-show="#{error}") #{error}
+
+    h1 Sign up
+
+    form(name="form", ng-submit="register(form)", novalidate)
+    
+      //- USERNAME -------------------------------------------------------------
+  
+      .form-group(ng-class="{'has-warning': form.username.$dirty,\
+                  'has-success': form.username.$valid && form.username.$dirty && !form.username.$error.mongoose,\
+                  'has-error': form.username.$invalid && form.username.$dirty || form.username.$error.mongoose }")
+        label Username
+        input.form-control(type="text", 
+                           ng-model="username",
+                           ng-minlength="3",
+                           required,
+                           unique-username,
+                           name="username")
+         
+        p(class="help-block",
+          ng-show="form.username.$error.unique && form.username")
+          | That username is already taken.
+     
+      //- EMAIL ---------------------------------------------------------------
+      
+      .form-group(ng-class="{'has-warning': form.email.$dirty,\
+                   'has-success': form.email.$valid && form.email.$dirty && !form.email.$error.mongoose,\
+                   'has-error': form.email.$invalid && form.email.$dirty || form.email.$error.mongoose }")
+        label Email
+        input.form-control(type="email", 
+                            ng-model="email",
+                            ng-minlength="5",
+                            required,
+                            unique-email,
+                            name="email")
+  
+        p(class="help-block",
+          ng-show="form.email.$error.unique && form.email")
+          | That email is already taken.
+          
+      //- PASSWORD -------------------------------------------------------------
+         
+      .form-group(ng-class="{'has-warning': form.password.$dirty,\
+                  'has-success': form.password.$valid && form.password.$dirty && !form.password.$error.mongoose,\
+                  'has-error': form.password.$invalid && form.password.$dirty || form.password.$error.mongoose }")
+        label Password
+        input.form-control(type="password",
+                           ng-model="password",
+                           ng-minlength="5",
+                           required,
+                           name="password")
+
+        p(class="help-block"
+          ng-show="form.password.$error.mongoose")
+          | {{ errors.password }}
+
+      button.btn.btn-primary.btn-lg.btn-block(type="submit") Sign up
+    
+    hr
+    p
+      | Already have an account? 
+      a(href="/login") Login
+    p
+      | Or go 
+      a(href="/") home
+      | .

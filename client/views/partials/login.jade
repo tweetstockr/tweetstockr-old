@@ -1,0 +1,58 @@
+include ../shared/messages
+
+.container-fluid
+  .col-md-5.center-block.form-login
+    //- show any messages that come back with authentication
+    .alert.alert-danger(ng-show="#{error}") #{error}
+    
+    h1 Login
+    
+    form(name="form" ng-submit="login(form)")
+      .form-group(ng-class="{'has-error': form.username.$error.mongoose}")
+        label Username
+        input(
+          class="form-control"
+          type="text"
+          ng-model="user.username"
+          name="username"
+        )
+        
+        p(class="help-block" ng-show="form.username.$error.mongoose")
+          | {{ errors.username }}
+      
+      .form-group(ng-class="{'has-error': form.password.$error.mongoose}")
+        label Password
+        input(
+          class="form-control"
+          type="password"
+          ng-model="user.password"
+          name="password"
+        )
+
+        p(
+          class="help-block"
+          ng-show="form.password.$error.mongoose"
+        ) {{ errors.password }}
+      
+      div.has-error
+        p.help-block
+          | {{ error.other }}
+      
+      button(
+        class="btn btn-primary btn-lg btn-block"
+        type="submit"
+      ) Login
+
+    hr
+    p
+      | Do you have an account? 
+      a(href="/signup") Signup here
+    
+    p
+      | Do you forgot your password? 
+      a(href="/forgot") Reset here
+    
+    p
+      | Or go 
+      a(href="/") home
+      | .

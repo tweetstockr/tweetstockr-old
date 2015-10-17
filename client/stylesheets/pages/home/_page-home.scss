@@ -1,0 +1,12 @@
+@import 'molecules/molecule-home';
+@import 'atoms/atom-home';
+
+@include keyframes(slider) {
+  0% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(-145%);
+  }
+}
