@@ -1,6 +1,6 @@
-# Contributing to Klassroom
+# Contributing to Tweetstockr
 
-We'd love for you to contribute to our source code and to make Klassroom even better than it is
+We'd love for you to contribute to our source code and to make Tweetstockr even better than it is
 today! Here are the guidelines we'd like you to follow:
 
  - [Code of Conduct](#coc)
@@ -11,7 +11,7 @@ today! Here are the guidelines we'd like you to follow:
  - [Commit Message Guidelines](#commit)
 
 ## <a name="coc"></a> Code of Conduct
-Help us keep Klassroom open and inclusive. Please read and follow our [Code of Conduct][coc].
+Help us keep Tweetstockr open and inclusive. Please read and follow our [Code of Conduct][coc].
 
 ## <a name="issue"></a> Found an Issue?
 If you find a bug in the source code or a mistake in the documentation, you can help us by
@@ -53,7 +53,7 @@ Here is a great example of a well defined issue: https://github.com/angular/angu
 ### Submitting a Pull Request
 Before you submit your pull request consider the following guidelines:
 
-* Search [GitHub](https://github.com/Klassroom/klassroom/pulls) for an open or closed Pull Request
+* Search [GitHub](https://github.com/Tweetstockr/Tweetstockr/pulls) for an open or closed Pull Request
   that relates to your submission. You don't want to duplicate effort.
 * Make your changes in a new git branch:
 
@@ -87,7 +87,7 @@ Before you submit your pull request consider the following guidelines:
     git push origin my-fix-branch
     ```
 
-* In GitHub, send a pull request to `klassroom:development`.
+* In GitHub, send a pull request to `Tweetstockr:development`.
 * If we suggest changes then:
   * Make the required updates.
   * Re-run the test suite to ensure tests are still passing.
@@ -150,7 +150,7 @@ To ensure consistency throughout the source code, keep these rules in mind as yo
 
 We have very precise rules over how our git commit messages can be formatted.  This leads to **more
 readable messages** that are easy to follow when looking through the **project history**.  But also,
-we use the git commit messages to **generate the Klassroom change log**.
+we use the git commit messages to **generate the Tweetstockr change log**.
 
 ### Commit Message Format
 Each commit message consists of a **header**, a **body** and a **footer**.  The header has a special
