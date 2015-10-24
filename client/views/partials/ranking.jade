@@ -1,11 +1,16 @@
 .container-fluid
-  h1 Ranking
-  
-  section(ng-init='find()')
-    div(ng-repeat="user in users")
-      hr
-      p
-        strong {{ $index + 1 | ordinal }}
-      p username: {{ user.username }}
-      p 
-        strong points: {{ user.points }}
+  section.ranking
+    table.table.table-hover
+      tbody
+        tr(ng-repeat="user in ranking.users")
+          td.ranking-position {{ $index + 1 | ordinal }}
+
+          td.ranking-picture
+            img(class="ranking-picture__image" ng-src="{{ user.twitter.profile_image }}")
+
+          td.ranking-username
+            | {{ user.twitter.username }}
+
+          td.ranking-points
+            | {{ user.points }} 
+            small pts

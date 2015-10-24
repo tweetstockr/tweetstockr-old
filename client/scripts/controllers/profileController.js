@@ -5,16 +5,22 @@
     .module('tweetstockr')
     .controller('profileController', profileController);
 
-  function profileController($scope , Auth, $location, ResetAccount, $window) {
-    $scope.logout = function() {
+  function profileController(Auth, $location, ResetAccount, $window, $rootScope) {
+    var vm = this;
+
+    // Setting name/username to name/username field on view.
+    vm.name = $rootScope.currentUser.name
+    vm.username = $rootScope.currentUser.username
+
+    vm.logout = function() {
       Auth.logout(function(err) {
         if(!err) {
-          $location.path('/login');
+          $location.path('/');
         }
       });
     };
 
-    $scope.resetAccount = function(){
+    vm.resetAccount = function(){
       ResetAccount.save(
         function(result) {
           $window.location.href = 'http://' + $window.location.host;

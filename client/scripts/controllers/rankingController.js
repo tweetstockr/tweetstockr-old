@@ -5,11 +5,15 @@
     .module('tweetstockr')
     .controller('rankingController', rankingController);
 
-  function rankingController($scope, Ranking) {
-    $scope.find = function() {
+  function rankingController(Ranking) {
+    var vm = this;
+
+    vm.find = function() {
       Ranking.query(function(ranking) {
-        $scope.users = ranking;
+        vm.users = ranking;
       });
     };
+
+    vm.find();
   }
 })();
