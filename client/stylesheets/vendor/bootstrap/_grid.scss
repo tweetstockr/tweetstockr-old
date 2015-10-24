@@ -4,6 +4,7 @@
 
 .container {
   @include make-container();
+  max-width: 1250px;
 
   // For each breakpoint, define the maximum width of the container in a media query
   @each $breakpoint, $container-max-width in $container-max-widths {
