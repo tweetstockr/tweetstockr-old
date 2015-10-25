@@ -5,7 +5,7 @@
     .module('tweetstockr')
     .controller('homeController', homeController);
 
-  function homeController($scope, Socket, Portfolio, Shares, $interval, $timeout, $rootScope) {
+  function homeController($scope, Socket, Portfolio, Shares, $interval, $timeout, $rootScope, Notification) {
     $scope.points = false;
     $scope.variation = false;
 
@@ -45,8 +45,9 @@
 
       share.$save(function(res) {
         if (res.success === false) {
-          alert(res.message);
+          Notification.error(res.message);
         } else {
+          Notification.success('You bought ' + res.stock + '!');
           $rootScope.currentUser = res.owner;
           $scope.getPortfolio();
         }
@@ -58,6 +59,7 @@
         shareId : shareId
       }, function() {
         share.$delete(function(res) {
+          Notification.success('You sold ' + res.stock + '!');
           $rootScope.currentUser = res.owner;
           $scope.getPortfolio();
         });
@@ -68,7 +70,6 @@
       Socket.emit('update-me');
       $scope.getPortfolio();
     };
-
 
     $scope.chartOptions = {
       seriesBarDistance: 15,
