@@ -6,7 +6,8 @@
     .factory('Socket', Socket);
 
   function Socket($rootScope) {
-    var socket = io.connect('http://localhost:3000');
+    // var socket = io.connect('http://localhost:3000');
+    var socket = io.connect('https://tweetstockr.herokuapp.com');
 
     return {
       on: function (eventName, callback) {

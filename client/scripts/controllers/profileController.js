@@ -20,11 +20,19 @@
       });
     };
 
-    vm.resetAccount = function(){
+    vm.resetAccount = function() {
       ResetAccount.save(
         function(result) {
           $window.location.href = 'http://' + $window.location.host;
-      });
+        });
     };
+
+    vm.openModal = function () {
+      vm.confirmModal = true;
+    }
+
+    vm.closeModal = function () {
+      vm.confirmModal = false;
+    }
   }
 })();

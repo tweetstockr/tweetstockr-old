@@ -26,9 +26,9 @@ section.cover
           input(type="email" class="form-control" ng-model="profile.username" readonly)
 
         .pull-right
-          button(class="btn btn-primary" ng-click="profile.resetAccount()")
+          button(class="btn btn-primary" ng-click="profile.openModal()")
             | Reset my account
-    
+
     .col-md-5
       .profile-information.profile-rewards
         h2 Rewards
@@ -48,4 +48,24 @@ section.cover
             polygon(points="48.7,45.1 41.3,37.6 42.7,36.2 48.7,42.2 60,31 61.4,32.4")
         h3.profile-rewards__title
           | You don't have any rewards yet.
+
+.modal(ng-show="profile.confirmModal")
+  .modal-dialog(role="document")
+    .modal-content
+      .modal-header
+        button(type="button" class="close" ng-click="profile.closeModal()" aria-label="Close")
+          span(aria-hidden="true") &times;
+          span(class="sr-only") Close
+
+        h4.modal-title
+          | Confirm modal
+          
+      .modal-body.text-center
+        p Are you sure you want to reset your account?
+
+        button(class="btn btn-sm btn-primary" ng-click="profile.resetAccount()")
+          | Yes
+
+        button(class="btn btn-sm btn-primary-outline" ng-click="profile.closeModal()")
+          | No
 

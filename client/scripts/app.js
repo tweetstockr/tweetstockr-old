@@ -7,9 +7,9 @@
       'ngRoute',
       'ngCookies',
       'angular-chartist',
-      'angularModalService'
+      'ui-notification'
     ])
-    .config(function($routeProvider, $locationProvider) {
+    .config(function($routeProvider, $locationProvider, NotificationProvider) {
       $routeProvider
       .when('/home', {
         templateUrl: 'partials/home',
@@ -33,6 +33,16 @@
       });
 
       $locationProvider.html5Mode(true);
+
+      NotificationProvider.setOptions({
+        delay: 5000,
+        startTop: 20,
+        startRight: 20,
+        verticalSpacing: 20,
+        horizontalSpacing: 20,
+        positionX: 'right',
+        positionY: 'top'
+      });
     })
 
     .run(function ($rootScope, $location, Auth) {
