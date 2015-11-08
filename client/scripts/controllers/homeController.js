@@ -9,26 +9,6 @@
     $scope.points = false;
     $scope.variation = false;
 
-    $scope.showPoints = function() {
-      $scope.points = false;
-      $scope.variation = false;
-
-      $timeout(function() {
-        $scope.showVariations();
-      }, 5000);
-    }
-
-    $scope.showVariations = function() {
-      $scope.points = true;
-      $scope.variation = true;
-
-      $timeout(function() {
-        $scope.showPoints();
-      }, 5000);
-    }
-
-    $scope.showPoints();
-
     $scope.getPortfolio = function() {
       if ($scope.currentUser) {
         Portfolio.query(function(shares) {
