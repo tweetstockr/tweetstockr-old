@@ -40,13 +40,10 @@ section.header(ng-show="currentUser")
                 h2.commodities-item-header__title
                   | {{ stock.name }}
 
-                span.commodities-item-header__price(ng-class="stock.lastMove" ng-hide="points")
-                  | {{ stock.count }} pts 
+                span.commodities-item-header__price(ng-class="stock.lastMove")
+                  | {{ stock.count }} pts | {{ stock.variation }} 
                   i.fa(ng-class="stock.icon")
 
-                span.commodities-item-header__price(ng-class="stock.lastMove" ng-show="variation")
-                  | {{ stock.variation }} 
-                  
               section.commodities-item-content(ng-if="info")
                 form(
                   class="form-inline"
