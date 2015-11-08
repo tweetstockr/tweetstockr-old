@@ -1,4 +1,4 @@
-// var twitter = require('../../config.js');
+var twitter = require('../../config.js');
 
 module.exports = {
   'twitterAuth' : {
