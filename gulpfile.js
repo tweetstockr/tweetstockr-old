@@ -19,10 +19,10 @@ var target = {
     './client/scripts/app.js',
     './client/scripts/filters/*.js',
     './client/scripts/controllers/*.js',
+    './client/scripts/directives/*.js',
     './client/scripts/services/*.js',
     './client/scripts/directives/*.js',
   ],
-
   scripts_dist: './dist/scripts/'
 }
 

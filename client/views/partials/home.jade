@@ -15,7 +15,6 @@ section.header(ng-show="currentUser")
             
             .header-info
               h2.header-info__name {{ currentUser.username }}
-              h3.header-info__ranking Ranking: {{ $index + 1 | ordinal }}
         
         .col-md-5(ng-show="currentUser")
           .header-wallet
@@ -30,8 +29,8 @@ section.header(ng-show="currentUser")
       .row
         .col-md-10
           h2.commodities__title
-            p Commodities - 
-              small {{ stocksUpdatedAt | date: "MM/dd/yyyy 'at' h:mma" }}
+            p Commodities -
+              small {{ stocksUpdatedAt | date: "h:mma" }}
 
           ul.commodities-list(ng-init="stock.amount = 1")
             li.commodities-item(
@@ -48,10 +47,7 @@ section.header(ng-show="currentUser")
                 span.commodities-item-header__price(ng-class="stock.lastMove" ng-show="variation")
                   | {{ stock.variation }} 
                   
-                //- span(style="color:yellow")
-                //-   |  ({{stock.lastMove}})
-
-              section.commodities-item-content(ng-show="info")
+              section.commodities-item-content(ng-if="info")
                 form(
                   class="form-inline"
                   ng-submit="buyShare(stock)"
@@ -59,7 +55,7 @@ section.header(ng-show="currentUser")
                   fieldset.form-group
                     label Amount
                     input.form-control(type="number" min="1" max="10" ng-model="stock.amount")
-
+                    
                   fieldset.form-group
                     label Price
                     h3 {{ stock.count }} 
@@ -101,11 +97,5 @@ section.header(ng-show="currentUser")
               label Current Value 
               h3 {{share.currentPrice}} pts
           
-          
-        
-      div(ng-hide='!portfolio || portfolio.length', style="color:white")
-        | No trades yet. 
-        br
-        |  Why don't you 
-        a(href='/shares/create') Buy One share
-        | ?
+      div(ng-hide="!portfolio || portfolio.length")
+        p.text-center There are currently no shares.
