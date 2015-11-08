@@ -7,7 +7,7 @@
 
   function Socket($rootScope) {
     // var socket = io.connect('http://localhost:3000');
-    var socket = io.connect('https://tweetstockr.herokuapp.com');
+    var socket = io.connect('http://www.tweetstockr.com');
 
     return {
       on: function (eventName, callback) {
