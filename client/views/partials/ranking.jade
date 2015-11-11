@@ -9,7 +9,8 @@
             img(class="ranking-picture__image" ng-src="{{ user.twitter.profile_image }}")
 
           td.ranking-username
-            | {{ user.twitter.username }}
+            a(href="https://twitter.com/{{ user.twitter.username }}" target="_blank" rel="nofollow")
+              | @{{ user.twitter.username }}
 
           td.ranking-points
             | {{ user.points }} 

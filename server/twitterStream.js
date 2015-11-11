@@ -18,7 +18,7 @@ var StockModel   = require('./models/stock');
 var TrendsModel  = require('./models/trends');
 var refreshTweetsCountRate = 60000; // Interval to wait before update Tweets count
 var refreshTrendsRate = 15 * 60000; // Interval to wait before update Trends list
-var woeid = 23424768; // TT location id: 1 = location worldwide, 23424768 = BR
+var woeid = 1; // TT location id: 1 = location worldwide, 23424768 = BR
 var currentTrends = []; // The current Trending Topics
 var lastUpdateDate = new Date();
 var lastTrends = []; // The last count
