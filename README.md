@@ -1,4 +1,4 @@
-[![tweetstockr logo](logo.png)]()
+# Tweetstockr
 
 ## Building
 To build the project, you will first need to install the necessary dependencies using npm and Bower.
