@@ -8,6 +8,10 @@
 @import 'pages/registration/page-registration';
 @import 'pages/home/page-home';
 
+svg {
+  vertical-align: middle;
+}
+
 body {
   background-color: #f7f7f7;
 }
