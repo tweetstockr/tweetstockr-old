@@ -5,9 +5,11 @@
     .module('tweetstockr')
     .controller('homeController', homeController);
 
-  function homeController($scope, Socket, Portfolio, Shares, $interval, $timeout, $rootScope, Notification) {
+  function homeController($scope, Socket, Portfolio, Shares, $interval, $timeout, $rootScope, Notification, $window) {
     $scope.points = false;
     $scope.variation = false;
+
+    console.log($rootScope.currentUser);
 
     $scope.getPortfolio = function() {
       if ($scope.currentUser) {
@@ -18,20 +20,24 @@
     };
 
     $scope.buyShare = function(stock) {
-      var share = new Shares({
-        stock: stock.name,
-        amount: stock.amount
-      });
+      if($rootScope.currentUser === null) {
+        $window.location.href = '/auth/twitter';
+      } else {
+        var share = new Shares({
+          stock: stock.name,
+          amount: stock.amount
+        });
 
-      share.$save(function(res) {
-        if (res.success === false) {
-          Notification.error(res.message);
-        } else {
-          Notification.success('You bought ' + res.stock + '!');
-          $rootScope.currentUser = res.owner;
-          $scope.getPortfolio();
-        }
-      });
+        share.$save(function(res) {
+          if (res.success === false) {
+            Notification.error(res.message);
+          } else {
+            Notification.success('You bought ' + res.stock + '!');
+            $rootScope.currentUser = res.owner;
+            $scope.getPortfolio();
+          }
+        });
+      }
     };
 
     $scope.sellShare = function(shareId) {
