@@ -1,4 +1,6 @@
-<img src="logo.png" width="300px">
+<p align="center">
+  <img src="logo.png" width="500px">
+</p>
 
 ## Building
 To build the project, you will first need to install the necessary dependencies using npm and Bower.
