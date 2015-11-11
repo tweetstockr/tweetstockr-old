@@ -1,4 +1,4 @@
-# Tweetstockr
+<img src="logo.png" width="300px">
 
 ## Building
 To build the project, you will first need to install the necessary dependencies using npm and Bower.
