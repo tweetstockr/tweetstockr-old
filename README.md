@@ -18,7 +18,7 @@ $ gulp
 Want to file a bug, contribute some code, or improve documentation? Nice! Read up on our [contribution guide](https://github.com/tweetstockr/tweetstockr/blob/master/CONTRIBUTING.md) and then check out one of our issues [here](https://github.com/tweetstockr/tweetstockr/issues).
 
 ## Feature Requests / Ideas
-Have an idea or a feature you'd love to see in Tweetstockr? Check out our public Trello board to contribute your thoughts and vote on existing ideas.
+Have an idea or a feature you'd love to see in Tweetstockr? Check out our public [Trello board](https://trello.com/b/c3yZoC4M/tweetstockr-open-source-roadmap) to contribute your thoughts and vote on existing ideas.
 
 If you want to request any idea or feature, please follow the [contribution guide](https://github.com/tweetstockr/tweetstockr/blob/master/CONTRIBUTING.md).
 
