@@ -3,14 +3,20 @@
 </p>
 
 ## Building
-To build the project, you will first need to install the necessary dependencies using npm and Bower.
+To build the project, you will first need to install the necessary dependencies using npm and Bower in the project root to get everything you need.
 
 Run:
 ```sh
 $ npm install & bower install
 ```
-in the project root to get everything you need. Next, to actually build the project you will need Gulp.
 
+Next, you need to run your local server.
+Run:
+```sh
+$ node server
+```
+
+To actually build the project you will need Gulp.
 Run:
 ```sh
 $ gulp
