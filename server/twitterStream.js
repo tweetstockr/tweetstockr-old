@@ -53,7 +53,6 @@ module.exports = function(server) {
   resetTwitterStream();
   startTwitterStream();
 
-
   // Get the trends and fetch the price and price history
   // then update the lastTrends list
   function sendListToClient() {
@@ -113,7 +112,7 @@ module.exports = function(server) {
           if(stocksWithPrice === trendsObj.list.length) {
             lastTrends = JSON.parse(JSON.stringify(tt));
             lastUpdateDate = Date();
-            // console.log('-- Send to the User: ');
+            console.log('-- Sending new values to client');
             // console.log(JSON.stringify(lastTrends));
             io.emit('update', lastTrends);
             io.emit('update-date', lastUpdateDate);
