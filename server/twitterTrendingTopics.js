@@ -1,6 +1,9 @@
 /*
+ *  twitterTrendingTopics.js
+ *
  *  Gets the updated Trending Topics list from Twitter
  *  Twitter limits the search in 15 minutes intervals
+ *
  */
 
 var TrendsModel  = require('./models/trends');

@@ -45,7 +45,7 @@ require('./server/routes')(app, passport);
 
 // ROBOT
 var http  = require('http').createServer(app);
-var tweetOmeter = require('./server/twitterStream')(server);
+var tweetOmeter = require('./server/twitterController')(server);
 
 server.listen(process.env.PORT || config.port, function(){
   console.log('aeeeee...');

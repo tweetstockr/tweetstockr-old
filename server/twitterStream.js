@@ -1,61 +1,129 @@
 /*
-  TWEET-O-METER
-  1 - Com a lista de TT, iniciar um streaming buscando as TT e contando as
-      ocorrências nos Tweets
-  2 - Após 1 minuto de streaming, contabilizar o total contado de cada TT, isto
-      é o valor do TT no game
-  3 - Armazenar os valores atualizados no banco de dados
-*/
-
-'use strict';
+ *  twitterStream.js
+ *
+ *  Stream Twitter with current Trending Topics
+ *  Count Tweets while streaming
+ *  Send updated Tweets count to client and update Mongo documents
+ *
+ */
 
 var twitter     = require('twitter');
-var configAuth  = require('./config/credentials');
+var TrendsModel  = require('./models/trends');
 var strings     = require('./config/strings');
 var StockModel   = require('./models/stock');
-var TrendsModel  = require('./models/trends');
-var refreshTweetsCountRate = 60000; // Interval to wait before update Tweets count
+var configAuth  = require('./config/credentials');
+
+
+// Initialize Twitter API
+var clientTwitter = null;
+
 var currentTrends = []; // The current Trending Topics
 var lastUpdateDate = new Date();
 var lastTrends = []; // The last count
 
-var twitterTrendingTopics = require('./twitterTrendingTopics');
 
 
-module.exports = function(server) {
-  // Get last available count for current TTs
-  // Use this when the server has just started and the count is not ready
-  console.log('-- Get from MONGO last available count for current TTs');
-
-  sendListToClient();
+module.exports = function(server){
 
   var io = require('socket.io').listen(server);
 
-  // When the user connect, send updated data
-  io.on('connection', function (socket) {
-      socket.on('update-me', function() {
-        io.emit('update', lastTrends);
-        io.emit('update-date', lastUpdateDate);
-      });
-  });
+  // Count Tweets!
+  // Get lastest TTs list and serch for terms in Twitter stream
+  this.startTwitterStream = function() {
 
-  // Initialize Twitter API
-  var clientTwitter = null;
+    // When the user connect, send updated data
+    io.on('connection', function (socket) {
+        socket.on('update-me', function() {
+          io.emit('update', lastTrends);
+          io.emit('update-date', lastUpdateDate);
+        });
+    });
 
-  function resetTwitterStream() {
+    console.log('-- Start Twitter stream');
+
+    this.sendListToClient();
+
+    // Find updated Trends list from db
+    TrendsModel.getNewestStoredTT(function(err, trends) {
+      if(err) {
+        return console.error(err);
+      }
+
+      if(!trends) {
+        return console.log(strings.wait_tweet_count);
+      }
+
+      // Clone the Trends
+      var trendsObj = JSON.parse(JSON.stringify(trends));
+
+      // If the list was found, start streaming
+      if(trendsObj.list ) {
+        // get only the name of the trending topics and put it into a string -
+        var search = [];
+
+        for(var i = 0; i < trendsObj.list.length; i++) {
+          search.push(trendsObj.list[i].name);
+        }
+
+        var streamQuery = search.join(',');
+
+        // Copy and prepare array
+        currentTrends = JSON.parse(JSON.stringify(trendsObj.list));
+
+        for(var i = 0; i < currentTrends.length; i++) {
+          currentTrends[i].count = 0;
+        }
+
+        console.log('-- Starting Twitter stream with the following keywords: \n' + streamQuery);
+
+        // searching for streamQuery
+        clientTwitter.stream('statuses/filter', {
+          track: streamQuery
+        }, function(stream) {
+          stream.on('data', function(tweet) {
+            // Search word in tweet text and update tweets count
+            for(var key in currentTrends) {
+              var q = currentTrends[key].name;
+
+              if(tweet.text) {
+                var n = tweet.text.search(q);
+
+                if(n !== -1) {
+                  currentTrends[key].count ++;
+                }
+              }
+            }
+          });
+
+          stream.on('error', function(error) {
+            console.log(error);
+          });
+        });
+      }
+    });
+
+  }
+
+
+
+  this.resetTwitterStream = function() {
+
     clientTwitter = new twitter({
       consumer_key        : configAuth.twitterAuth.consumerKey,
       consumer_secret     : configAuth.twitterAuth.consumerSecret,
       access_token_key    : configAuth.twitterAuth.accessTokenKey,
       access_token_secret : configAuth.twitterAuth.accessTokenSecret,
     });
+
   }
-  resetTwitterStream();
-  startTwitterStream();
+
+
+
 
   // Get the trends and fetch the price and price history
   // then update the lastTrends list
-  function sendListToClient() {
+  this.sendListToClient = function() {
+
     TrendsModel.getNewestStoredTT(function(err, trends) {
       if(err) {
         return console.log(err);
@@ -120,85 +188,11 @@ module.exports = function(server) {
         });
       }
     });
-  }
-
-
-  // Count Tweets!
-  function startTwitterStream() {
-    console.log('-- Start Twitter stream');
-
-    sendListToClient();
-
-    // Find updated Trends list from db
-    TrendsModel.getNewestStoredTT(function(err, trends) {
-      if(err) {
-        return console.error(err);
-      }
-
-      if(!trends) {
-        return console.log(strings.wait_tweet_count);
-      }
-
-      // Clone the Trends
-      var trendsObj = JSON.parse(JSON.stringify(trends));
-
-      // If the list was found, start streaming
-      if(trendsObj.list ) {
-        // get only the name of the trending topics and put it into a string -
-        var search = [];
-
-        for(var i = 0; i < trendsObj.list.length; i++) {
-          search.push(trendsObj.list[i].name);
-        }
-
-        var streamQuery = search.join(',');
-
-        // Copy and prepare array
-        currentTrends = JSON.parse(JSON.stringify(trendsObj.list));
-
-        for(var i = 0; i < currentTrends.length; i++) {
-          currentTrends[i].count = 0;
-        }
-
-        console.log('-- Starting Twitter stream with the following keywords: \n' + streamQuery);
-
-        // searching for streamQuery
-        clientTwitter.stream('statuses/filter', {
-          track: streamQuery
-        }, function(stream) {
-          stream.on('data', function(tweet) {
-            // Search word in tweet text and update tweets count
-            for(var key in currentTrends) {
-              var q = currentTrends[key].name;
-
-              if(tweet.text) {
-                var n = tweet.text.search(q);
-
-                if(n !== -1) {
-                  currentTrends[key].count ++;
-                }
-              }
-            }
-          });
-
-          stream.on('error', function(error) {
-            console.log(error);
-          });
-        });
-      }
-    });
-  }
-
-  // Get counted Tweets and store in the database
-  var tweetCounter = setInterval(function() {
-    // Stop Counting!
-    console.log('-- Stop counting!');
-    resetTwitterStream();
-    sendListToClient();
 
     console.log('-- Last Trends with count: ' + JSON.stringify(currentTrends));
 
-    // Got an updated count
+
+    // Save an updated count
     for(var key in currentTrends) {
       // Save stock to database
       var newStockModel = new StockModel({
@@ -215,6 +209,8 @@ module.exports = function(server) {
       currentTrends[key].count = 0;
     }
 
-    twitterTrendingTopics.updateTrendsList();
-  }, refreshTweetsCountRate);
-};
+  }
+
+
+
+}
