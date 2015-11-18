@@ -1,12 +1,10 @@
 /*
   TWEET-O-METER
-  1 - Obtém lista de Trending Topics atualizada do Twitter (só é possível fazer
-      isso a cada 15 minutos)
-  2 - Com a lista de TT, iniciar um streaming buscando as TT e contando as
+  1 - Com a lista de TT, iniciar um streaming buscando as TT e contando as
       ocorrências nos Tweets
-  3 - Após 1 minuto de streaming, contabilizar o total contado de cada TT, isto
+  2 - Após 1 minuto de streaming, contabilizar o total contado de cada TT, isto
       é o valor do TT no game
-  4 - Armazenar os valores atualizados no banco de dados
+  3 - Armazenar os valores atualizados no banco de dados
 */
 
 'use strict';
@@ -17,11 +15,12 @@ var strings     = require('./config/strings');
 var StockModel   = require('./models/stock');
 var TrendsModel  = require('./models/trends');
 var refreshTweetsCountRate = 60000; // Interval to wait before update Tweets count
-var refreshTrendsRate = 15 * 60000; // Interval to wait before update Trends list
-var woeid = 1; // TT location id: 1 = location worldwide, 23424768 = BR
 var currentTrends = []; // The current Trending Topics
 var lastUpdateDate = new Date();
 var lastTrends = []; // The last count
+
+var twitterTrendingTopics = require('./twitterTrendingTopics');
+
 
 module.exports = function(server) {
   // Get last available count for current TTs
@@ -51,56 +50,9 @@ module.exports = function(server) {
       access_token_secret : configAuth.twitterAuth.accessTokenSecret,
     });
   }
-
   resetTwitterStream();
   startTwitterStream();
 
-  // Updates the Trending Topics list
-  // It can only be called once in 15 minutes due to Twitter API limitation
-  function updateTrendsList() {
-    var nowMinus15Minutes = new Date(new Date() - refreshTrendsRate);
-
-    TrendsModel.find(
-      { 'created' :
-        { '$gte' : nowMinus15Minutes, '$lt' : new Date() }
-      },
-      function (err, results) {
-        if(err) {
-          return console.error(err);
-        }
-
-        // No update in the last 15 minutes, so... update it!
-        if(!results.length) {
-          console.log('-- Renew TTs list');
-
-          // Trends location: Yahoo's Where On Earth Id
-          // https://developer.yahoo.com/geo/geoplanet/
-          clientTwitter.get('trends/place', { 'id' : woeid },
-            function(error, result, response) {
-              if(error) {
-                throw error;
-              }
-
-              // Trends list updated!
-              console.log('-- TTs list updated: ' + JSON.stringify(result[0].trends));
-
-              //Store trends on database
-              var newTrends = new TrendsModel({
-                woeid : woeid,
-                list : result[0].trends,
-              });
-
-              newTrends.save(function(err, newTrends) {
-                if(err) {
-                  return console.error(err);
-                }
-              });
-            }
-          );
-        }
-      }
-    );
-  }
 
   // Get the trends and fetch the price and price history
   // then update the lastTrends list
@@ -264,6 +216,6 @@ module.exports = function(server) {
       currentTrends[key].count = 0;
     }
 
-    updateTrendsList();
+    twitterTrendingTopics.updateTrendsList();
   }, refreshTweetsCountRate);
 };
