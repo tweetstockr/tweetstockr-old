@@ -14,21 +14,20 @@ var twitterTrendingTopics = require('./twitterTrendingTopics');
 var TwitterStream = require('./twitterStream');
 
 module.exports = function(server) {
-  
+
   var twitterStream = new TwitterStream(server);
 
   twitterStream.resetTwitterStream();
   twitterStream.startTwitterStream();
-  twitterStream.sendListToClient();
 
   // Get counted Tweets and store in the database
   var tweetCounter = setInterval(function() {
-    // Stop Counting!
-    console.log('-- Stop counting!');
+
+    console.log('-- Stop counting and start streaming again!');
     twitterStream.resetTwitterStream();
     twitterStream.sendListToClient();
-
-
     twitterTrendingTopics.updateTrendsList();
+
   }, refreshTweetsCountRate);
+
 };
