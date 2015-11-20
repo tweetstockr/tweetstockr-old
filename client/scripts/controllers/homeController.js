@@ -67,8 +67,9 @@
     }
 
     // Update data
-    
+
     Socket.on('update', function(data) {
+
       $scope.stocks = data;
 
       for (var i = 0; i < $scope.stocks.length; i++) {
