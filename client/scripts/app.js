@@ -34,6 +34,12 @@
         controllerAs: 'ranking'
       })
 
+      .when('/about', {
+        templateUrl: 'partials/about',
+        controller: 'aboutController',
+        controllerAs: 'about'
+      })
+
       .otherwise({
         redirectTo: '/home'
       });
