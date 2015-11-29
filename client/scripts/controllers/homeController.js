@@ -68,6 +68,18 @@
 
     // Update data
 
+    Socket.on('tweet', function(data){
+
+      $scope.tweet = data;
+
+    });
+
+    Socket.on('currentCount', function(data){
+
+      $scope.currentCount = data;
+
+    });
+
     Socket.on('update', function(data) {
 
       $scope.stocks = data;
