@@ -11,7 +11,11 @@
 
     return {
       currentUser: function() {},
-
+      logout: function(cb){
+        $rootScope.currentUser = null;
+        $cookies.remove('user');
+        cb();
+      }
     };
   }
 })();

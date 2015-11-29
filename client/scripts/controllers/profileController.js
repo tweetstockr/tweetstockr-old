@@ -5,20 +5,12 @@
     .module('tweetstockr')
     .controller('profileController', profileController);
 
-  function profileController(Auth, $location, ResetAccount, $window, $rootScope) {
+  function profileController($location, ResetAccount, $window, $rootScope) {
     var vm = this;
 
     // Setting name/username to name/username field on view.
     vm.name = $rootScope.currentUser.name
     vm.username = $rootScope.currentUser.username
-
-    vm.logout = function() {
-      Auth.logout(function(err) {
-        if(!err) {
-          $location.path('/');
-        }
-      });
-    };
 
     vm.resetAccount = function() {
       ResetAccount.save(

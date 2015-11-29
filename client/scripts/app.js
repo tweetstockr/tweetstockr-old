@@ -22,6 +22,12 @@
         controllerAs: 'profile'
       })
 
+      .when('/logout', {
+        templateUrl: 'partials/logout',
+        controller: 'logoutController',
+        controllerAs: 'logout'
+      })
+
       .when('/ranking', {
         templateUrl: 'partials/ranking',
         controller: 'rankingController',
