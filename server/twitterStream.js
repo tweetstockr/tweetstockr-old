@@ -7,8 +7,8 @@
  *
  */
 
-var TrendsModel = require('./models/trends');
 var StockModel  = require('./models/stock');
+var twitterTrendingTopics = require('./twitterTrendingTopics');
 
 var strings     = require('./config/strings');
 var configAuth  = require('./config/credentials');
@@ -17,6 +17,8 @@ var clientTwitter  = null; // Twitter API client
 var currentTrends  = []; // The current Trending Topics (being created)
 var lastTrends     = []; // The last count (ready)
 var lastUpdateDate = new Date();
+
+
 
 
 module.exports = function(server){
@@ -36,10 +38,10 @@ module.exports = function(server){
   // Get lastest TTs list and serch for terms in Twitter stream
   this.startTwitterStream = function() {
 
-    this.sendListToClient();
+    // this.sendListToClient();
 
-    // Find updated Trends list from db
-    TrendsModel.getNewestStoredTT(function(err, trends) {
+    // Find updated Trends list from Twitter or mongo
+    twitterTrendingTopics.getUpdatedTrendsList(function(err, trends) {
 
       if(err) return console.error(err);
 
@@ -75,13 +77,15 @@ module.exports = function(server){
           // Receives a new Tweet
           stream.on('data', function(tweet) {
 
-            // Iterate through Trending Topics
-            // Search word in Tweet text and update Tweets count
-            for(var key in currentTrends) {
-              if(tweet.text) {
+            if(tweet.text) {
+
+              // Iterate through Trending Topics
+              // Search word in Tweet text and update Tweets count
+              for(var key in currentTrends) {
                 var n = tweet.text.search( currentTrends[key].name );
                 if(n !== -1) currentTrends[key].count ++;
               }
+
             }
 
           });
@@ -114,7 +118,7 @@ module.exports = function(server){
 
     console.log('-- Last Trends with count: ' + JSON.stringify(currentTrends));
 
-    TrendsModel.getNewestStoredTT(function(err, trends) {
+    twitterTrendingTopics.getUpdatedTrendsList(function(err, trends) {
 
       if(err) return console.log(err);
 
