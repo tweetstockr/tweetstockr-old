@@ -5,6 +5,7 @@ var TrendsModel = require('../models/trends');
 var StockModel  = require('../models/stock');
 var UserModel   = require('../models/user');
 var strings     = require('../config/strings');
+var config = require('../config/config');
 
 function errorMessage(msg) {
   return { success : false, message : msg };
@@ -41,13 +42,13 @@ exports.create = function(req, res) {
   share.owner = req.user; //who bought this?
 
   // Check if the TT is on the most recent TT list
-  TrendsModel.getNewestStoredTT(function(err, trends) {
+  TrendsModel.findOne({}, {}, { sort: { 'created_at' : -1 } }, function(err, docsTrends) {
     if(err) {
       return console.error(err);
     }
 
     // Check if we have a TT list
-    if(!trends) {
+    if(!docsTrends) {
       return res.json(errorMessage(
         strings.tt_not_available
       ));
@@ -56,8 +57,8 @@ exports.create = function(req, res) {
     // Search for stockName in the current TT list
     var found = false;
 
-    for (var i = 0; i < trends.list.length; i++) {
-      if(trends.list[i].name === stockName) {
+    for (var i = 0; i < docsTrends.trends.length; i++) {
+      if(docsTrends.trends[i].name === stockName) {
         found = true; break;
       }
     }
@@ -71,18 +72,31 @@ exports.create = function(req, res) {
 
     // Found stock in TTs list
     // Get last computed stock
-    StockModel.getNewestByName(stockName, function(err, stock) {
+    StockModel.find({ 'name': stockName })
+              .sort('-created_at')
+              .limit(config.maxStockChartData)
+              .exec(function (err, docsStocks) {
+
       if(err) {
         return console.error(err);
       }
 
-      if(!stock) {
+      if(!docsStocks) {
         var message = strings.x_not_valid;
         if (message){message.format(stockName)}
         return res.json(errorMessage(message));
       }
 
-      var totalPrice = (stock.price * quantity);
+      // Calculate price -------------------------------------------------------
+      var price = 0;
+      if (docsStocks.length > 1){
+        var countVariation = Math.round((docsStocks[0].tweet_volume
+                           - docsStocks[1].tweet_volume)/10);
+        price = countVariation < 0 ? 0 : countVariation;
+      }
+      // -----------------------------------------------------------------------
+
+      var totalPrice = (price * quantity);
 
       // Total price is totalPrice
       if(totalPrice <= 1) {
@@ -96,7 +110,7 @@ exports.create = function(req, res) {
         ));
       }
 
-      share.price = stock.price;
+      share.price = price;
 
       share.save(function(err) {
         if(err) {
