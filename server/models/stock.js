@@ -30,22 +30,7 @@ stockSchema.pre('save', function(next, done){
   next();
 });
 
-/**
- * Statics
- */
-stockSchema.statics = {
-  getNewestByName: function(stockName, cb) {
-    this.findOne({name:stockName})
-      .sort({created_at:-1})
-      .exec(cb);
-  },
-  getLastPrices: function(stockName, cb) {
-    this.find({name:stockName})
-      .sort({created_at:-1})
-      .limit(config.maxStockChartData)
-      .exec(cb);
-  }
-};
+
 
 // create the model for users and expose it to our app
 module.exports = mongoose.model('Stock', stockSchema);

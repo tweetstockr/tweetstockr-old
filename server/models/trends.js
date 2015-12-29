@@ -15,16 +15,7 @@ var trendsSchema = new Schema({
 });
 
 
-/**
- * Statics
- */
-trendsSchema.statics = {
-  getNewestStoredTT: function(cb){
-    this.findOne()
-      .sort('-created_at')
-      .exec(cb);
-  },
-};
+
 
 // create the model for users and expose it to our app
 module.exports = mongoose.model('Trends', trendsSchema);

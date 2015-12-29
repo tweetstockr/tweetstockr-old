@@ -15,11 +15,12 @@ var configAuth  = require('./config/credentials');
 var config = require('./config/config');
 
 // Interval to wait before update Trends list
-// From Twitter: "This information is cached for 5 minutes.
+// From Twitter:
+// "This information is cached for 5 minutes.
 // Requesting more frequently than that will not return any more
 // data, and will count against your rate limit usage."
-// There are two initial buckets available for GET requests:
-// 15 calls every 15 minutes, and 180 calls every 15 minutes.
+// "There are two initial buckets available for GET requests:
+// 15 calls every 15 minutes, and 180 calls every 15 minutes."
 
 var refreshTrendsRate = 2 * 60000;
 
@@ -54,9 +55,6 @@ module.exports = function(server) {
   }, refreshTrendsRate);
 
   saveTrendingTopics();
-
-
-
 
 
   function sendListToUser(){
@@ -163,12 +161,14 @@ module.exports = function(server) {
                 // Some Trends don't have tweet_volume. Ignore them.
                 if (stock.name && stock.tweet_volume) {
 
-                  var stockPrice = parseInt(stock.tweet_volume) || 0;
+                  var stockVolume = parseInt(stock.tweet_volume) || 0;
+                  var stockPrice = (stockVolume/totalTweets)*100;
+                  stockPrice = +stockPrice.toFixed(2);
 
                   // Save Counts
                   var newStockModel = new StockModel({
                       name: stock.name,
-                      price: (stockPrice/totalTweets)*100,
+                      price: stockPrice.toFixed(2),
                       created_at: newTrends.created_at
                   });
 

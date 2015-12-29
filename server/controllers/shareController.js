@@ -32,7 +32,7 @@ exports.share = function(req, res, next, id) {
 };
 
 /**
- * Create a share
+ * Create a share (buy a TT)
  */
 exports.create = function(req, res) {
   var share = new ShareModel(req.body);
@@ -89,17 +89,14 @@ exports.create = function(req, res) {
 
       // Calculate price -------------------------------------------------------
       var price = 0;
-      if (docsStocks.length > 1){
-        var countVariation = Math.round((docsStocks[0].tweet_volume
-                           - docsStocks[1].tweet_volume)/10);
-        price = countVariation < 0 ? 0 : countVariation;
+      if (docsStocks.length){
+        price = docsStocks[0].price;
       }
+      var totalPrice = (price * quantity);
       // -----------------------------------------------------------------------
 
-      var totalPrice = (price * quantity);
-
-      // Total price is totalPrice
-      if(totalPrice <= 1) {
+      // Total price can't be zero
+      if(totalPrice <= 0) {
         return res.json(errorMessage(
           strings.invalid_price
         ));
@@ -117,11 +114,15 @@ exports.create = function(req, res) {
           res.status(500).json(err);
         } else {
 
+          // Current user balance
+          var newBalance = share.owner.points - totalPrice;
+          newBalance = +newBalance.toFixed(2);
+
           // Share created for the user
           // after buying the stock, remove points from user
           UserModel.findOneAndUpdate(
             { _id : share.owner._id },
-            { points : share.owner.points - totalPrice },
+            { points : newBalance },
             { upsert:true}, function(err) {
               if(err) {
                 res.status(500).json(err);
@@ -171,14 +172,19 @@ exports.destroy = function(req, res) {
     if(err) {
       res.status(500).json(err);
     } else {
-      // Get last computed price.
-      StockModel.getNewestByName(share.stock, function(err, stock) {
+
+      // Get last computed stock
+      StockModel.find({ 'name': share.stock })
+                .sort('-created_at')
+                .limit(1)
+                .exec(function (err, stock) {
+
         // Update price of stock is stock.price
         if(!stock) {
           // stock not found. delete anyway
           res.json(share);
         } else {
-          var currentPrice = (stock.price * share.amount);
+          var currentPrice = (stock[0].price * share.amount);
           //after removing the stock, give the points to the user
 
           // Current user share.owner has share.owner.points points
@@ -248,11 +254,11 @@ exports.byOwner = function(req, res) {
 
         shares.forEach(function( share ) {
           // get most recent count
-          StockModel
-            .find({name:share.stock})
-            .sort('-created')
-            .limit(1)
-            .exec(function(err, stock) {
+          StockModel.find({ 'name': share.stock })
+                    .sort('-created_at')
+                    .limit(1)
+                    .exec(function (err, stock) {
+
               var price = 0;
 
               if(stock.length) {
