@@ -14,20 +14,6 @@ var StockModel  = require('./models/stock');
 var configAuth  = require('./config/credentials');
 var config = require('./config/config');
 
-// Interval to wait before update Trends list
-// From Twitter:
-// "This information is cached for 5 minutes.
-// Requesting more frequently than that will not return any more
-// data, and will count against your rate limit usage."
-// "There are two initial buckets available for GET requests:
-// 15 calls every 15 minutes, and 180 calls every 15 minutes."
-
-var refreshTrendsRate = 2 * 60000;
-
-var woeid = 1; // TT location id: 1 = location worldwide, 23424768 = BR
-
-var lastTrends = [];
-var lastUpdateDate = new Date();
 
 var clientTwitter = new require('twitter')({
       consumer_key        : configAuth.twitterAuth.consumerKey,
@@ -37,6 +23,21 @@ var clientTwitter = new require('twitter')({
     });
 
 module.exports = function(server) {
+
+  // Interval to wait before update Trends list
+  // From Twitter:
+  // "This information is cached for 5 minutes.
+  // Requesting more frequently than that will not return any more
+  // data, and will count against your rate limit usage."
+  // "There are two initial buckets available for GET requests:
+  // 15 calls every 15 minutes, and 180 calls every 15 minutes."
+
+  var refreshTrendsRate = 2 * 60000;
+
+  var woeid = 1; // TT location id: 1 = location worldwide, 23424768 = BR
+
+  var lastTrends = [];
+  var lastUpdateDate = new Date();
 
   var io = require('socket.io').listen(server);
 
@@ -57,50 +58,60 @@ module.exports = function(server) {
   saveTrendingTopics();
 
 
+
   function sendListToUser(){
 
     // Get most recent list of TTs
     TrendsModel.findOne({}, {}, { sort: { 'created_at' : -1 } }, function(err, docsTrends) {
 
-      if(err) throw err;
+      if (err) {
+        console.log(JSON.stringify(err));
+        throw err;
+      }
 
       var lastUpdateDate = docsTrends.created_at;
 
       // Get historical data of every TT ---------------------------------------
-      var totalTrends = docsTrends.trends.length;
+      var trendsToCompute = docsTrends.trends.length;
       var listTrends = [];
       var i = 0;
 
       for(var key in docsTrends.trends) {
+
         StockModel.find({ 'name': docsTrends.trends[key].name })
                   .sort('-created_at')
                   .limit(config.maxStockChartData)
                   .exec(function (err, docsStocks) {
 
-          totalTrends--;
-
-          // Must have at least 1 rows of data to calculate price
+          // Must have at least 1 rows of data
           if (docsStocks.length){
-            listTrends[i] = {
-              'name' : docsStocks[0].name,
-              'count' : docsStocks[0].price,
-            }
 
-            // Price history ---------------------------------------------------
-            var priceHistory = [];
-            for (var i2 = 0; i2 < docsStocks.length; i2++) {
-                priceHistory.push({
-                  'count' : docsStocks[i2].price,
-                  'created' : docsStocks[i2].created_at
-                });
-            }
-            listTrends[i].history = priceHistory;
-            // -----------------------------------------------------------------
+              var currentPrice = parseInt(docsStocks[0].price || 0);
+              if (currentPrice > 0) {
 
-            i++;
+                listTrends[i] = {
+                  'name' : docsStocks[0].name,
+                  'count' : currentPrice,
+                }
+
+                // Price history -------------------------------------------------
+                var priceHistory = [];
+                for (var i2 = 0; i2 < docsStocks.length; i2++) {
+                    if (docsStocks[i2].price != null) {
+                      priceHistory.push({
+                        'count' : docsStocks[i2].price,
+                        'created' : docsStocks[i2].created_at
+                      });  
+                    }
+                }
+                listTrends[i].history = priceHistory;
+                // ---------------------------------------------------------------
+                i++;
+              }
           }
 
-          if (totalTrends == 0){
+          trendsToCompute--;
+          if (trendsToCompute == 0){
               console.log("The complete list: ");
               console.log(JSON.stringify(listTrends));
               lastTrends = JSON.parse(JSON.stringify(listTrends));
@@ -111,6 +122,7 @@ module.exports = function(server) {
         });
 
       }
+
       // -----------------------------------------------------------------------
 
     });
@@ -118,6 +130,44 @@ module.exports = function(server) {
   }
 
 
+  var createStockFromTrend = function(trend, created_at, callback) {
+
+    StockModel.find({ 'name': trend.name })
+              .sort('-created_at')
+              .limit(1)
+              .exec(function (err, prevStock) {
+
+      if (err) { console.log(JSON.stringify(err)); }
+
+      // Calculate stock price
+      var stockPrice = null;
+      var prevStockPrice = null;
+
+      if (prevStock.length){
+        stockPrice = parseInt(trend.tweet_volume) - parseInt(prevStock[0].tweet_volume);
+        prevStockPrice = prevStock[0].price
+      }
+
+      if ((prevStockPrice != stockPrice ) || !prevStock.length) {
+        // Price did update or it's the first document
+
+        // Save Trend as Stock
+        var newStockModel = new StockModel({
+            name: trend.name,
+            price: stockPrice,
+            created_at: created_at,
+            tweet_volume: parseInt(trend.tweet_volume)
+        });
+
+        newStockModel.save(function(err, newStockModel) {
+          callback(newStockModel);
+        });
+
+      }
+      else{ callback(newStockModel); }
+
+    });
+  }
 
 
   function saveTrendingTopics(){
@@ -139,7 +189,7 @@ module.exports = function(server) {
           // No recent updates. Get new list!
           if(!docs.length){
 
-            // Save Trends
+            // Save new Trends
             var newTrends = new TrendsModel(result[0]);
             newTrends.save(function(err, newTrends) {
 
@@ -148,36 +198,24 @@ module.exports = function(server) {
               // For each Trend, save Counts -----------------------------------
               var trendsToCompute = newTrends.trends.length;
 
-              var totalTweets = 0;
-              for(var key in newTrends.trends) {
-                totalTweets += parseInt(newTrends.trends[key].tweet_volume) || 0;
-              }
-              console.log("totalTweets:" + totalTweets);
-
               for(var key in newTrends.trends) {
 
                 var stock = newTrends.trends[key];
 
                 // Some Trends don't have tweet_volume. Ignore them.
-                if (stock.name && stock.tweet_volume) {
+                var stockVolume = parseInt(stock.tweet_volume) || 0;
+                if (stock.name && stockVolume !== 0) {
 
-                  var stockVolume = parseInt(stock.tweet_volume) || 0;
-                  var stockPrice = (stockVolume/totalTweets)*100;
-                  stockPrice = +stockPrice.toFixed(2);
-
-                  // Save Counts
-                  var newStockModel = new StockModel({
-                      name: stock.name,
-                      price: stockPrice.toFixed(2),
-                      created_at: newTrends.created_at
+                  createStockFromTrend(stock, newTrends.created_at, function(newStockModel){
+                    trendsToCompute--;
+                    if (trendsToCompute == 0) { sendListToUser(); }
                   });
 
-                  newStockModel.save(function(err, newStockModel) {
-                    if(err) console.error(err);
-                  });
                 }
-
-                  sendListToUser();
+                else{
+                  trendsToCompute--;
+                  if (trendsToCompute == 0) { sendListToUser(); }
+                }
 
               }
               // ---------------------------------------------------------------
@@ -185,7 +223,6 @@ module.exports = function(server) {
             });
 
           }
-
 
         });
 

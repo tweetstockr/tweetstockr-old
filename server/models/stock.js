@@ -16,6 +16,9 @@ var stockSchema = new Schema({
   price: {
     type: Number
   },
+  tweet_volume: {
+    type: Number
+  },
   created_at: Date
 });
 
