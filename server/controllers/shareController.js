@@ -180,10 +180,14 @@ exports.destroy = function(req, res) {
                 .exec(function (err, stock) {
 
         // Update price of stock is stock.price
+        // If stock not found. delete anyway
+
         if(!stock) {
-          // stock not found. delete anyway
+          res.json(share);
+        } else if (!stock.length) {
           res.json(share);
         } else {
+
           var currentPrice = (stock[0].price * share.amount);
           //after removing the stock, give the points to the user
 
