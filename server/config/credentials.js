@@ -1,4 +1,4 @@
-var twitter = require('../../cred.js');
+// var twitter = require('../../cred.js');
 
 module.exports = {
   'twitterAuth' : {
