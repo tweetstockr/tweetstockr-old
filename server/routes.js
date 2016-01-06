@@ -25,7 +25,7 @@ module.exports = function(app, passport) {
   app.post('/auth/reset', userController.reset);
 
   // User Portfolio
-  app.get('/api/portfolio', shareController.byOwner);
+  app.get('/api/portfolio', auth.ensureAuthenticated, shareController.byOwner);
   // Shares
   app.get('/api/shares', shareController.all);
   app.post('/api/shares', auth.ensureAuthenticated, shareController.create);

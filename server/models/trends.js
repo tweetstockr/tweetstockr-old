@@ -4,41 +4,18 @@
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var StockModel   = require('./stock');
 
 // Trends Model
+// Follow this pattern: https://dev.twitter.com/rest/reference/get/trends/place
 var trendsSchema = new Schema({
-  woeid : Number,
-  list : [mongoose.Schema.Types.Mixed],
-  created: Date
+  as_of: Date,
+  created_at: Date,
+  locations: [mongoose.Schema.Types.Mixed],
+  trends: [mongoose.Schema.Types.Mixed],
 });
 
-/**
- * Pre hook.
- */
-trendsSchema.pre('save', function(next, done){
-  if (this.isNew) {
-    this.created = Date.now();
-  }
 
-  next();
-});
 
-/**
- * Statics
- */
-trendsSchema.statics = {
-  load: function(id, cb) {
-    this.findOne({
-      _id: id
-    }).populate('owner', 'username').exec(cb);
-  },
-  getNewestStoredTT: function(cb){
-    this.findOne()
-      .sort('-created')
-      .exec(cb);
-  },
-};
 
 // create the model for users and expose it to our app
 module.exports = mongoose.model('Trends', trendsSchema);
