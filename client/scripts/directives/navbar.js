@@ -6,7 +6,8 @@
     .directive('navbar', function () {
       return {
         restrict: 'E',
-        templateUrl: 'shared/navbar'
+        templateUrl: 'shared/navbar',
+        replace: true
       };
     });
 })();

@@ -6,7 +6,8 @@
     .directive('footerbar', function () {
       return {
         restrict: 'E',
-        templateUrl: 'shared/footerbar'
+        templateUrl: 'shared/footerbar',
+        replace: true
       };
     });
 })();

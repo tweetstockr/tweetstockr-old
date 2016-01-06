@@ -81,7 +81,6 @@
     });
 
     Socket.on('update', function(data) {
-
       $scope.stocks = data;
 
       for (var i = 0; i < $scope.stocks.length; i++) {
@@ -92,8 +91,7 @@
         if (stock.count > 0 && dataLenght > 1){
           if (stock.history[1].count > 0){
             // ( (currentPrice/lastPrice)-1 ) * 100
-            var variationNumber =
-                          (( stock.count / stock.history[1].count ) - 1) * 100;
+            var variationNumber = (( stock.count / stock.history[1].count ) - 1) * 100;
             stock.variation = Math.round(variationNumber).toFixed(0) + '%';
             stock.lastMove = (variationNumber < 0) ? 'danger' : 'success';
             stock.icon = (variationNumber < 0) ? 'fa-caret-down' : 'fa-caret-up';
