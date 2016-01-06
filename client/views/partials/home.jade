@@ -27,7 +27,7 @@ section.header(ng-show="currentUser")
   .row
     section(class="commodities col-md-6")
       .row
-        .col-md-10
+        .col-md-12
           h2.commodities__title
             p Commodities - 
               small {{ stocksUpdatedAt | date: "h:mma" }}
@@ -41,7 +41,11 @@ section.header(ng-show="currentUser")
                   | {{ stock.name }}
 
                 span.commodities-item-header__price(ng-class="stock.lastMove")
-                  | {{ stock.count }} pts | {{ stock.variation }} 
+                  | {{ stock.variation }} 
+                  i.fa(ng-class="stock.icon")
+                    
+                span.commodities-item-header__price
+                  | {{ stock.count }} pts
                   i.fa(ng-class="stock.icon")
 
               section.commodities-item-content(ng-if="info")
