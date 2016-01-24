@@ -26,6 +26,11 @@
         controller: 'rankingController'
       })
 
+      .when('/profile', {
+        templateUrl: 'partials/profile.html',
+        controller: 'profileController'
+      })
+
       .otherwise({
         redirectTo: '/dashboard'
       });
