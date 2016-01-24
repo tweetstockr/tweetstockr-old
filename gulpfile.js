@@ -8,7 +8,7 @@ var gulp = require('gulp')
   , minify = require('gulp-cssnano')
   , prefix = require('gulp-autoprefixer')
   , concat = require('gulp-concat')
-  , uglify = require('gulp-uglify');
+  , ngAnnotate = require('gulp-ng-annotate');
 
 var path = {
   views: {
@@ -24,7 +24,8 @@ var path = {
   scripts: {
       input: [
           'public/scripts/main.js'
-        , 'public/scripts/services/trendListService.js'
+        , 'public/scripts/services/**/*.js'
+        , 'public/scripts/controllers/**/*.js'
       ]
     , output: 'dist/scripts'
   }
@@ -63,7 +64,7 @@ gulp.task('scripts', function() {
   return gulp.src(path.scripts.input)
     .pipe(plumber())
     .pipe(concat('main.js'))
-    .pipe(uglify())
+    .pipe(ngAnnotate())
     .pipe(gulp.dest(path.scripts.output))
     .pipe(browserSync.stream());
 });
