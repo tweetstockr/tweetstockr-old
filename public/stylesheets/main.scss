@@ -1,0 +1,49 @@
+@import "helpers/_variables";
+@import "vendors/bootstrap/bootstrap";
+
+@import "helpers/_responsive";
+@import "helpers/_reset";
+
+@import "components/header";
+
+$blue-light: #E8EFF0;
+$snow: #F8FAF9;
+
+body {
+  background-color: $snow;
+}
+
+.content {
+  margin-top: 30px;
+}
+
+.subheader {
+  background-color: $blue-light;
+  height: 50px;
+  line-height: 50px;
+}
+
+.subheader-item {
+  display: inline-block;
+
+  a {
+    display: block;
+    margin-right: 50px;
+    font-weight: 500;
+    font-size: 15px;
+  }
+
+  .icon {
+    width: 20px;
+
+    path {
+      fill: $color-primary;
+    }
+  }
+
+  span {
+    font-size: 14px;
+    margin-left: 10px;
+    vertical-align: middle;
+  }  
+}

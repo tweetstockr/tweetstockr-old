@@ -1,0 +1,33 @@
+.header {
+  height: 80px;
+  background-color: $color-primary;
+  line-height: 80px;
+}
+
+.user {
+  float: right;
+  padding-left: 20px;
+  padding-right: 20px;
+  height: 80px;
+  transition: .15s ease-in-out;
+
+  &:hover {
+    background-color: darken($color-primary, 2.5%);
+  }
+
+  span {
+    color: $light-blue;
+    font-weight: 400;
+    font-size: 18px;
+    margin-left: 10px;
+    vertical-align: middle;
+  }
+}
+
+.user-icon {
+  width: 30px;
+  
+  path {
+    fill: $light-blue;
+  }
+}
