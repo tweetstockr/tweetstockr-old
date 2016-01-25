@@ -11,6 +11,11 @@
         controller: 'dashboardController'
       })
 
+      .when('/market', {
+        templateUrl: 'partials/market.html',
+        controller: 'marketController'
+      })
+
       .when('/wallet', {
         templateUrl: 'partials/wallet.html',
         controller: 'walletController'
