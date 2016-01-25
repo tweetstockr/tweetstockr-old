@@ -5,7 +5,7 @@
     .module('tweetstockr')
     .controller('walletController', walletController);
 
-  function walletController () {
-    
+  function walletController ($scope, transactionsService) {
+    $scope.transactionList = transactionsService.getTransactions();
   }
 })();
