@@ -25,6 +25,7 @@ var path = {
       input: [
           'public/scripts/main.js'
         , 'public/scripts/services/**/*.js'
+        , 'public/scripts/directives/**/*.js'
         , 'public/scripts/controllers/**/*.js'
       ]
     , output: 'dist/scripts'

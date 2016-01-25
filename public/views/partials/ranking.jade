@@ -1,61 +1,11 @@
-.row
-  .ranking
-    .col-md-12.ranking-table
-      h1 Leaderboard
+.ranking
+  h1 Leaderboard
 
-      ul
-        li.ranking-item
-          .ranking-info
-            span.ranking-position 01.
-            img(class="ranking-photo" src="https://secure.gravatar.com/avatar/f5417b8e259bf6074a6bfb624ce291cf?d=https%3A%2F%2Fi.vimeocdn.com%2Fportrait%2Fdefault-yellow_300x300.png&s=300", alt="")
-            span.ranking-username Bu Kinoshita
+  ul
+    li.ranking-item(ng-repeat="user in rankingList | orderBy: '-user_points'" ng-class="{me: user.me }")
+      .ranking-info
+        span.ranking-position {{ $index + 1 }}.
+        img(class="ranking-photo" ng-src="{{ user.user_photo }}", alt="")
+        span.ranking-username {{ user.name }}
 
-          span.ranking-points 1320
-
-        li.ranking-item.me
-          .ranking-info
-            span.ranking-position 02.
-            img(class="ranking-photo" src="https://secure.gravatar.com/avatar/f5417b8e259bf6074a6bfb624ce291cf?d=https%3A%2F%2Fi.vimeocdn.com%2Fportrait%2Fdefault-yellow_300x300.png&s=300", alt="")
-            span.ranking-username Bu Kinoshita
-
-          span.ranking-points 1320
-
-        li.ranking-item
-          .ranking-info
-            span.ranking-position 03.
-            img(class="ranking-photo" src="https://secure.gravatar.com/avatar/f5417b8e259bf6074a6bfb624ce291cf?d=https%3A%2F%2Fi.vimeocdn.com%2Fportrait%2Fdefault-yellow_300x300.png&s=300", alt="")
-            span.ranking-username Bu Kinoshita
-
-          span.ranking-points 1320
-
-        li.ranking-item
-          .ranking-info
-            span.ranking-position 02.
-            img(class="ranking-photo" src="https://secure.gravatar.com/avatar/f5417b8e259bf6074a6bfb624ce291cf?d=https%3A%2F%2Fi.vimeocdn.com%2Fportrait%2Fdefault-yellow_300x300.png&s=300", alt="")
-            span.ranking-username Bu Kinoshita
-
-          span.ranking-points 1320
-
-        li.ranking-item
-          .ranking-info
-            span.ranking-position 02.
-            img(class="ranking-photo" src="https://secure.gravatar.com/avatar/f5417b8e259bf6074a6bfb624ce291cf?d=https%3A%2F%2Fi.vimeocdn.com%2Fportrait%2Fdefault-yellow_300x300.png&s=300", alt="")
-            span.ranking-username Bu Kinoshita
-
-          span.ranking-points 1320
-
-        li.ranking-item
-          .ranking-info
-            span.ranking-position 02.
-            img(class="ranking-photo" src="https://secure.gravatar.com/avatar/f5417b8e259bf6074a6bfb624ce291cf?d=https%3A%2F%2Fi.vimeocdn.com%2Fportrait%2Fdefault-yellow_300x300.png&s=300", alt="")
-            span.ranking-username Bu Kinoshita
-
-          span.ranking-points 1320
-
-        li.ranking-item
-          .ranking-info
-            span.ranking-position 02.
-            img(class="ranking-photo" src="https://secure.gravatar.com/avatar/f5417b8e259bf6074a6bfb624ce291cf?d=https%3A%2F%2Fi.vimeocdn.com%2Fportrait%2Fdefault-yellow_300x300.png&s=300", alt="")
-            span.ranking-username Bu Kinoshita
-
-          span.ranking-points 1320
+      span.ranking-points {{ user.user_points }}
