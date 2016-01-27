@@ -13,6 +13,14 @@ body {
   background-color: $snow;
 }
 
+.icon {
+  width: 20px;
+
+  path {
+    fill: $color-primary;
+  }
+}
+
 .content {
   margin-top: 50px;
   margin-bottom: 50px;
@@ -196,7 +204,24 @@ body {
       &.is-active {
         border-bottom: 4px solid $color-primary;
         color: $color-primary;
+
+        path {
+          fill: $color-primary;
+        }
       }
+    }
+  }
+}
+
+.tab-icon {
+  display: inline-block;
+
+  .icon {
+    vertical-align: sub;
+    margin-right: 10px;
+
+    path {
+      fill: #999;
     }
   }
 }

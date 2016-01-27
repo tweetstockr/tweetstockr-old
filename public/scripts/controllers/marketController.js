@@ -7,12 +7,19 @@
 
   function marketController ($scope, $route, $routeParams) {
     $scope.tabs = [{
-      title: 'Shares',
-      url: 'components/shares.html'
+        title: 'Shares'
+      , url: 'components/shares.html'
+      , icon: 'icons/shares-icon.html'
     }, {
-      title: 'Portfolio',
-      url: 'components/portfolio.html'
+        title: 'Portfolio'
+      , url: 'components/portfolio.html'
+      , icon: 'icons/portfolio-icon.html'
     }];
+
+    $scope.data = {
+      label: 100,
+      percentage: 10
+    };
 
     $scope.currentTab = 'components/shares.html';
 
