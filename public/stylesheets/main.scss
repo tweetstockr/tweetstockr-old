@@ -35,7 +35,7 @@ body {
 }
 
 .wallet-content {
-  border-right: 1px solid #f2f2f2;
+  border-right: 1px solid $gray-light;
   padding: 15px;
   height: 200px;
 
@@ -94,11 +94,11 @@ body {
 
 .transaction-item {
   height: 100px;
-  border-bottom: 1px solid #f2f2f2;
+  border-bottom: 1px solid $gray-light;
   transition: .15s ease-in-out;
-  
+
   &:hover {
-    background-color: #f2f2f2;
+    background-color: $gray-light;
   }
 }
 
@@ -126,5 +126,146 @@ body {
 
   &.sell {
     color: $color-danger;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.market {
+  box-shadow: 0 1px 2px rgba($black, .1);
+}
+
+.market-tabs {
+  background-color: $white;
+  border-bottom: 1px solid $gray-light;
+
+  li {
+    display: inline-block;
+
+    a {
+      color: #999;
+      display: block;
+      padding: 30px;
+      transition: .25s ease-in-out;
+
+      &:hover {
+        color: $color-primary;
+      }
+
+      &.is-active {
+        border-bottom: 4px solid $color-primary;
+        color: $color-primary;
+      }
+    }
+  }
+}
+
+.market-content {
+  background-color: $white;
+  width: 100%;
+  display: block;
+  padding: 30px;
+}
+
+.share {
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.share-header {
+  height: 70px;
+  line-height: 70px;
+  padding-left: 15px;
+  padding-right: 15px;
+  background-color: $color-primary;
+
+  h2 {
+    font-size: 18px;
+    font-weight: 400;
+    color: $white;
+  }
+}
+
+.share-body {
+  height: 175px;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+}
+
+.share-footer {
+  border: 1px solid #ddd;
+}
+
+.share-footer-space {
+  display: inline-block;
+  vertical-align: middle;
+  
+  input {
+    border: 0;
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .btn {
+    padding: 0;
+    border-radius: 0;
+    border: none;
+  }
+}
+
+.share-amount {
+  input {
+    width: 50px;
+    height: 80px;
+  }
+}
+
+.share-controls {
+  button {
+    display: block;
+    height: 40px;
+    width: 40px;
+  }
+}
+
+.share-total {
+  input {
+    height: 80px;
+    width: 174px;
+  }
+}
+
+.share-buy {
+  button {
+    height: 80px;
+    width: 60px;
   }
 }

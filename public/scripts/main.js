@@ -16,6 +16,16 @@
         controller: 'marketController'
       })
 
+      .when('/market/:tab', {
+        templateUrl: 'partials/market.html',
+        controller: 'marketController'
+      })
+
+      .when('/market/:tab', {
+        templateUrl: 'partials/market.html',
+        controller: 'marketController'
+      })
+
       .when('/wallet', {
         templateUrl: 'partials/wallet.html',
         controller: 'walletController'
