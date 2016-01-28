@@ -41,6 +41,11 @@
         controller: 'rankingController'
       })
 
+      .when('/tournaments', {
+        templateUrl: 'partials/tournaments.html',
+        controller: 'tournamentsController'
+      })
+
       .when('/profile', {
         templateUrl: 'partials/profile.html',
         controller: 'profileController'

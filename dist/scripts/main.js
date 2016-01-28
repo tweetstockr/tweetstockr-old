@@ -41,6 +41,11 @@
         controller: 'rankingController'
       })
 
+      .when('/tournaments', {
+        templateUrl: 'partials/tournaments.html',
+        controller: 'tournamentsController'
+      })
+
       .when('/profile', {
         templateUrl: 'partials/profile.html',
         controller: 'profileController'
@@ -320,6 +325,17 @@
     .controller('shopController', shopController);
 
   function shopController () {
+    
+  }
+})();
+(function() {
+  'use strict';
+
+  angular
+    .module('tweetstockr')
+    .controller('tournamentsController', tournamentsController);
+
+  function tournamentsController () {
     
   }
 })();

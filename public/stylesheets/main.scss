@@ -199,6 +199,10 @@ body {
 
       &:hover {
         color: $color-primary;
+
+        path {
+          fill: $color-primary;
+        }
       }
 
       &.is-active {
@@ -222,6 +226,7 @@ body {
 
     path {
       fill: #999;
+      transition: .25s ease-in-out;
     }
   }
 }
