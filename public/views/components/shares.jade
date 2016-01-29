@@ -1,1 +1,10 @@
-h1 Shares
+.row
+  .col-md-4(ng-repeat="share in trendsList")
+    article.share
+      header.share-header
+        h2 {{ share.name}}
+      
+      section.share-body
+
+      footer.share-footer
+        span {{ share.price }}

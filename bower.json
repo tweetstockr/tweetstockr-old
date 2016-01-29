@@ -20,6 +20,8 @@
   ],
   "dependencies": {
     "angular": "~1.4.9",
-    "angular-route": "~1.4.9"
+    "angular-route": "~1.4.9",
+    "socket.io-client": "~1.4.5",
+    "angular-chartist.js": "^3.3.13"
   }
 }

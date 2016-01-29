@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('tweetstockr', ['ngRoute'])
+    .module('tweetstockr', ['ngRoute', 'angular-chartist'])
     .config(["$routeProvider", "$locationProvider", function ($routeProvider, $locationProvider) {
       $routeProvider
 
@@ -255,6 +255,18 @@
     .controller('marketController', marketController);
 
   function marketController ($scope, $route, $routeParams) {
+    var socket = io('http://localhost:4000');
+
+    socket.on('connect', function () {
+      console.log('connected!');
+      socket.emit('update-me');
+    });
+
+    socket.on('update', function (trends) {
+      $scope.trendsList = trends;
+      $scope.$apply();
+    });
+
     $scope.tabs = [{
         title: 'Shares'
       , url: 'components/shares.html'
@@ -264,11 +276,6 @@
       , url: 'components/portfolio.html'
       , icon: 'icons/portfolio-icon.html'
     }];
-
-    $scope.data = {
-      label: 100,
-      percentage: 10
-    };
 
     $scope.currentTab = 'components/shares.html';
 
@@ -291,7 +298,6 @@
     $scope.isActiveTab = function (tabUrl) {
       return tabUrl === $scope.currentTab;
     };
-
   }
 })();
 (function() {
