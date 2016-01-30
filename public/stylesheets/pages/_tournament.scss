@@ -1,0 +1,36 @@
+.tournament {
+  background-color: $white;
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgba($black, .1);
+  overflow: hidden;
+
+  
+}
+
+.tournament-info {
+  padding: 25px 40px;
+
+  h2 {
+    font-weight: 500;
+    font-size: 25px;
+    line-height: 35px;
+    color: $color-primary;
+  }
+
+  p {
+    font-size: 20px;
+    line-height: 25px;
+    color: #999;
+    font-weight: 300;
+  }
+
+  li {
+    border: 1px solid $gray-light;
+    padding: 10px;
+    list-style: none;
+
+    h4 {
+      margin-bottom: 0;
+    }
+  }
+}

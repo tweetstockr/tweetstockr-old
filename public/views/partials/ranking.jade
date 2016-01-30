@@ -1,0 +1,11 @@
+.ranking
+  h1 Leaderboard
+
+  ul
+    li.ranking-item(ng-repeat="user in rankingList | orderBy: '-user_points'" ng-class="{me: user.me }")
+      .ranking-info
+        span.ranking-position 0{{ $index + 1 }}.
+        img(class="ranking-photo" ng-src="{{ user.user_photo }}", alt="")
+        span.ranking-username {{ user.name }}
+
+      span.ranking-points {{ user.user_points }}

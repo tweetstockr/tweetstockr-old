@@ -1,0 +1,22 @@
+.subheader {
+  background-color: $blue-light;
+  height: 50px;
+  line-height: 50px;
+}
+
+.subheader-item {
+  display: inline-block;
+
+  a {
+    display: block;
+    margin-right: 50px;
+    font-weight: 500;
+    font-size: 15px;
+  }
+
+  span {
+    font-size: 14px;
+    margin-left: 10px;
+    vertical-align: middle;
+  }  
+}

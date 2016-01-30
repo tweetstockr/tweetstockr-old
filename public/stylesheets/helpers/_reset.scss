@@ -1,0 +1,32 @@
+img {
+  width: 100%;
+}
+
+a {
+  text-decoration: none;
+
+  &:hover,
+  &:active,
+  &:focus {
+    text-decoration: none;
+  }
+}
+
+.container-fluid {
+  padding-left: 1rem;
+  padding-right: 1rem;
+
+  @include breakpoint(desktop) {
+    padding-left: 5.625rem;
+    padding-right: 5.625rem;
+  }
+}
+
+svg {
+  vertical-align: middle;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}

@@ -1,0 +1,29 @@
+.wallet-box
+  .col-md-4.wallet-content
+    h2 Amount Points
+    h3 3087 pts
+
+  .col-md-4.wallet-content
+    h2 Total Spent
+    h3 7819 pts
+
+  .col-md-4.wallet-content
+    h2 Total Earned
+    h3 18039 pts
+
+
+section.transactions
+  header.transactions-header
+    h1 Transactions
+
+  table.transactions-table
+    tr.transaction-item(ng-repeat="transaction in transactionList | orderBy: '-date'")
+      td.transaction-info
+        h2 {{ transaction.name }}
+        span {{ transaction.date | date: "MMMM d, y 'at' h:mma"}}
+
+
+      td.transaction-value(ng-class="{'sell': transaction.sell, 'buy': transaction.buy}")
+        span(ng-show="transaction.sell") -
+        span(ng-show="transaction.buy") +
+        | {{ transaction.points }} pts
