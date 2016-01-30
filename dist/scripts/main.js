@@ -238,6 +238,43 @@
 (function() {
   'use strict';
 
+  userService.$inject = ["$http", "$rootScope"];
+  angular
+    .module('tweetstockr')
+    .factory('userService', userService);
+
+  function userService ($http, $rootScope) {
+
+    return {
+      getProfile: function (onSuccess, onError) {
+
+        $http({
+            method: 'GET',
+            url: 'http://localhost:4000/profile',
+            data: {},
+            withCredentials: true
+        })
+        .then(function successCallback(response) {
+
+            if (response.data.redirect_to) {
+              window.location = 'http://localhost:4000' + response.data.redirect_to;
+            }
+            onSuccess(response);
+
+          }, function errorCallback(response) {
+
+            onSuccess(response);
+
+          });
+          
+      }
+    }
+  }
+})();
+
+(function() {
+  'use strict';
+
   angular
     .module('tweetstockr')
     .controller('dashboardController', dashboardController);
@@ -303,14 +340,23 @@
 (function() {
   'use strict';
 
+  profileController.$inject = ["$scope", "userService"];
   angular
     .module('tweetstockr')
     .controller('profileController', profileController);
 
-  function profileController () {
-    
+  function profileController ($scope, userService) {
+
+      userService.getProfile(
+        function(success){
+          $scope.thisIsTheProfile = success;
+        }, function(error){
+          $scope.thisIsTheProfile = error;
+      });
   }
+
 })();
+
 (function() {
   'use strict';
 
