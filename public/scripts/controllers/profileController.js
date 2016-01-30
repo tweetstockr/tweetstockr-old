@@ -6,13 +6,16 @@
     .controller('profileController', profileController);
 
   function profileController ($scope, userService) {
+    userService.getProfile(
+      function (success) {
+        var user = success.data.user.twitter;
 
-      userService.getProfile(
-        function(success){
-          $scope.thisIsTheProfile = success;
-        }, function(error){
-          $scope.thisIsTheProfile = error;
-      });
+        console.log('User: ', user);
+
+        $scope.user_photo = user.profile_image;
+        $scope.user_name = user.username;
+      }, function (error) {
+        console.log('User: ', error);
+    });
   }
-
 })();
