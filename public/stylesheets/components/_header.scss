@@ -31,3 +31,34 @@
     fill: $blue-baby;
   }
 }
+
+.wallet-total {
+  float: right;
+  position: relative;
+  padding-right: 25px;
+
+  span {
+    color: $blue-baby;
+  }
+
+  &:after {
+    content: '';
+    height: 30px;
+    width: 1px;
+    background-color: $blue-baby;
+    display: block;
+    position: absolute;
+    top: 25px;
+    right: 0;
+  }
+}
+
+.dollar-icon {
+  width: 35px;
+  margin-top: 7px;
+  margin-right: 10px;
+
+  path {
+    fill: $blue-baby;
+  }
+}
