@@ -1,0 +1,101 @@
+.wallet-box {
+  background-color: $white;
+  border-radius: 5px;
+  box-shadow: 0 1px 2px rgba($black, .1);
+  @include clearfix();
+}
+
+.wallet-content {
+  border-right: 1px solid $gray-light;
+  padding: 15px;
+  height: 200px;
+
+  &:hover {
+    h2 {
+      color: $color-primary;
+      font-weight: 500;
+    }
+  }
+
+  h2 {
+    color: #ccc;
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: 400;
+    transition: .15s ease-in-out;
+  }
+
+  h3 {
+    text-align: center;
+    font-size: 55px;
+    color: $color-primary;
+    font-weight: 500;
+    margin-top: 30px;
+  }
+
+  &:last-child {
+    border-right: 0;
+  }
+}
+
+.transactions {
+  margin-top: 50px;
+  background-color: $white;
+  border-radius: 5px;
+  box-shadow: 0 1px 2px rgba($black, .1);
+}
+
+.transactions-header {
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+  padding: 20px;
+  background-color: $color-primary;
+
+  h1 {
+    color: $white;
+    font-weight: 300;
+    margin-bottom: 0;
+    font-size: 25px;
+  }
+}
+
+.transactions-table {
+  width: 100%;
+}
+
+.transaction-item {
+  height: 100px;
+  border-bottom: 1px solid $gray-light;
+  transition: .15s ease-in-out;
+
+  &:hover {
+    background-color: $gray-light;
+  }
+}
+
+.transaction-info {
+  padding-left: 20px;
+
+  h2 {
+    color: $color-primary;
+    margin-bottom: 0;
+  }
+
+  span {
+    color: #ccc;
+  }
+}
+
+.transaction-value {
+  text-align: right;
+  padding-right: 20px;
+  font-size: 25px;
+
+  &.buy {
+    color: $color-success;
+  }
+
+  &.sell {
+    color: $color-danger;
+  }
+}
