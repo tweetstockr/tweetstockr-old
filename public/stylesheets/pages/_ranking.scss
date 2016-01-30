@@ -18,7 +18,8 @@
   background-color: $white;
   padding-top: 10px;
   padding-bottom: 10px;
-  border-bottom: 1px solid #f2f2f2;
+  border-bottom: 1px solid $gray-light;
+  @include clearfix();
 
   &.me {
     background-color: $yellow;
@@ -30,14 +31,23 @@
     border-radius: 5px;
 
     .ranking-username {
-      font-size: 25px;
+      font-size: 18px;
       font-weight: 500;
+
+      @include breakpoint(tablet) {
+        font-size: 25px;
+      }
     }
 
     .ranking-points {
-      font-size: 40px;
+      font-size: 25px;
       font-weight: 500;
       vertical-align: middle;
+      margin-top: 0;
+
+      @include breakpoint(tablet) {
+        font-size: 40px;
+      }
     }
   }
 
@@ -47,16 +57,6 @@
 
   &:last-child {
     border-bottom: none;
-  }
-
-  &:before,
-  &:after {
-    content: "";
-    display: table;
-  }
-
-  &:after {
-    clear: both;
   }
 }
 
@@ -88,6 +88,12 @@
   float: right;
   color: $color-primary;
   font-weight: 500;
-  font-size: 30px;
+  font-size: 20px;
   padding-right: 25px;
+  margin-top: 10px;
+
+  @include breakpoint(tablet) {
+    font-size: 30px;
+    margin-top: 0;
+  }
 }

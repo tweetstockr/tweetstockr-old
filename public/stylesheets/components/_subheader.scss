@@ -2,6 +2,11 @@
   background-color: $blue-light;
   height: 50px;
   line-height: 50px;
+  display: none;
+
+  @include breakpoint(desktop) {
+    display: block;
+  }
 }
 
 .subheader-item {
