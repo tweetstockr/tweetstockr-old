@@ -1,7 +1,7 @@
 .row
   .col-md-4(ng-repeat="share in trendsList")
     article.share
-      header.share-header
+      header.share-header(ng-click="buyShare(share.name, share.price)")
         h2 {{ share.name}}
       
       section.share-body

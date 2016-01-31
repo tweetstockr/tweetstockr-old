@@ -5,7 +5,7 @@
     .module('tweetstockr')
     .controller('marketController', marketController);
 
-  function marketController ($scope, $route, $routeParams) {
+  function marketController ($scope, $route, $routeParams, $http) {
     var socket = io('http://localhost:4000');
 
     socket.on('connect', function () {
@@ -49,5 +49,18 @@
     $scope.isActiveTab = function (tabUrl) {
       return tabUrl === $scope.currentTab;
     };
+
+    $scope.buyShare = function(name, price) {
+      $http({
+        method: 'POST',
+        url: 'http://localhost:4000/trade/buy',
+        stock: name,
+        amount: price
+      }).then(function successCallback(success) {
+        console.log('Buy Share Success: ', success);
+      }, function errorCallback(error) {
+        console.log('Buy Share Account Error: ', error);
+      });
+    }
   }
 })();
