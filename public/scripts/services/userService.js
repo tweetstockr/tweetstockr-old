@@ -6,7 +6,6 @@
     .factory('userService', userService);
 
   function userService ($http, $rootScope) {
-
     return {
       getProfile: function (onSuccess, onError) {
         $http({
