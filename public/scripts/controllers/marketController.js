@@ -14,7 +14,32 @@
     });
 
     socket.on('update', function (trends) {
+      $scope.chartOptions = {
+          seriesBarDistance: 15
+        , showArea: true
+      };
+
       $scope.trendsList = trends;
+
+      for(var i = 0; i < $scope.trendsList.length; i++) {
+        $scope.trendsList[i].chartData = {
+            label: []
+          , series: [[]]
+        };
+
+        var series = $scope.trendsList[i].chartData.series[0];
+        var label = $scope.trendsList[i].chartData.label;
+
+        for(var j = 0; j < $scope.trendsList[i].history.length; j++) {
+          var prices = JSON.stringify($scope.trendsList[i].history[j].price);
+          var time = new Date($scope.trendsList[i].history[j].created);
+
+          series.push(prices);
+          label.push(time);
+        }
+      }
+
+      console.log('Trends List: ', $scope.trendsList);
       $scope.$apply();
     });
 
@@ -51,6 +76,9 @@
     };
 
     $scope.buyShare = function(name, price) {
+      var audio = document.getElementById('audio');
+      audio.play();
+      
       $http({
         method: 'POST',
         url: 'http://localhost:4000/trade/buy',

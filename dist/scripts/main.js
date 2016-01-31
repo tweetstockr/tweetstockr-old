@@ -327,16 +327,16 @@
     .controller('headerController', headerController);
 
   function headerController ($scope, userService) {
-    userService.getProfile(
-      function (success) {
-        var user = success.data.user.twitter;
+    // userService.getProfile(
+    //   function (success) {
+    //     var user = success.data.user.twitter;
 
-        console.log('User: ', user);
+    //     console.log('User: ', user);
 
-        $scope.username = user.displayName;
-      }, function (error) {
-        console.log('User: ', error);
-    });
+    //     $scope.username = user.displayName;
+    //   }, function (error) {
+    //     console.log('User: ', error);
+    // });
   }
 })();
 (function() {
@@ -356,7 +356,32 @@
     });
 
     socket.on('update', function (trends) {
+      $scope.chartOptions = {
+          seriesBarDistance: 15
+        , showArea: true
+      };
+
       $scope.trendsList = trends;
+
+      for(var i = 0; i < $scope.trendsList.length; i++) {
+        $scope.trendsList[i].chartData = {
+            label: []
+          , series: [[]]
+        };
+
+        var series = $scope.trendsList[i].chartData.series[0];
+        var label = $scope.trendsList[i].chartData.label;
+
+        for(var j = 0; j < $scope.trendsList[i].history.length; j++) {
+          var prices = JSON.stringify($scope.trendsList[i].history[j].price);
+          var time = new Date($scope.trendsList[i].history[j].created);
+
+          series.push(prices);
+          label.push(time);
+        }
+      }
+
+      console.log('Trends List: ', $scope.trendsList);
       $scope.$apply();
     });
 
@@ -393,6 +418,9 @@
     };
 
     $scope.buyShare = function(name, price) {
+      var audio = document.getElementById('audio');
+      audio.play();
+      
       $http({
         method: 'POST',
         url: 'http://localhost:4000/trade/buy',
@@ -427,33 +455,33 @@
     .controller('profileController', profileController);
 
   function profileController ($scope, userService, $http) {
-    userService.getProfile(
-      function (success) {
-        console.log(JSON.stringify(success));
-        var user = success.data.user.twitter;
+    // userService.getProfile(
+    //   function (success) {
+    //     console.log(JSON.stringify(success));
+    //     var user = success.data.user.twitter;
 
-        console.log('User: ', user);
+    //     console.log('User: ', user);
 
-        $scope.user_photo = user.profile_image;
-        $scope.user_name = user.username;
-      }, function (error) {
-        console.log('User: ', error);
-    });
+    //     $scope.user_photo = user.profile_image;
+    //     $scope.user_name = user.username;
+    //   }, function (error) {
+    //     console.log('User: ', error);
+    // });
 
-    $scope.resetAccount = function () {
-      $http({
-        method: 'POST',
-        url: 'http://localhost:4000/reset'
-      }).then(function successCallback(success) {
-        if (success.data.redirect_to) {
-          window.location = 'http://localhost:4000' + success.data.redirect_to;
-        }
+    // $scope.resetAccount = function () {
+    //   $http({
+    //     method: 'POST',
+    //     url: 'http://localhost:4000/reset'
+    //   }).then(function successCallback(success) {
+    //     if (success.data.redirect_to) {
+    //       window.location = 'http://localhost:4000' + success.data.redirect_to;
+    //     }
 
-        console.log('Reset Account Success: ', success);
-      }, function errorCallback(error) {
-        console.log('Reset Account Error: ', error);
-      });
-    }
+    //     console.log('Reset Account Success: ', success);
+    //   }, function errorCallback(error) {
+    //     console.log('Reset Account Error: ', error);
+    //   });
+    // }
   }
 })();
 
