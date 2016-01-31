@@ -2,6 +2,14 @@
   height: 80px;
   background-color: $color-primary;
   line-height: 80px;
+
+  .logo {
+    width: 175px;
+
+    @include breakpoint(tablet) {
+      width: 250px;
+    }
+  }
 }
 
 .user {
@@ -10,9 +18,14 @@
   padding-right: 20px;
   height: 80px;
   transition: .15s ease-in-out;
+  display: none;
 
   &:hover {
     background-color: darken($color-primary, 2.5%);
+  }
+
+  @include breakpoint(desktop) {
+    display: block;
   }
 
   span {
@@ -41,15 +54,17 @@
     color: $blue-baby;
   }
 
-  &:after {
-    content: '';
-    height: 30px;
-    width: 1px;
-    background-color: $blue-baby;
-    display: block;
-    position: absolute;
-    top: 25px;
-    right: 0;
+  @include breakpoint(desktop) {
+    &:after {
+      content: '';
+      height: 30px;
+      width: 1px;
+      background-color: $blue-baby;
+      display: block;
+      position: absolute;
+      top: 25px;
+      right: 0;
+    }
   }
 }
 

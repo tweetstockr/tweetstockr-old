@@ -4,11 +4,13 @@ html(lang="en" ng-app="tweetstockr")
     meta(charset="UTF-8")
     title Tweetstockr
 
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+
     link(rel="stylesheet", href="stylesheets/main.css")
     link(rel="stylesheet" href="http://cdn.jsdelivr.net/chartist.js/latest/chartist.min.css")
 
   body
-    include ./components/header
+    navbar
     include ./components/subheader
 
     .container-fluid

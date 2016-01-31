@@ -131,6 +131,33 @@
 (function() {
   'use strict';
 
+  portfolioService.$inject = ["$http", "$rootScope"];
+  angular
+    .module('tweetstockr')
+    .factory('portfolioService', portfolioService);
+
+  function portfolioService ($http, $rootScope) {
+    return {
+      getPortfolio: function (onSuccess, onError) {
+        $http({
+          method: 'GET',
+          url: 'http://localhost:4000/portfolio',
+          data: {},
+          withCredentials: true
+        })
+        .then(function successCallback(response) {
+          onSuccess(response);
+        }, function errorCallback(response) {
+          onSuccess(response);
+        });
+      }
+    }
+  }
+})();
+
+(function() {
+  'use strict';
+
   angular
     .module('tweetstockr')
     .factory('transactionsService', transactionsService);
@@ -238,6 +265,51 @@
 (function() {
   'use strict';
 
+  userService.$inject = ["$http", "$rootScope"];
+  angular
+    .module('tweetstockr')
+    .factory('userService', userService);
+
+  function userService ($http, $rootScope) {
+    return {
+      getProfile: function (onSuccess, onError) {
+        $http({
+          method: 'GET',
+          url: 'http://localhost:4000/profile',
+          data: {},
+          withCredentials: true
+        })
+        .then(function successCallback(response) {
+          if (response.data.redirect_to) {
+            window.location = 'http://localhost:4000' + response.data.redirect_to;
+          }
+          
+          onSuccess(response);
+        }, function errorCallback(response) {
+
+          onSuccess(response);
+        });
+      }
+    }
+  }
+})();
+
+(function() {
+  'use strict';
+
+  angular
+    .module('tweetstockr')
+    .directive('navbar', function () {
+      return {
+        restrict: 'E',
+        templateUrl: 'components/header.html',
+        controller: 'headerController'
+      };
+    });
+})();
+(function() {
+  'use strict';
+
   angular
     .module('tweetstockr')
     .controller('dashboardController', dashboardController);
@@ -249,12 +321,33 @@
 (function() {
   'use strict';
 
-  marketController.$inject = ["$scope", "$route", "$routeParams"];
+  headerController.$inject = ["$scope", "userService"];
+  angular
+    .module('tweetstockr')
+    .controller('headerController', headerController);
+
+  function headerController ($scope, userService) {
+    userService.getProfile(
+      function (success) {
+        var user = success.data.user.twitter;
+
+        console.log('User: ', user);
+
+        $scope.username = user.displayName;
+      }, function (error) {
+        console.log('User: ', error);
+    });
+  }
+})();
+(function() {
+  'use strict';
+
+  marketController.$inject = ["$scope", "$route", "$routeParams", "$http", "portfolioService"];
   angular
     .module('tweetstockr')
     .controller('marketController', marketController);
 
-  function marketController ($scope, $route, $routeParams) {
+  function marketController ($scope, $route, $routeParams, $http, portfolioService) {
     var socket = io('http://localhost:4000');
 
     socket.on('connect', function () {
@@ -298,19 +391,72 @@
     $scope.isActiveTab = function (tabUrl) {
       return tabUrl === $scope.currentTab;
     };
+
+    $scope.buyShare = function(name, price) {
+      $http({
+        method: 'POST',
+        url: 'http://localhost:4000/trade/buy',
+        stock: name,
+        amount: price
+      }).then(function successCallback(success) {
+        console.log('Buy Share Success: ', success);
+        $scope.getPortfolio();
+      }, function errorCallback(error) {
+        console.log('Buy Share Account Error: ', error);
+      });
+    }
+
+    $scope.getPortfolio = function () {
+      portfolioService.getPortfolio(
+        function (success) {
+          console.log('Portfolio Success: ', success);
+        },
+        function (error) {
+          console.log('Portfolio Error: ', error);
+        }
+      )
+    }
   }
 })();
 (function() {
   'use strict';
 
+  profileController.$inject = ["$scope", "userService", "$http"];
   angular
     .module('tweetstockr')
     .controller('profileController', profileController);
 
-  function profileController () {
-    
+  function profileController ($scope, userService, $http) {
+    userService.getProfile(
+      function (success) {
+        console.log(JSON.stringify(success));
+        var user = success.data.user.twitter;
+
+        console.log('User: ', user);
+
+        $scope.user_photo = user.profile_image;
+        $scope.user_name = user.username;
+      }, function (error) {
+        console.log('User: ', error);
+    });
+
+    $scope.resetAccount = function () {
+      $http({
+        method: 'POST',
+        url: 'http://localhost:4000/reset'
+      }).then(function successCallback(success) {
+        if (success.data.redirect_to) {
+          window.location = 'http://localhost:4000' + success.data.redirect_to;
+        }
+
+        console.log('Reset Account Success: ', success);
+      }, function errorCallback(error) {
+        console.log('Reset Account Error: ', error);
+      });
+    }
   }
 })();
+
 (function() {
   'use strict';
 

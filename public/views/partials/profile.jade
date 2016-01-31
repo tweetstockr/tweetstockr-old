@@ -5,18 +5,17 @@
         h2 Profile Information
 
       .profile-content
-        img(src="https://s3.amazonaws.com/uifaces/faces/twitter/nuraika/128.jpg", alt="")
+        img(ng-src="{{ user_photo }}", alt="")
             
         h2
-          a(href="") @nuraika
+          a(ng-href="http://www.twitter.com/{{ user_name }}")
+            | @{{ user_name }}
 
         h3
           strong Rank: 
           | 79th
 
-        h3 nuraika@gmail.com
-
-        button.btn.btn-primary
+        button.btn.btn-primary(ng-click="resetAccount()")
           | Reset Account
 
   .col-md-5

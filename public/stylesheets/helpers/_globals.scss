@@ -1,0 +1,16 @@
+body {
+  background-color: $snow;
+}
+
+.icon {
+  width: 20px;
+
+  path {
+    fill: $color-primary;
+  }
+}
+
+.content {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
