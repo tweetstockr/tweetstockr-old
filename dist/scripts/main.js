@@ -131,6 +131,33 @@
 (function() {
   'use strict';
 
+  portfolioService.$inject = ["$http", "$rootScope"];
+  angular
+    .module('tweetstockr')
+    .factory('portfolioService', portfolioService);
+
+  function portfolioService ($http, $rootScope) {
+    return {
+      getPortfolio: function (onSuccess, onError) {
+        $http({
+          method: 'GET',
+          url: 'http://localhost:4000/portfolio',
+          data: {},
+          withCredentials: true
+        })
+        .then(function successCallback(response) {
+          onSuccess(response);
+        }, function errorCallback(response) {
+          onSuccess(response);
+        });
+      }
+    }
+  }
+})();
+
+(function() {
+  'use strict';
+
   angular
     .module('tweetstockr')
     .factory('transactionsService', transactionsService);
@@ -315,12 +342,12 @@
 (function() {
   'use strict';
 
-  marketController.$inject = ["$scope", "$route", "$routeParams", "$http"];
+  marketController.$inject = ["$scope", "$route", "$routeParams", "$http", "portfolioService"];
   angular
     .module('tweetstockr')
     .controller('marketController', marketController);
 
-  function marketController ($scope, $route, $routeParams, $http) {
+  function marketController ($scope, $route, $routeParams, $http, portfolioService) {
     var socket = io('http://localhost:4000');
 
     socket.on('connect', function () {
@@ -373,9 +400,21 @@
         amount: price
       }).then(function successCallback(success) {
         console.log('Buy Share Success: ', success);
+        $scope.getPortfolio();
       }, function errorCallback(error) {
         console.log('Buy Share Account Error: ', error);
       });
+    }
+
+    $scope.getPortfolio = function () {
+      portfolioService.getPortfolio(
+        function (success) {
+          console.log('Portfolio Success: ', success);
+        },
+        function (error) {
+          console.log('Portfolio Error: ', error);
+        }
+      )
     }
   }
 })();

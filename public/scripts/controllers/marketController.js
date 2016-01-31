@@ -5,7 +5,7 @@
     .module('tweetstockr')
     .controller('marketController', marketController);
 
-  function marketController ($scope, $route, $routeParams, $http) {
+  function marketController ($scope, $route, $routeParams, $http, portfolioService) {
     var socket = io('http://localhost:4000');
 
     socket.on('connect', function () {
@@ -58,9 +58,21 @@
         amount: price
       }).then(function successCallback(success) {
         console.log('Buy Share Success: ', success);
+        $scope.getPortfolio();
       }, function errorCallback(error) {
         console.log('Buy Share Account Error: ', error);
       });
+    }
+
+    $scope.getPortfolio = function () {
+      portfolioService.getPortfolio(
+        function (success) {
+          console.log('Portfolio Success: ', success);
+        },
+        function (error) {
+          console.log('Portfolio Error: ', error);
+        }
+      )
     }
   }
 })();
