@@ -1,10 +1,28 @@
 .row
   .col-md-4(ng-repeat="share in trendsList")
     article.share
-      header.share-header(ng-click="buyShare(share.name, share.price)")
+      header.share-header
         h2 {{ share.name}}
       
       section.share-body
+        | {{ share.chartData }}
 
       footer.share-footer
-        span {{ share.price }}
+        ul.share-controls
+          li
+            span Amount
+            input(type="number" ng-model="shareAmount" ng-init="shareAmount = 1")
+
+          li
+            span Price
+            label {{ share.price }}
+
+          li
+            span Variation
+            label 7%
+
+          li
+            span Total
+            label {{ share.price * shareAmount }}
+
+        button.btn.btn-success.btn-block(ng-click="buyShare(share.name, share.price)") Buy Share

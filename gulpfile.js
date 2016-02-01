@@ -30,6 +30,11 @@ var path = {
         , 'public/scripts/controllers/**/*.js'
       ]
     , output: 'dist/scripts'
+  },
+
+  assets: {
+      input: 'public/assets/**/*'
+    , output: 'dist/assets'
   }
 }
 
@@ -72,6 +77,12 @@ gulp.task('scripts', function() {
     .pipe(browserSync.stream());
 });
 
+gulp.task('build:assets', function() {
+  return gulp.src(path.assets.input)
+    .pipe(plumber())
+    .pipe(gulp.dest(path.assets.output));
+});
+
 gulp.task('browserSync', function() {
   browserSync({
     server: {
@@ -89,6 +100,7 @@ gulp.task('compile', [
     'views'
   , 'stylesheets'
   , 'scripts'
+  , 'build:assets'
 ]);
 
 gulp.task('watcher', function() {
