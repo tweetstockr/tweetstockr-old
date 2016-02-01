@@ -1,9 +1,25 @@
-h1(ng-init="getPortfolio()") Portfolio
+.row(ng-init="getPortfolio()")
+  .col-md-4(ng-repeat="trade in portfolio")
+    article.market-item
+      header.market-item-header
+        h2.market-item-header__title {{ trade.stock }}
 
+      footer.market-item-footer
+        ul.market-item-controls
+          li.market-item-spaces
+            span.market-item-spaces__title Amount
+            label.market-item-spaces__info {{ trade.amount }}
 
-ul
-  li(ng-repeat="trade in portfolio")
-    | {{trade}}
-    button.btn.btn-success.btn-block(ng-click="sellShare(trade)") Sell for {{trade.price * trade.amount}}
+          li.market-item-spaces
+            span.market-item-spaces__title Price
+            label.market-item-spaces__info {{ trade.price }}
 
-    
+          li.market-item-spaces
+            span.market-item-spaces__title Variation
+            label.market-item-spaces__info 7%
+
+          li.market-item-spaces
+            span.market-item-spaces__title Total
+            label.market-item-spaces__info {{ trade.price * trade.amount }}
+
+        button.btn.btn-success.btn-block(ng-click="sellShare(trade)") Sell for {{ trade.price * trade.amount }}

@@ -429,29 +429,27 @@
     };
 
     $scope.sellShare = function(share){
-
       $http({
         method: 'POST',
         url: 'http://localhost:4000/trade/sell',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         transformRequest: function(obj) {
-            var str = [];
-            for(var p in obj)
-            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-            return str.join("&");
+          var str = [];
+          for(var p in obj)
+          str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
+          return str.join('&');
         },
         data: {
           trade : share._id
         },
         withCredentials: true
       }).then(function successCallback(response) {
-
         if (response.data.success) {
           alert(response.data.message); // You sell #blablabla
           $scope.getPortfolio();
-        }
-        else
+        } else {
           alert(response.data.message);
+        }
 
       }, function errorCallback(response) {
         console.log('Buy Share Account Error: ' +  response);
@@ -459,7 +457,6 @@
     }
 
     $scope.buyShare = function(name, quantity) {
-
       var audio = document.getElementById('audio');
       audio.play();
 
@@ -468,10 +465,10 @@
         url: 'http://localhost:4000/trade/buy',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         transformRequest: function(obj) {
-            var str = [];
-            for(var p in obj)
-            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-            return str.join("&");
+          var str = [];
+          for(var p in obj)
+          str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
+          return str.join('&');
         },
         data: {
           stock: name,
@@ -479,13 +476,12 @@
         },
         withCredentials: true
       }).then(function successCallback(response) {
-
         if (response.data.success) {
           alert(response.data.message); // You have purchased #blablabla
           $scope.getPortfolio();
-        }
-        else
+        } else {
           alert(response.data.message); // You do not have enough points
+        }
 
       }, function errorCallback(response) {
         console.log('Buy Share Account Error: ' +  response);
@@ -495,9 +491,7 @@
     $scope.getPortfolio = function () {
       portfolioService.getPortfolio(
         function (success) {
-
           $scope.portfolio = success.data;
-
         },
         function (error) {
           console.log('Portfolio Error: ' + error);
