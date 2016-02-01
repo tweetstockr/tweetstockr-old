@@ -4,6 +4,7 @@
   angular
     .module('tweetstockr', ['ngRoute', 'angular-chartist'])
     .config(["$routeProvider", "$locationProvider", function ($routeProvider, $locationProvider) {
+
       $routeProvider
 
       .when('/dashboard', {
@@ -56,6 +57,7 @@
       });
     }]);
 })();
+
 (function() {
   'use strict';
 
@@ -392,32 +394,50 @@
       return tabUrl === $scope.currentTab;
     };
 
-    $scope.buyShare = function(name, price) {
+    $scope.buyShare = function(name, quantity) {
+
       $http({
         method: 'POST',
         url: 'http://localhost:4000/trade/buy',
-        stock: name,
-        amount: price
-      }).then(function successCallback(success) {
-        console.log('Buy Share Success: ', success);
-        $scope.getPortfolio();
-      }, function errorCallback(error) {
-        console.log('Buy Share Account Error: ', error);
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        transformRequest: function(obj) {
+            var str = [];
+            for(var p in obj)
+            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+            return str.join("&");
+        },
+        data: {
+          stock: name,
+          amount: quantity
+        },
+        withCredentials: true
+      }).then(function successCallback(response) {
+
+        if (response.data.success) {
+          alert(response.data.message); // You have purchased #blablabla
+          $scope.getPortfolio();
+        }
+        else
+          alert(response.data.message); // You do not have enough points
+
+      }, function errorCallback(response) {
+        console.log('Buy Share Account Error: ' +  response);
       });
     }
 
     $scope.getPortfolio = function () {
       portfolioService.getPortfolio(
         function (success) {
-          console.log('Portfolio Success: ', success);
+          console.log('Portfolio Success: ' +  success);
         },
         function (error) {
-          console.log('Portfolio Error: ', error);
+          console.log('Portfolio Error: ' + error);
         }
       )
     }
   }
 })();
+
 (function() {
   'use strict';
 

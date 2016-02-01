@@ -4,6 +4,7 @@
   angular
     .module('tweetstockr', ['ngRoute', 'angular-chartist'])
     .config(function ($routeProvider, $locationProvider) {
+
       $routeProvider
 
       .when('/dashboard', {
