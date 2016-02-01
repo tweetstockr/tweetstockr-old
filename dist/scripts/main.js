@@ -315,12 +315,12 @@
 (function() {
   'use strict';
 
+  dashboardController.$inject = ["$scope"];
   angular
     .module('tweetstockr')
     .controller('dashboardController', dashboardController);
 
-  function dashboardController () {
-    
+  function dashboardController ($scope) {
   }
 })();
 (function() {
@@ -360,33 +360,38 @@
       socket.emit('update-me');
     });
 
-    socket.on('update', function (trends) {
-      $scope.chartOptions = {
-          seriesBarDistance: 15
-        , showArea: true
-      };
+    socket.on('update', function (data) {
+      $scope.stocks = data;
 
-      $scope.trendsList = trends;
+      for (var i = 0; i < $scope.stocks.length; i++) {
+        var stock = $scope.stocks[i];
+        var dataLenght = stock.history.length;
 
-      for(var i = 0; i < $scope.trendsList.length; i++) {
-        $scope.trendsList[i].chartData = {
-            label: []
-          , series: [[]]
-        };
-
-        var series = $scope.trendsList[i].chartData.series[0];
-        var label = $scope.trendsList[i].chartData.label;
-
-        for(var j = 0; j < $scope.trendsList[i].history.length; j++) {
-          var prices = JSON.stringify($scope.trendsList[i].history[j].price);
-          var time = new Date($scope.trendsList[i].history[j].created);
-
-          series.push(prices);
-          label.push(time);
+        if (stock.price > 0 && dataLenght > 1){
+          if (stock.history[1].price > 0){
+            var variationNumber = (( stock.price / stock.history[1].price ) - 1) * 100;
+            stock.variation = Math.round(variationNumber).toFixed(0) + '%';
+            stock.lastMove = (variationNumber < 0) ? 'danger' : 'success';
+            stock.icon = (variationNumber < 0) ? 'fa-caret-down' : 'fa-caret-up';
+          }
         }
+
+        var chartData = {};
+        chartData.labels = [];
+        chartData.series = [[]];
+
+        for (var j = dataLenght-1; j >= 0; j--){
+          var time = new Date(stock.history[j].created);
+          var label = time.getHours() + ':' + time.getMinutes();
+
+          chartData.series[0].push(stock.history[j].price);
+          chartData.labels.push(label);
+        }
+
+        stock.chartData = chartData;
       }
 
-      console.log('Trends List: ', $scope.trendsList);
+      console.log('Stocks: ', $scope.stocks);
       $scope.$apply();
     });
 
@@ -409,6 +414,7 @@
         $scope.isActiveTab = function (tabUrl) {
           return tabUrl === $scope.currentTab;
         };
+
       } else if(tab.url === 'components/portfolio.html') {
         $scope.currentTab = tab.url;
 

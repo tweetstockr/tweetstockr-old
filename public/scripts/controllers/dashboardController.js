@@ -5,7 +5,6 @@
     .module('tweetstockr')
     .controller('dashboardController', dashboardController);
 
-  function dashboardController () {
-    
+  function dashboardController ($scope) {
   }
 })();

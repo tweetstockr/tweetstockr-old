@@ -1,11 +1,11 @@
 .row
-  .col-md-4(ng-repeat="share in trendsList")
+  .col-md-4(ng-repeat="share in stocks")
     article.share
       header.share-header
         h2 {{ share.name}}
       
       section.share-body
-        | {{ share.chartData }}
+        chartist(class="ct-chart ct-golden-section" chartist-data="share.chartData" chartist-chart-type="Line" chartist-chart-options="chartOptions" chartist-responsive-options="barResponsiveOptions")
 
       footer.share-footer
         ul.share-controls
@@ -19,7 +19,7 @@
 
           li
             span Variation
-            label 7%
+            label {{ share.variation }}
 
           li
             span Total
