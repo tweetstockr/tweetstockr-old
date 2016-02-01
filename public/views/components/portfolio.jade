@@ -1,1 +1,9 @@
 h1(ng-init="getPortfolio()") Portfolio
+
+
+ul
+  li(ng-repeat="trade in portfolio")
+    | {{trade}}
+    button.btn.btn-success.btn-block(ng-click="sellShare(trade)") Sell for {{trade.price * trade.amount}}
+
+    
