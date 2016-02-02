@@ -5,8 +5,8 @@
     .module('tweetstockr')
     .controller('marketController', marketController);
 
-  function marketController ($scope, portfolioService, networkService) {
-    var socket = io('http://localhost:4000');
+  function marketController ($scope, portfolioService, networkService, CONFIG) {
+    var socket = io(CONFIG.apiUrl);
 
     socket.on('connect', function () {
       console.log('connected!');
@@ -84,7 +84,7 @@
     $scope.sellShare = function(share){
 
       networkService.postAuth(
-        'http://localhost:4000/trade/sell',
+        CONFIG.apiUrl + '/trade/sell',
         { trade : share._id },
         function successCallback(response){
           alert(response.message); // You sell #blablabla
@@ -99,7 +99,7 @@
     $scope.buyShare = function(name, quantity) {
 
       networkService.postAuth(
-        'http://localhost:4000/trade/buy',
+        CONFIG.apiUrl + '/trade/buy',
         { stock: name, amount: quantity },
         function successCallback(response){
 
@@ -118,11 +118,11 @@
 
     $scope.getPortfolio = function () {
       portfolioService.getPortfolio(
-        function (success) {
-          $scope.portfolio = success.data;
+        function onSuccess(data) {
+          $scope.portfolio = data;
         },
-        function (error) {
-          console.log('Portfolio Error: ' + error);
+        function onError(data) {
+          console.log('Portfolio Error: ' + data.message);
         }
       )
     }

@@ -3,6 +3,9 @@
 
   angular
     .module('tweetstockr', ['ngRoute', 'angular-chartist'])
+    .constant('CONFIG', {
+      apiUrl: 'http://localhost:4000'
+    })
     .config(["$routeProvider", "$locationProvider", function ($routeProvider, $locationProvider) {
 
       $routeProvider
@@ -165,8 +168,30 @@
               onErrorCallback(response.data || {'message':'Sorry! An error ocurred.'});
 
           }, function postError(response) {
-            console.log('Error: ' + response);
+            onErrorCallback({'message':'Error: Could not connect to the server.'});
+            console.log('POST error: ' + response);
           });
+        },
+
+        getAuth: function (getUrl, onSuccessCallback, onErrorCallback) {
+
+          $http({
+            method: 'GET',
+            url: getUrl,
+            withCredentials: true
+          })
+          .then(function completeCallback(response) {
+
+            if (response.data.redirect_to)
+              window.location = response.data.redirect_to;
+
+            onSuccessCallback(response.data);
+
+          }, function getError(response) {
+            onErrorCallback({'message':'Error: Could not connect to the server.'});
+            console.log('GET error: ' + response);
+          });
+
         }
 
       }
@@ -177,30 +202,26 @@
 (function() {
   'use strict';
 
-  portfolioService.$inject = ["$http", "$rootScope"];
+  portfolioService.$inject = ["$http", "$rootScope", "CONFIG", "networkService"];
   angular
     .module('tweetstockr')
     .factory('portfolioService', portfolioService);
 
-  function portfolioService ($http, $rootScope) {
+  function portfolioService ($http, $rootScope, CONFIG, networkService) {
     return {
       getPortfolio: function (onSuccess, onError) {
-        $http({
-          method: 'GET',
-          url: 'http://localhost:4000/portfolio',
-          withCredentials: true
-        })
-        .then(function successCallback(response) {
 
-          if (response.data.redirect_to) {
-            window.location = 'http://localhost:4000' + response.data.redirect_to;
-          }
+        networkService.getAuth(
+          CONFIG.apiUrl + '/portfolio',
+          function successCallback(response){
+            onSuccess(response);
+          },
+          function errorCallback(response){
+            onError(response);
+          });
 
-          onSuccess(response);
-        }, function errorCallback(response) {
-          onSuccess(response);
-        });
       }
+
     }
   }
 })();
@@ -315,29 +336,23 @@
 (function() {
   'use strict';
 
-  userService.$inject = ["$http", "$rootScope"];
+  userService.$inject = ["$http", "$rootScope", "networkService", "CONFIG"];
   angular
     .module('tweetstockr')
     .factory('userService', userService);
 
-  function userService ($http, $rootScope) {
+  function userService ($http, $rootScope, networkService, CONFIG) {
     return {
       getProfile: function (onSuccess, onError) {
-        $http({
-          method: 'GET',
-          url: 'http://localhost:4000/profile',
-          withCredentials: true
-        })
-        .then(function successCallback(response) {
-          if (response.data.redirect_to) {
-            window.location = 'http://localhost:4000' + response.data.redirect_to;
-          }
 
-          onSuccess(response);
-        }, function errorCallback(response) {
-
-          onSuccess(response);
-        });
+        networkService.getAuth(
+          CONFIG.apiUrl + '/profile',
+          function successCallback(response){
+            onSuccess(response);
+          },
+          function errorCallback(response){
+            onError(response);
+          });
       }
     }
   }
@@ -376,28 +391,34 @@
     .controller('headerController', headerController);
 
   function headerController ($scope, userService) {
-    // userService.getProfile(
-    //   function (success) {
-    //     var user = success.data.user.twitter;
+    userService.getProfile(
+      function (data) {
 
-    //     console.log('User: ', user);
+        var user = data.user.twitter;
 
-    //     $scope.username = user.displayName;
-    //   }, function (error) {
-    //     console.log('User: ', error);
-    // });
+        $scope.username = user.displayName;
+        $scope.balance = data.balance;
+
+        // These are not being used yet...
+        $scope.profile_image_thumb = user.profile_image_normal;
+        $scope.twitter_url = 'https://twitter.com/' + user.username;
+
+      }, function (error) {
+        console.log('User: ', error);
+    });
   }
 })();
+
 (function() {
   'use strict';
 
-  marketController.$inject = ["$scope", "portfolioService", "networkService"];
+  marketController.$inject = ["$scope", "portfolioService", "networkService", "CONFIG"];
   angular
     .module('tweetstockr')
     .controller('marketController', marketController);
 
-  function marketController ($scope, portfolioService, networkService) {
-    var socket = io('http://localhost:4000');
+  function marketController ($scope, portfolioService, networkService, CONFIG) {
+    var socket = io(CONFIG.apiUrl);
 
     socket.on('connect', function () {
       console.log('connected!');
@@ -475,7 +496,7 @@
     $scope.sellShare = function(share){
 
       networkService.postAuth(
-        'http://localhost:4000/trade/sell',
+        CONFIG.apiUrl + '/trade/sell',
         { trade : share._id },
         function successCallback(response){
           alert(response.message); // You sell #blablabla
@@ -490,7 +511,7 @@
     $scope.buyShare = function(name, quantity) {
 
       networkService.postAuth(
-        'http://localhost:4000/trade/buy',
+        CONFIG.apiUrl + '/trade/buy',
         { stock: name, amount: quantity },
         function successCallback(response){
 
@@ -509,11 +530,11 @@
 
     $scope.getPortfolio = function () {
       portfolioService.getPortfolio(
-        function (success) {
-          $scope.portfolio = success.data;
+        function onSuccess(data) {
+          $scope.portfolio = data;
         },
-        function (error) {
-          console.log('Portfolio Error: ' + error);
+        function onError(data) {
+          console.log('Portfolio Error: ' + data.message);
         }
       )
     }
@@ -523,39 +544,40 @@
 (function() {
   'use strict';
 
-  profileController.$inject = ["$scope", "userService", "networkService"];
+  profileController.$inject = ["$scope", "userService", "networkService", "CONFIG"];
   angular
     .module('tweetstockr')
     .controller('profileController', profileController);
 
-  function profileController ($scope, userService, networkService) {
-    // userService.getProfile(
-    //   function (success) {
-    //     console.log(JSON.stringify(success));
-    //     var user = success.data.user.twitter;
-    //
-    //     console.log('User: ', user);
-    //
-    //     $scope.user_photo = user.profile_image;
-    //     $scope.user_name = user.username;
-    //   }, function (error) {
-    //     console.log('User: ', error);
-    // });
+  function profileController ($scope, userService, networkService, CONFIG) {
+
+    userService.getProfile(
+      function (data) {
+
+        var user = data.user.twitter;
+        $scope.user_photo = user.profile_image;
+        $scope.user_name = user.username;
+        $scope.balance = data.balance;
+
+        //TODO: return user rank
+        $scope.rank = '79';
+
+      }, function (error) {
+        console.log('User: ', error);
+    });
 
     $scope.resetAccount = function () {
 
       networkService.postAuth(
-        'http://localhost:4000/reset',
+        CONFIG.apiUrl + '/reset',
         {},
         function successCallback(response){
-          if (response.message) {
+          if (response.message)
             alert(response.message);
-          }
         },
         function errorCallback(response){
-          if (response.message) {
+          if (response.message)
             alert(response.message);
-          }
         });
 
     }

@@ -11,9 +11,13 @@
           a(ng-href="http://www.twitter.com/{{ user_name }}")
             | @{{ user_name }}
 
+        h2
+          strong
+            {{ balance }} pts
+          
         h3
           strong Rank: 
-          | 79th
+          | {{ rank }}th
 
         button.btn.btn-primary(ng-click="resetAccount()")
           | Reset Account

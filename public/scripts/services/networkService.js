@@ -32,8 +32,30 @@
               onErrorCallback(response.data || {'message':'Sorry! An error ocurred.'});
 
           }, function postError(response) {
-            console.log('Error: ' + response);
+            onErrorCallback({'message':'Error: Could not connect to the server.'});
+            console.log('POST error: ' + response);
           });
+        },
+
+        getAuth: function (getUrl, onSuccessCallback, onErrorCallback) {
+
+          $http({
+            method: 'GET',
+            url: getUrl,
+            withCredentials: true
+          })
+          .then(function completeCallback(response) {
+
+            if (response.data.redirect_to)
+              window.location = response.data.redirect_to;
+
+            onSuccessCallback(response.data);
+
+          }, function getError(response) {
+            onErrorCallback({'message':'Error: Could not connect to the server.'});
+            console.log('GET error: ' + response);
+          });
+
         }
 
       }

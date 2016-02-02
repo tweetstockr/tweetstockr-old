@@ -5,25 +5,21 @@
     .module('tweetstockr')
     .factory('portfolioService', portfolioService);
 
-  function portfolioService ($http, $rootScope) {
+  function portfolioService ($http, $rootScope, CONFIG, networkService) {
     return {
       getPortfolio: function (onSuccess, onError) {
-        $http({
-          method: 'GET',
-          url: 'http://localhost:4000/portfolio',
-          withCredentials: true
-        })
-        .then(function successCallback(response) {
 
-          if (response.data.redirect_to) {
-            window.location = 'http://localhost:4000' + response.data.redirect_to;
-          }
+        networkService.getAuth(
+          CONFIG.apiUrl + '/portfolio',
+          function successCallback(response){
+            onSuccess(response);
+          },
+          function errorCallback(response){
+            onError(response);
+          });
 
-          onSuccess(response);
-        }, function errorCallback(response) {
-          onSuccess(response);
-        });
       }
+
     }
   }
 })();
