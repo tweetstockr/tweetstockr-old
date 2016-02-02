@@ -133,6 +133,50 @@
 (function() {
   'use strict';
 
+    networkService.$inject = ["$http"];
+  angular
+    .module('tweetstockr')
+    .factory('networkService', networkService);
+
+  function networkService ($http) {
+    return {
+      postAuth: function (postUrl, postData, onSuccessCallback, onErrorCallback) {
+
+        $http({
+          method: 'POST',
+          url: postUrl,
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          transformRequest: function(obj) {
+            var str = [];
+            for(var p in obj)
+            str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
+            return str.join('&');
+          },
+          data: postData,
+          withCredentials: true
+        }).then(function completeCallback(response) {
+
+            if (response.data.redirect_to)
+              window.location = response.data.redirect_to;
+
+            if (response.data.success)
+              onSuccessCallback(response.data);
+            else
+              onErrorCallback(response.data || {'message':'Sorry! An error ocurred.'});
+
+          }, function postError(response) {
+            console.log('Error: ' + response);
+          });
+        }
+
+      }
+    }
+
+})();
+
+(function() {
+  'use strict';
+
   portfolioService.$inject = ["$http", "$rootScope"];
   angular
     .module('tweetstockr')
@@ -347,12 +391,12 @@
 (function() {
   'use strict';
 
-  marketController.$inject = ["$scope", "$route", "$routeParams", "$http", "portfolioService"];
+  marketController.$inject = ["$scope", "portfolioService", "networkService"];
   angular
     .module('tweetstockr')
     .controller('marketController', marketController);
 
-  function marketController ($scope, $route, $routeParams, $http, portfolioService) {
+  function marketController ($scope, portfolioService, networkService) {
     var socket = io('http://localhost:4000');
 
     socket.on('connect', function () {
@@ -429,63 +473,38 @@
     };
 
     $scope.sellShare = function(share){
-      $http({
-        method: 'POST',
-        url: 'http://localhost:4000/trade/sell',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        transformRequest: function(obj) {
-          var str = [];
-          for(var p in obj)
-          str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
-          return str.join('&');
-        },
-        data: {
-          trade : share._id
-        },
-        withCredentials: true
-      }).then(function successCallback(response) {
-        if (response.data.success) {
-          alert(response.data.message); // You sell #blablabla
-          $scope.getPortfolio();
-        } else {
-          alert(response.data.message);
-        }
 
-      }, function errorCallback(response) {
-        console.log('Buy Share Account Error: ' +  response);
-      });
+      networkService.postAuth(
+        'http://localhost:4000/trade/sell',
+        { trade : share._id },
+        function successCallback(response){
+          alert(response.message); // You sell #blablabla
+          $scope.getPortfolio();
+        },
+        function errorCallback(response){
+          alert(response.message); // You do not have enough points
+        });
+
     }
 
     $scope.buyShare = function(name, quantity) {
-      var audio = document.getElementById('audio');
-      audio.play();
 
-      $http({
-        method: 'POST',
-        url: 'http://localhost:4000/trade/buy',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        transformRequest: function(obj) {
-          var str = [];
-          for(var p in obj)
-          str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
-          return str.join('&');
-        },
-        data: {
-          stock: name,
-          amount: quantity
-        },
-        withCredentials: true
-      }).then(function successCallback(response) {
-        if (response.data.success) {
-          alert(response.data.message); // You have purchased #blablabla
+      networkService.postAuth(
+        'http://localhost:4000/trade/buy',
+        { stock: name, amount: quantity },
+        function successCallback(response){
+
+          var audio = document.getElementById('audio');
+          audio.play();
+
+          alert(response.message); // You have purchased #blablabla
           $scope.getPortfolio();
-        } else {
-          alert(response.data.message); // You do not have enough points
-        }
 
-      }, function errorCallback(response) {
-        console.log('Buy Share Account Error: ' +  response);
-      });
+        },
+        function errorCallback(response){
+          alert(response.message); // You do not have enough points
+        });
+
     }
 
     $scope.getPortfolio = function () {
@@ -504,12 +523,12 @@
 (function() {
   'use strict';
 
-  profileController.$inject = ["$scope", "userService", "$http"];
+  profileController.$inject = ["$scope", "userService", "networkService"];
   angular
     .module('tweetstockr')
     .controller('profileController', profileController);
 
-  function profileController ($scope, userService, $http) {
+  function profileController ($scope, userService, networkService) {
     // userService.getProfile(
     //   function (success) {
     //     console.log(JSON.stringify(success));
@@ -524,19 +543,21 @@
     // });
 
     $scope.resetAccount = function () {
-      $http({
-        method: 'POST',
-        url: 'http://localhost:4000/reset',
-        withCredentials: true
-      }).then(function successCallback(response) {
 
-        if (response.data.redirect_to) {
-          window.location = 'http://localhost:4000' + response.data.redirect_to;
-        }
+      networkService.postAuth(
+        'http://localhost:4000/reset',
+        {},
+        function successCallback(response){
+          if (response.message) {
+            alert(response.message);
+          }
+        },
+        function errorCallback(response){
+          if (response.message) {
+            alert(response.message);
+          }
+        });
 
-      }, function errorCallback(error) {
-        console.log('Reset Account Error: ', error);
-      });
     }
   }
 })();
