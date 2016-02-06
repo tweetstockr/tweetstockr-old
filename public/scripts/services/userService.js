@@ -40,7 +40,7 @@
           function errorCallback(response){
             onError(response);
           });
-      },
+      }
     }
   }
 })();
