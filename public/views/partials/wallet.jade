@@ -16,10 +16,16 @@ section.transactions
   header.transactions-header
     h1 Transactions
 
+  style.
+    .inactive h2 {
+      text-decoration:line-through;
+    }
+
   table.transactions-table
-    tr.transaction-item(ng-repeat="transaction in transactionList | orderBy: '-created'")
+    tr.transaction-item(ng-repeat="transaction in transactionList | orderBy: '-created'",
+                        ng-class="{'inactive':!transaction.active}")
       td.transaction-info
-        h2 {{ transaction.stock }} (x{{ transaction.amount }}) - {{ transaction.active }}
+        h2 {{ transaction.stock }} (x{{ transaction.amount }})
         span {{ transaction.created | date: "MMMM d, y 'at' h:mma"}}
 
 
