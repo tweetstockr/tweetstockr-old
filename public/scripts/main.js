@@ -4,7 +4,7 @@
   angular
     .module('tweetstockr', ['ngRoute', 'angular-chartist'])
     .constant('CONFIG', {
-      apiUrl: 'http://api.tweetstockr.com'
+      apiUrl: 'http://localhost:4000'
     })
     .config(function ($routeProvider, $locationProvider) {
 

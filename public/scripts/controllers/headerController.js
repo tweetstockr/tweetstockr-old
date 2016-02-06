@@ -5,22 +5,33 @@
     .module('tweetstockr')
     .controller('headerController', headerController);
 
-  function headerController ($scope, userService) {
-    userService.getProfile(
-      function (data) {
+  function headerController ($rootScope, $scope, userService) {
 
-        var user = data.user.twitter;
+    $rootScope.updateCurrentUser = function () {
 
-        $scope.twitter_user = user.username;
-        $scope.username = user.displayName;
-        $scope.balance = data.balance;
+      userService.getProfile(
+        function onSuccess(response) {
 
-        // These are not being used yet...
-        $scope.profile_image_thumb = user.profile_image_normal;
-        $scope.twitter_url = 'https://twitter.com/' + user.username;
+          $scope.username = response.user.twitter.displayName;
+          $scope.twitter_user = response.user.twitter.username;
+          $scope.balance = response.balance;
+          // These are not being used yet...
+          $scope.profile_image = response.user.twitter.profile_image;
+          $scope.profile_image_thumb = response.user.twitter.profile_image_normal;
+          $scope.twitter_url = 'https://twitter.com/' + response.user.twitter.username;
 
-      }, function (error) {
-        console.log('User: ', error);
-    });
+          //TODO: return user rank
+          $scope.rank = '79';
+
+        },
+        function onError(data) {
+          console.log('Error: ' + data.message);
+        }
+      )
+
+    }
+
+    $rootScope.updateCurrentUser();
+
   }
 })();

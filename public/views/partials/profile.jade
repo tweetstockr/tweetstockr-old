@@ -5,11 +5,11 @@
         h2 Profile Information
 
       .profile-content
-        img(ng-src="{{ user_photo }}", alt="")
+        img(ng-src="{{ profile_image }}", alt="username")
             
         h2
-          a(ng-href="http://www.twitter.com/{{ user_name }}")
-            | @{{ user_name }}
+          a(ng-href="http://www.twitter.com/{{ twitter_user }}")
+            | @{{ twitter_user }}
 
         h2
           strong

@@ -5,28 +5,14 @@
     .module('tweetstockr')
     .controller('profileController', profileController);
 
-  function profileController ($scope, userService, networkService, CONFIG) {
+  function profileController ($rootScope, $scope, userService) {
 
-    userService.getProfile(
-      function (data) {
+    $rootScope.updateCurrentUser();
 
-        var user = data.user.twitter;
-        $scope.user_photo = user.profile_image;
-        $scope.user_name = user.username;
-        $scope.balance = data.balance;
-
-        //TODO: return user rank
-        $scope.rank = '79';
-
-      }, function (error) {
-        console.log('User: ', error);
-    });
 
     $scope.resetAccount = function () {
 
-      networkService.postAuth(
-        CONFIG.apiUrl + '/reset',
-        {},
+      userService.resetAccount(
         function successCallback(response){
           if (response.message)
             alert(response.message);
@@ -35,7 +21,6 @@
           if (response.message)
             alert(response.message);
         });
-
     }
   }
 })();

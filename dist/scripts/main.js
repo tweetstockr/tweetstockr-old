@@ -4,7 +4,7 @@
   angular
     .module('tweetstockr', ['ngRoute', 'angular-chartist'])
     .constant('CONFIG', {
-      apiUrl: 'http://api.tweetstockr.com'
+      apiUrl: 'http://localhost:4000'
     })
     .config(["$routeProvider", "$locationProvider", function ($routeProvider, $locationProvider) {
 
@@ -87,6 +87,53 @@
     }
   }
 
+})();
+
+(function() {
+  'use strict';
+
+  marketService.$inject = ["$rootScope", "CONFIG", "networkService"];
+  angular
+    .module('tweetstockr')
+    .factory('marketService', marketService);
+
+  function marketService ($rootScope, CONFIG, networkService) {
+    return {
+      buy: function (name, quantity, onSuccess, onError) {
+
+        networkService.postAuth(
+          CONFIG.apiUrl + '/trade/buy',
+          { stock: name, amount: quantity },
+          function successCallback(response){
+
+            $rootScope.updateCurrentUser();
+            onSuccess(response);
+
+          },
+          function errorCallback(response){
+            onError(response);
+          });
+
+      },
+      sell: function(shareId, onSuccess, onError){
+
+        networkService.postAuth(
+          CONFIG.apiUrl + '/trade/sell',
+          { trade : shareId },
+          function successCallback(response){
+
+            $rootScope.updateCurrentUser();
+            onSuccess(response);
+            
+          },
+          function errorCallback(response){
+            onError(response);
+          });
+
+      }
+
+    }
+  }
 })();
 
 (function() {
@@ -334,7 +381,30 @@
           function errorCallback(response){
             onError(response);
           });
-      }
+      },
+      getBalance: function (onSuccess, onError) {
+
+        networkService.getAuth(
+          CONFIG.apiUrl + '/balance',
+          function successCallback(response){
+            onSuccess(response);
+          },
+          function errorCallback(response){
+            onError(response);
+          });
+      },
+      resetAccount: function (onSuccess, onError) {
+
+        networkService.postAuth(
+          CONFIG.apiUrl + '/reset', {},
+          function successCallback(response){
+            $rootScope.updateCurrentUser();
+            onSuccess(response);
+          },
+          function errorCallback(response){
+            onError(response);
+          });
+      },
     }
   }
 })();
@@ -366,40 +436,51 @@
 (function() {
   'use strict';
 
-  headerController.$inject = ["$scope", "userService"];
+  headerController.$inject = ["$rootScope", "$scope", "userService"];
   angular
     .module('tweetstockr')
     .controller('headerController', headerController);
 
-  function headerController ($scope, userService) {
-    userService.getProfile(
-      function (data) {
+  function headerController ($rootScope, $scope, userService) {
 
-        var user = data.user.twitter;
+    $rootScope.updateCurrentUser = function () {
 
-        $scope.twitter_user = user.username;
-        $scope.username = user.displayName;
-        $scope.balance = data.balance;
+      userService.getProfile(
+        function onSuccess(response) {
 
-        // These are not being used yet...
-        $scope.profile_image_thumb = user.profile_image_normal;
-        $scope.twitter_url = 'https://twitter.com/' + user.username;
+          $scope.username = response.user.twitter.displayName;
+          $scope.twitter_user = response.user.twitter.username;
+          $scope.balance = response.balance;
+          // These are not being used yet...
+          $scope.profile_image = response.user.twitter.profile_image;
+          $scope.profile_image_thumb = response.user.twitter.profile_image_normal;
+          $scope.twitter_url = 'https://twitter.com/' + response.user.twitter.username;
 
-      }, function (error) {
-        console.log('User: ', error);
-    });
+          //TODO: return user rank
+          $scope.rank = '79';
+
+        },
+        function onError(data) {
+          console.log('Error: ' + data.message);
+        }
+      )
+
+    }
+
+    $rootScope.updateCurrentUser();
+
   }
 })();
 
 (function() {
   'use strict';
 
-  marketController.$inject = ["$scope", "portfolioService", "networkService", "CONFIG"];
+  marketController.$inject = ["$rootScope", "$scope", "portfolioService", "networkService", "marketService", "CONFIG"];
   angular
     .module('tweetstockr')
     .controller('marketController', marketController);
 
-  function marketController ($scope, portfolioService, networkService, CONFIG) {
+  function marketController ($rootScope, $scope, portfolioService, networkService, marketService, CONFIG) {
     var socket = io(CONFIG.apiUrl);
 
     socket.on('connect', function () {
@@ -477,36 +558,33 @@
 
     $scope.sellShare = function(share){
 
-      networkService.postAuth(
-        CONFIG.apiUrl + '/trade/sell',
-        { trade : share._id },
+      marketService.sell(share._id,
         function successCallback(response){
           alert(response.message); // You sell #blablabla
           $scope.getPortfolio();
         },
         function errorCallback(response){
           alert(response.message); // You do not have enough points
-        });
+        }
+      );
 
     }
 
     $scope.buyShare = function(name, quantity) {
 
-      networkService.postAuth(
-        CONFIG.apiUrl + '/trade/buy',
-        { stock: name, amount: quantity },
+      marketService.buy(name, quantity,
         function successCallback(response){
 
           var audio = document.getElementById('audio');
           audio.play();
-
           alert(response.message); // You have purchased #blablabla
           $scope.getPortfolio();
 
         },
         function errorCallback(response){
           alert(response.message); // You do not have enough points
-        });
+        }
+      );
 
     }
 
@@ -520,39 +598,26 @@
         }
       )
     }
+
   }
 })();
 
 (function() {
   'use strict';
 
-  profileController.$inject = ["$scope", "userService", "networkService", "CONFIG"];
+  profileController.$inject = ["$rootScope", "$scope", "userService"];
   angular
     .module('tweetstockr')
     .controller('profileController', profileController);
 
-  function profileController ($scope, userService, networkService, CONFIG) {
+  function profileController ($rootScope, $scope, userService) {
 
-    userService.getProfile(
-      function (data) {
+    $rootScope.updateCurrentUser();
 
-        var user = data.user.twitter;
-        $scope.user_photo = user.profile_image;
-        $scope.user_name = user.username;
-        $scope.balance = data.balance;
-
-        //TODO: return user rank
-        $scope.rank = '79';
-
-      }, function (error) {
-        console.log('User: ', error);
-    });
 
     $scope.resetAccount = function () {
 
-      networkService.postAuth(
-        CONFIG.apiUrl + '/reset',
-        {},
+      userService.resetAccount(
         function successCallback(response){
           if (response.message)
             alert(response.message);
@@ -561,7 +626,6 @@
           if (response.message)
             alert(response.message);
         });
-
     }
   }
 })();

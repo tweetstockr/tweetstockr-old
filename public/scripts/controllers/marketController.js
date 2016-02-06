@@ -5,7 +5,7 @@
     .module('tweetstockr')
     .controller('marketController', marketController);
 
-  function marketController ($scope, portfolioService, networkService, CONFIG) {
+  function marketController ($rootScope, $scope, portfolioService, networkService, marketService, CONFIG) {
     var socket = io(CONFIG.apiUrl);
 
     socket.on('connect', function () {
@@ -83,36 +83,33 @@
 
     $scope.sellShare = function(share){
 
-      networkService.postAuth(
-        CONFIG.apiUrl + '/trade/sell',
-        { trade : share._id },
+      marketService.sell(share._id,
         function successCallback(response){
           alert(response.message); // You sell #blablabla
           $scope.getPortfolio();
         },
         function errorCallback(response){
           alert(response.message); // You do not have enough points
-        });
+        }
+      );
 
     }
 
     $scope.buyShare = function(name, quantity) {
 
-      networkService.postAuth(
-        CONFIG.apiUrl + '/trade/buy',
-        { stock: name, amount: quantity },
+      marketService.buy(name, quantity,
         function successCallback(response){
 
           var audio = document.getElementById('audio');
           audio.play();
-
           alert(response.message); // You have purchased #blablabla
           $scope.getPortfolio();
 
         },
         function errorCallback(response){
           alert(response.message); // You do not have enough points
-        });
+        }
+      );
 
     }
 
@@ -126,5 +123,6 @@
         }
       )
     }
+
   }
 })();
