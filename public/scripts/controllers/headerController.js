@@ -15,6 +15,7 @@
           $scope.username = response.user.twitter.displayName;
           $scope.twitter_user = response.user.twitter.username;
           $scope.balance = response.balance;
+          $scope.ranking = response.ranking;
           // These are not being used yet...
           $scope.profile_image = response.user.twitter.profile_image;
           $scope.profile_image_thumb = response.user.twitter.profile_image_normal;

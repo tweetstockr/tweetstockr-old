@@ -12,7 +12,7 @@
         $scope.rankingList = response;
       },
       function onError(response){
-        alert("error >> " + JSON.strigify(response));
+        alert("error >> " + JSON.stringify(response));
       }
     );
   }

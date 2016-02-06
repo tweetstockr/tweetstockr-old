@@ -12,7 +12,7 @@
         $scope.transactionList = response;
       },
       function errorCallback(response){
-        alert("error >> " + JSON.strigify(response));
+        alert("error >> " + JSON.stringify(response));
       }
     );
 
@@ -21,7 +21,7 @@
         $scope.stats = response;
       },
       function errorCallback(response){
-        alert("error >> " + JSON.strigify(response));
+        alert("error >> " + JSON.stringify(response));
       }
     );
 
