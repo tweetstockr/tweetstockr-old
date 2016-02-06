@@ -11,6 +11,7 @@
 
         var user = data.user.twitter;
 
+        $scope.twitter_user = user.username;
         $scope.username = user.displayName;
         $scope.balance = data.balance;
 

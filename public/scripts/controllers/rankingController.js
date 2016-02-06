@@ -6,6 +6,14 @@
     .controller('rankingController', rankingController);
 
   function rankingController ($scope, leaderboardService) {
-    $scope.rankingList = leaderboardService.getUser();
+
+    leaderboardService.getRanking(
+      function onSuccess(response){
+        $scope.rankingList = response;
+      },
+      function onError(response){
+        alert("error >> " + JSON.strigify(response));
+      }
+    );
   }
 })();

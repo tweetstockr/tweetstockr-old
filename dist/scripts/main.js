@@ -64,75 +64,31 @@
 (function() {
   'use strict';
 
+  leaderboardService.$inject = ["CONFIG", "networkService"];
   angular
     .module('tweetstockr')
     .factory('leaderboardService', leaderboardService);
 
-  function leaderboardService () {
-    var leaderboard = [
-      {
-          "name": "Taylor Gordon"
-        , "user_photo": "https://i.vimeocdn.com/portrait/3471430_300x300.jpg"
-        , "user_points": 1635
-      },
-
-      {
-          "name": "Sherri Ryan"
-        , "user_photo": "https://secure.gravatar.com/avatar/3e1b4c0646f5679a31b4fcd992f64b10?d=https%3A%2F%2Fi.vimeocdn.com%2Fportrait%2Fdefault-green_300x300.png&s=300"
-        , "user_points": 5368
-      },
-
-      {
-          "name": "Owen Welch"
-        , "user_photo": "https://i.vimeocdn.com/portrait/10991843_300x300.jpg"
-        , "user_points": 7323
-      },
-
-      {
-          "name": "Brad Roberts"
-        , "user_photo": "https://i.vimeocdn.com/portrait/4900311_300x300.jpg"
-        , "user_points": 1226
-      },
-
-      {
-          "name": "Martin Schnitzer"
-        , "user_photo": "https://s3.amazonaws.com/ideo-org-images-production/fellow_avatars/127/original/Martin-Schnitzer-Portrait.jpg"
-        , "user_points": 3847
-        , "me": true
-      },
-
-      {
-          "name": "Minnie Bredouw"
-        , "user_photo": "https://s3.amazonaws.com/ideo-org-images-production/fellow_avatars/123/original/Minnie-Bredouw-Portrait.jpg"
-        , "user_points": 8495
-      },
-
-      {
-          "name": "Allie Avital"
-        , "user_photo": "https://i.vimeocdn.com/portrait/10428575_300x300.jpg"
-        , "user_points": 7374
-      },
-
-      {
-          "name": "Brad Roberts"
-        , "user_photo": "https://i.vimeocdn.com/portrait/4900311_300x300.jpg"
-        , "user_points": 4902
-      },
-
-      {
-          "name": "Nikolas Woischnik"
-        , "user_photo": "http://www.heisenbergmedia.com/wp-content/uploads/2015/06/Nikolas-Woischnik-Image-by-Dan-Taylor-dan@heisenbergmedia.com-1-1.jpg?15ba49"
-        , "user_points": 2349
-      }
-    ];
-
+  function leaderboardService (CONFIG, networkService) {
     return {
-      getUser: function () {
-        return leaderboard;
+      getRanking: function (onSuccess, onError) {
+
+        networkService.get(
+          CONFIG.apiUrl + '/ranking',
+          function successCallback(response){
+            onSuccess(response);
+          },
+          function errorCallback(response){
+            onError(response);
+          });
+
       }
+
     }
   }
+
 })();
+
 (function() {
   'use strict';
 
@@ -143,6 +99,8 @@
 
   function networkService ($http) {
     return {
+
+      // Post data with authentication
       postAuth: function (postUrl, postData, onSuccessCallback, onErrorCallback) {
 
         $http({
@@ -169,10 +127,11 @@
 
           }, function postError(response) {
             onErrorCallback({'message':'Error: Could not connect to the server.'});
-            console.log('POST error: ' + response);
+            console.log('Authenticated POST error: ' + response);
           });
         },
 
+        // Get data with authentication
         getAuth: function (getUrl, onSuccessCallback, onErrorCallback) {
 
           $http({
@@ -189,10 +148,32 @@
 
           }, function getError(response) {
             onErrorCallback({'message':'Error: Could not connect to the server.'});
+            console.log('Authenticated GET error: ' + response);
+          });
+
+        },
+
+        // Get data without authentication
+        get: function (getUrl, onSuccessCallback, onErrorCallback) {
+
+          $http({
+            method: 'GET',
+            url: getUrl,
+          })
+          .then(function completeCallback(response) {
+
+            if (response.data.redirect_to)
+              window.location = response.data.redirect_to;
+
+            onSuccessCallback(response.data);
+
+          }, function getError(response) {
+            onErrorCallback({'message':'Error: Could not connect to the server.'});
             console.log('GET error: ' + response);
           });
 
         }
+
 
       }
     }
@@ -202,12 +183,12 @@
 (function() {
   'use strict';
 
-  portfolioService.$inject = ["$http", "$rootScope", "CONFIG", "networkService"];
+  portfolioService.$inject = ["CONFIG", "networkService"];
   angular
     .module('tweetstockr')
     .factory('portfolioService', portfolioService);
 
-  function portfolioService ($http, $rootScope, CONFIG, networkService) {
+  function portfolioService (CONFIG, networkService) {
     return {
       getPortfolio: function (onSuccess, onError) {
 
@@ -396,6 +377,7 @@
 
         var user = data.user.twitter;
 
+        $scope.twitter_user = user.username;
         $scope.username = user.displayName;
         $scope.balance = data.balance;
 
@@ -593,9 +575,18 @@
     .controller('rankingController', rankingController);
 
   function rankingController ($scope, leaderboardService) {
-    $scope.rankingList = leaderboardService.getUser();
+
+    leaderboardService.getRanking(
+      function onSuccess(response){
+        $scope.rankingList = response;
+      },
+      function onError(response){
+        alert("error >> " + JSON.strigify(response));
+      }
+    );
   }
 })();
+
 (function() {
   'use strict';
 

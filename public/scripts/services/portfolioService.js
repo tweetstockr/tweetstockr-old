@@ -5,7 +5,7 @@
     .module('tweetstockr')
     .factory('portfolioService', portfolioService);
 
-  function portfolioService ($http, $rootScope, CONFIG, networkService) {
+  function portfolioService (CONFIG, networkService) {
     return {
       getPortfolio: function (onSuccess, onError) {
 

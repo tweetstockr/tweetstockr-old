@@ -7,6 +7,8 @@
 
   function networkService ($http) {
     return {
+
+      // Post data with authentication
       postAuth: function (postUrl, postData, onSuccessCallback, onErrorCallback) {
 
         $http({
@@ -33,10 +35,11 @@
 
           }, function postError(response) {
             onErrorCallback({'message':'Error: Could not connect to the server.'});
-            console.log('POST error: ' + response);
+            console.log('Authenticated POST error: ' + response);
           });
         },
 
+        // Get data with authentication
         getAuth: function (getUrl, onSuccessCallback, onErrorCallback) {
 
           $http({
@@ -53,10 +56,32 @@
 
           }, function getError(response) {
             onErrorCallback({'message':'Error: Could not connect to the server.'});
+            console.log('Authenticated GET error: ' + response);
+          });
+
+        },
+
+        // Get data without authentication
+        get: function (getUrl, onSuccessCallback, onErrorCallback) {
+
+          $http({
+            method: 'GET',
+            url: getUrl,
+          })
+          .then(function completeCallback(response) {
+
+            if (response.data.redirect_to)
+              window.location = response.data.redirect_to;
+
+            onSuccessCallback(response.data);
+
+          }, function getError(response) {
+            onErrorCallback({'message':'Error: Could not connect to the server.'});
             console.log('GET error: ' + response);
           });
 
         }
+
 
       }
     }
