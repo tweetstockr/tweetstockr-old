@@ -88,6 +88,7 @@ gulp.task('browserSync', function() {
     server: {
       baseDir: 'dist'
     },
+    port: 9000,
     notify: false,
     files: 'bower_components/**/*',
     options: {
