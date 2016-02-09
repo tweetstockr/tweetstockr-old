@@ -28,7 +28,7 @@
         'seconds': seconds
       };
     };
-    
+
     function initializeClock(endtime) {
 
       function updateClock() {
@@ -121,7 +121,7 @@
 
     $scope.sellShare = function(share){
 
-      marketService.sell(share._id,
+      marketService.sell(share.tradeId,
         function successCallback(response){
           alert(response.message); // You sell #blablabla
           $scope.getPortfolio();
