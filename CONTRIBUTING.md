@@ -9,6 +9,7 @@ today! Here are the guidelines we'd like you to follow:
  - [Submission Guidelines](#submit)
  - [Coding Rules](#rules)
  - [Commit Message Guidelines](#commit)
+ - [Versioning](#versioning)
 
 ## <a name="coc"></a> Code of Conduct
 Help us keep Tweetstockr open and inclusive. Please read and follow our [Code of Conduct][coc].
@@ -213,3 +214,6 @@ A detailed explanation can be found in this [document][commit-message-format].
 [github]: https://github.com/tweetstockr/tweetstockr
 [js-style-guide]: http://google-styleguide.googlecode.com/svn/trunk/javascriptguide.xml
 [jsfiddle]: http://jsfiddle.net/
+
+### <a name="versioning"></a> Versioning
+http://semver.org/spec/v2.0.0.html
