@@ -6,8 +6,10 @@ html(lang="en" ng-app="tweetstockr")
 
     meta(name="viewport" content="width=device-width, initial-scale=1")
 
-    link(rel="stylesheet", href="stylesheets/main.css")
-    link(rel="stylesheet" href="http://cdn.jsdelivr.net/chartist.js/latest/chartist.min.css")
+    link(rel="stylesheet" href="bower/chartist/dist/chartist.min.css")
+    link(rel="stylesheet" href="bower/angular-loading-bar/build/loading-bar.min.css")
+    link(rel="stylesheet" href="bower/angular-ui-notification/dist/angular-ui-notification.min.css")
+    link(rel="stylesheet" href="stylesheets/main.css")
 
   body
     navbar
@@ -17,8 +19,11 @@ html(lang="en" ng-app="tweetstockr")
       .content
         main(ng-view)
 
+    script(src="bower/angular/angular.min.js")
+    script(src="bower/angular-route/angular-route.min.js")
     script(src="bower/socket.io-client/socket.io.js")
-    script(src="bower/angular/angular.js")
-    script(src="bower/angular-route/angular-route.js")
-    script(src="bower/angular-chartist.js/dist/angular-chartist.js")
+    script(src="bower/chartist/dist/chartist.min.js")
+    script(src="bower/angular-loading-bar/build/loading-bar.min.js")
+    script(src="bower/angular-ui-notification/dist/angular-ui-notification.min.js")
+    script(src="bower/angular-chartist.js/dist/angular-chartist.min.js")
     script(src="scripts/main.js")

@@ -5,15 +5,19 @@
         h2 Profile Information
 
       .profile-content
-        img(ng-src="{{ user_photo }}", alt="")
+        img(ng-src="{{ profileImage }}", alt="username")
             
         h2
-          a(ng-href="http://www.twitter.com/{{ user_name }}")
-            | @{{ user_name }}
+          a(ng-href="http://www.twitter.com/{{ twitterUser }}")
+            | @{{ twitterUser }}
 
+        h2
+          strong
+            | {{ balance }} pts
+          
         h3
           strong Rank: 
-          | 79th
+          | {{ ranking }}th
 
         button.btn.btn-primary(ng-click="resetAccount()")
           | Reset Account
@@ -21,4 +25,16 @@
   .col-md-5
     .profile
       .profile-title
-        h2 Redeem Tickets
+        h2 Joysticket Integration
+        
+      br
+      | Log in with your Joysticket account and redeem your pts for real rewards!
+      
+      br
+      br
+      
+      button.btn.btn-primary(ng-click="joysticketLogin()")
+        | Joysticket Login
+      
+      br
+      br

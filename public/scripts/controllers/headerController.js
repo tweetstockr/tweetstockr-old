@@ -5,16 +5,25 @@
     .module('tweetstockr')
     .controller('headerController', headerController);
 
-  function headerController ($scope, userService) {
-    // userService.getProfile(
-    //   function (success) {
-    //     var user = success.data.user.twitter;
+  function headerController ($rootScope, $scope, userService) {
+    $rootScope.updateCurrentUser = function () {
+      userService.getProfile(
+        function onSuccess(response) {
+          $scope.username = response.user.twitter.displayName;
+          $scope.twitterUser = response.user.twitter.username;
+          $scope.balance = response.balance;
+          $scope.ranking = response.ranking;
+          // These are not being used yet...
+          $scope.profileImage = response.user.twitter.profile_image;
+          $scope.profileImageThumb = response.user.twitter.profile_image_normal;
+          $scope.twitterUrl = 'https://twitter.com/' + response.user.twitter.username;
+        },
+        function onError(data) {
+          console.log('Error: ' + data.message);
+        }
+      );
+    };
 
-    //     console.log('User: ', user);
-
-    //     $scope.username = user.displayName;
-    //   }, function (error) {
-    //     console.log('User: ', error);
-    // });
+    $rootScope.updateCurrentUser();
   }
 })();

@@ -1,13 +1,13 @@
 section.market
   header.market-header
     ul.market-tabs
-      li(ng-repeat="tab in tabs" ng-class="{ active:isActiveTab(tab.url) }" ng-click="onClickTab(tab)")
-        a(href="" ng-class="{'is-active': isActiveTab(tab.url)}")
+      li(class="market-tabs-item" ng-repeat="tab in tabs" ng-class="{ active:isActiveTab(tab.url) }" ng-click="onClickTab(tab)")
+        a(class="market-tabs-link" href="" ng-class="{'is-active': isActiveTab(tab.url)}")
           .tab-icon(ng-include="tab.icon")
           | {{ tab.title }}
 
     span.countdown
-      span 35
+      span {{ nextUpdateIn }}
 
   .market-content
     .row

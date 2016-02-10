@@ -5,41 +5,85 @@
     .module('tweetstockr')
     .controller('marketController', marketController);
 
-  function marketController ($scope, $route, $routeParams, $http, portfolioService) {
-    var socket = io('http://localhost:4000');
+  function marketController ($rootScope, $scope, portfolioService, networkService, marketService, CONFIG, Notification) {
+    var socket = io(CONFIG.apiUrl);
 
     socket.on('connect', function () {
       console.log('connected!');
       socket.emit('update-me');
     });
 
-    socket.on('update', function (trends) {
-      $scope.chartOptions = {
-          seriesBarDistance: 15
-        , showArea: true
+    // Update Countdown ========================================================
+    function getTimeRemaining(endtime) {
+      var t = Date.parse(endtime) - Date.parse(new Date());
+      var seconds = Math.floor((t / 1000) % 60);
+      var minutes = Math.floor((t / 1000 / 60) % 60);
+      var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+      var days = Math.floor(t / (1000 * 60 * 60 * 24));
+      return {
+        'total': t,
+        'days': days,
+        'hours': hours,
+        'minutes': minutes,
+        'seconds': seconds
       };
+    }
 
-      $scope.trendsList = trends;
+    function initializeClock(endtime) {
+      function updateClock() {
+        var t = getTimeRemaining(endtime);
+        var timeString = ('0' + t.minutes).slice(-2) + ':' + ('0' + t.seconds).slice(-2);
 
-      for(var i = 0; i < $scope.trendsList.length; i++) {
-        $scope.trendsList[i].chartData = {
-            label: []
-          , series: [[]]
-        };
+        $scope.$apply(function() {
+          $scope.nextUpdateIn = timeString;
+        });
 
-        var series = $scope.trendsList[i].chartData.series[0];
-        var label = $scope.trendsList[i].chartData.label;
-
-        for(var j = 0; j < $scope.trendsList[i].history.length; j++) {
-          var prices = JSON.stringify($scope.trendsList[i].history[j].price);
-          var time = new Date($scope.trendsList[i].history[j].created);
-
-          series.push(prices);
-          label.push(time);
+        if (t.total <= 0) {
+          var timeinterval = setInterval(updateClock, 1000);
+          clearInterval(timeinterval);
         }
       }
 
-      console.log('Trends List: ', $scope.trendsList);
+      updateClock();
+    }
+
+    socket.on('update-date', function(data) {
+      var deadline = new Date(data.nextUpdate);
+      initializeClock(deadline);
+    });
+    // =========================================================================
+
+    socket.on('update', function (data) {
+      $scope.stocks = data;
+
+      for (var i = 0; i < $scope.stocks.length; i++) {
+        var stock = $scope.stocks[i];
+        var dataLenght = stock.history.length;
+
+        if (stock.price > 0 && dataLenght > 1) {
+          if (stock.history[1].price > 0) {
+            var variationNumber = (( stock.price / stock.history[1].price ) - 1) * 100;
+            stock.variation = Math.round(variationNumber).toFixed(0) + '%';
+            stock.lastMove = (variationNumber < 0) ? 'danger' : 'success';
+            stock.icon = (variationNumber < 0) ? 'fa-caret-down' : 'fa-caret-up';
+          }
+        }
+
+        var chartData = {};
+        chartData.labels = [];
+        chartData.series = [[]];
+
+        for (var j = dataLenght-1; j >= 0; j--) {
+          var time = new Date(stock.history[j].created);
+          var label = time.getHours() + ':' + time.getMinutes();
+
+          chartData.series[0].push(stock.history[j].price);
+          chartData.labels.push(label);
+        }
+
+        stock.chartData = chartData;
+      }
+
       $scope.$apply();
     });
 
@@ -62,6 +106,7 @@
         $scope.isActiveTab = function (tabUrl) {
           return tabUrl === $scope.currentTab;
         };
+
       } else if(tab.url === 'components/portfolio.html') {
         $scope.currentTab = tab.url;
 
@@ -75,32 +120,42 @@
       return tabUrl === $scope.currentTab;
     };
 
-    $scope.buyShare = function(name, price) {
-      var audio = document.getElementById('audio');
-      audio.play();
-      
-      $http({
-        method: 'POST',
-        url: 'http://localhost:4000/trade/buy',
-        stock: name,
-        amount: price
-      }).then(function successCallback(success) {
-        console.log('Buy Share Success: ', success);
-        $scope.getPortfolio();
-      }, function errorCallback(error) {
-        console.log('Buy Share Account Error: ', error);
-      });
-    }
+    $scope.sellShare = function(share) {
+      marketService.sell(share.tradeId,
+        function successCallback(response) {
+          Notification.success(response.message);
+          $scope.getPortfolio();
+        },
+        function errorCallback(response) {
+            Notification.error(response.message);
+        }
+      );
+    };
+
+    $scope.buyShare = function(name, quantity) {
+      marketService.buy(name, quantity,
+        function successCallback(response) {
+          Notification.success(response);
+          var audio = document.getElementById('audio');
+          audio.play();
+          $scope.getPortfolio();
+        },
+        function errorCallback(response) {
+          Notification.error(response.message);
+        }
+      );
+    };
 
     $scope.getPortfolio = function () {
       portfolioService.getPortfolio(
-        function (success) {
-          console.log('Portfolio Success: ', success);
+        function onSuccess(data) {
+          $scope.portfolio = data;
         },
-        function (error) {
-          console.log('Portfolio Error: ', error);
+        function onError(data) {
+          Notification.error(data.message);
+          console.log('Portfolio Error: ' + data.message);
         }
-      )
-    }
+      );
+    };
   }
 })();

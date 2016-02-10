@@ -9,6 +9,8 @@ var gulp = require('gulp')
   , minify = require('gulp-cssnano')
   , prefix = require('gulp-autoprefixer')
   , concat = require('gulp-concat')
+  , jshint = require('gulp-jshint')
+  , stylish = require('jshint-stylish')
   , ngAnnotate = require('gulp-ng-annotate');
 
 var path = {
@@ -38,7 +40,7 @@ var path = {
   }
 }
 
-gulp.task('views', function() {
+gulp.task('build:views', function() {
   return gulp.src(path.views.input)
     .pipe(plumber())
     .pipe(jade())
@@ -46,7 +48,7 @@ gulp.task('views', function() {
     .pipe(browserSync.stream());
 });
 
-gulp.task('stylesheets', function() {
+gulp.task('build:stylesheets', function() {
   return gulp.src(path.stylesheets.input)
     .pipe(plumber())
     .pipe(sass({
@@ -68,13 +70,20 @@ gulp.task('stylesheets', function() {
     .pipe(browserSync.stream());
 })
 
-gulp.task('scripts', function() {
+gulp.task('build:scripts', function() {
   return gulp.src(path.scripts.input)
     .pipe(plumber())
     .pipe(concat('main.js'))
     .pipe(ngAnnotate())
     .pipe(gulp.dest(path.scripts.output))
     .pipe(browserSync.stream());
+});
+
+gulp.task('lint:scripts', function () {
+  return gulp.src(path.scripts.input)
+    .pipe(plumber())
+    .pipe(jshint('.jshintrc'))
+    .pipe(jshint.reporter('jshint-stylish'));
 });
 
 gulp.task('build:assets', function() {
@@ -88,6 +97,7 @@ gulp.task('browserSync', function() {
     server: {
       baseDir: 'dist'
     },
+    port: 9000,
     notify: false,
     files: 'bower_components/**/*',
     options: {
@@ -97,16 +107,16 @@ gulp.task('browserSync', function() {
 });
 
 gulp.task('compile', [
-    'views'
-  , 'stylesheets'
-  , 'scripts'
+    'build:views'
+  , 'build:stylesheets'
+  , 'build:scripts'
   , 'build:assets'
 ]);
 
 gulp.task('watcher', function() {
-  gulp.watch(path.views.input, ['views']);
-  gulp.watch(path.stylesheets.input, ['stylesheets']);
-  gulp.watch(path.scripts.input, ['scripts']);
+  gulp.watch(path.views.input, ['build:views']);
+  gulp.watch(path.stylesheets.input, ['build:stylesheets']);
+  gulp.watch(path.scripts.input, ['build:scripts']);
 });
 
 gulp.task('server', [
@@ -116,5 +126,6 @@ gulp.task('server', [
 
 gulp.task('default', [
     'compile'
+  , 'lint:scripts'
   , 'server'
 ]);

@@ -107,10 +107,10 @@
   font-size: 25px;
 
   &.buy {
-    color: $color-success;
+    color: $color-danger;
   }
 
   &.sell {
-    color: $color-danger;
+    color: $color-success;
   }
 }

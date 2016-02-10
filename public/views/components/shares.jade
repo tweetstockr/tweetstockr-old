@@ -1,28 +1,28 @@
 .row
-  .col-md-4(ng-repeat="share in trendsList")
-    article.share
-      header.share-header
-        h2 {{ share.name}}
+  .col-md-4(ng-repeat="share in stocks | orderBy: '-price' track by $index")
+    article.market-item
+      header.market-item-header
+        h2.market-item-header__title {{ share.name}}
       
-      section.share-body
-        | {{ share.chartData }}
+      section.market-item-body
+        chartist(class="ct-chart ct-golden-section" chartist-data="share.chartData" chartist-chart-type="Line" chartist-chart-options="chartOptions" chartist-responsive-options="barResponsiveOptions")
 
-      footer.share-footer
-        ul.share-controls
-          li
-            span Amount
-            input(type="number" ng-model="shareAmount" ng-init="shareAmount = 1")
+      footer.market-item-footer
+        ul.market-item-controls
+          li.market-item-spaces
+            span.market-item-spaces__title Amount
+            input(class="market-item-spaces__input" type="number" ng-model="shareAmount" ng-init="shareAmount = 1")
 
-          li
-            span Price
-            label {{ share.price }}
+          li.market-item-spaces
+            span.market-item-spaces__title Price
+            label.market-item-spaces__info {{ share.price }}
 
-          li
-            span Variation
-            label 7%
+          li.market-item-spaces
+            span.market-item-spaces__title Variation
+            label.market-item-spaces__info {{ share.variation }}
 
-          li
-            span Total
-            label {{ share.price * shareAmount }}
+          li.market-item-spaces
+            span.market-item-spaces__title Total
+            label.market-item-spaces__info {{ share.price * shareAmount }}
 
-        button.btn.btn-success.btn-block(ng-click="buyShare(share.name, share.price)") Buy Share
+        button.btn.btn-success.btn-block(ng-click="buyShare(share.name, shareAmount)") Buy Share

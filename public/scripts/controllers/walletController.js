@@ -5,7 +5,23 @@
     .module('tweetstockr')
     .controller('walletController', walletController);
 
-  function walletController ($scope, transactionsService) {
-    $scope.transactionList = transactionsService.getTransactions();
+  function walletController ($scope, walletService) {
+    walletService.getTransactions(
+      function successCallback(response) {
+        $scope.transactionList = response;
+      },
+      function errorCallback(response) {
+        console.log('error: ', JSON.stringify(response));
+      }
+    );
+
+    walletService.getStats(
+      function successCallback(response) {
+        $scope.stats = response;
+      },
+      function errorCallback(response) {
+        console.log('error: ', JSON.stringify(response));
+      }
+    );
   }
 })();

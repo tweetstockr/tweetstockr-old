@@ -5,26 +5,42 @@
     .module('tweetstockr')
     .factory('userService', userService);
 
-  function userService ($http, $rootScope) {
+  function userService ($http, $rootScope, networkService, CONFIG) {
     return {
       getProfile: function (onSuccess, onError) {
-        $http({
-          method: 'GET',
-          url: 'http://localhost:4000/profile',
-          data: {},
-          withCredentials: true
-        })
-        .then(function successCallback(response) {
-          if (response.data.redirect_to) {
-            window.location = 'http://localhost:4000' + response.data.redirect_to;
+        networkService.getAuth(
+          CONFIG.apiUrl + '/profile',
+          function successCallback(response) {
+            onSuccess(response);
+          },
+          function errorCallback(response) {
+            onError(response);
           }
-          
-          onSuccess(response);
-        }, function errorCallback(response) {
-
-          onSuccess(response);
-        });
+        );
+      },
+      getBalance: function (onSuccess, onError) {
+        networkService.getAuth(
+          CONFIG.apiUrl + '/balance',
+          function successCallback(response) {
+            onSuccess(response);
+          },
+          function errorCallback(response) {
+            onError(response);
+          }
+        );
+      },
+      resetAccount: function (onSuccess, onError) {
+        networkService.postAuth(
+          CONFIG.apiUrl + '/reset', {},
+          function successCallback(response) {
+            $rootScope.updateCurrentUser();
+            onSuccess(response);
+          },
+          function errorCallback(response) {
+            onError(response);
+          }
+        );
       }
-    }
+    };
   }
 })();

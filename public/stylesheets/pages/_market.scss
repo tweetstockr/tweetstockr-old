@@ -10,32 +10,32 @@
 
 .market-tabs {
   float: left;
+}
 
-  li {
-    display: inline-block;
+.market-tabs-item {
+  display: inline-block;
+}
 
-    a {
-      color: #999;
-      display: block;
-      padding: 30px;
-      transition: .25s ease-in-out;
+.market-tabs-link {
+  color: #999;
+  display: block;
+  padding: 30px;
+  transition: .25s ease-in-out;
 
-      &:hover {
-        color: $color-primary;
+  &:hover {
+    color: $color-primary;
 
-        path {
-          fill: $color-primary;
-        }
-      }
+    path {
+      fill: $color-primary;
+    }
+  }
 
-      &.is-active {
-        border-bottom: 4px solid $color-primary;
-        color: $color-primary;
+  &.is-active {
+    border-bottom: 4px solid $color-primary;
+    color: $color-primary;
 
-        path {
-          fill: $color-primary;
-        }
-      }
+    path {
+      fill: $color-primary;
     }
   }
 }
@@ -93,4 +93,65 @@
 
 .market-audio {
   display: none;
+}
+
+.market-item {
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.market-item-header {
+  padding: 15px;
+  border: 1px solid $gray-light;
+}
+
+.market-item-header__title {
+  margin-bottom: 0;
+  font-weight: 300;
+  color: $color-primary;
+  font-size: 16px;
+}
+
+.market-item-body {
+  border-right: 1px solid $gray-light;
+  border-left: 1px solid $gray-light;
+}
+
+.market-item-footer {
+  border-top: 1px solid $gray-light;
+
+  .btn {
+    border-radius: 0;
+  }
+}
+
+.market-item-spaces {
+  display: inline-block;
+  text-align: center;
+  width: 25%;
+  border-right: 1px solid $gray-light;
+  min-height: 55px;
+
+  &:first-child {
+    border-left: 1px solid $gray-light;
+  }
+}
+
+.market-item-spaces__title {
+  color: $color-primary;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.market-item-spaces__input {
+  width: 100%;
+  border: none;
+  text-align: center;
+  outline: none;
+}
+
+.market-item-spaces__info {
+  display: block;
+  margin-bottom: 0;
 }
