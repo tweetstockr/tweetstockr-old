@@ -10,11 +10,6 @@
 
       $routeProvider
 
-      .when('/dashboard', {
-        templateUrl: 'partials/dashboard.html',
-        controller: 'dashboardController'
-      })
-
       .when('/market', {
         templateUrl: 'partials/market.html',
         controller: 'marketController'
@@ -56,7 +51,7 @@
       })
 
       .otherwise({
-        redirectTo: '/dashboard'
+        redirectTo: '/market'
       });
     }]);
 })();
@@ -354,17 +349,6 @@
         controller: 'headerController'
       };
     });
-})();
-(function() {
-  'use strict';
-
-  dashboardController.$inject = ["$scope"];
-  angular
-    .module('tweetstockr')
-    .controller('dashboardController', dashboardController);
-
-  function dashboardController ($scope) {
-  }
 })();
 (function() {
   'use strict';
