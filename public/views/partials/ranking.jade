@@ -2,7 +2,7 @@
   h1 Leaderboard
 
   ul
-    li.ranking-item(ng-repeat="item in rankingList | orderBy: '-balance'" ng-class="{me: twitter_user == item.user.twitter.username }")
+    li.ranking-item(ng-repeat="item in rankingList | orderBy: '-balance'" ng-class="{me: twitterUser == item.user.twitter.username }")
       .ranking-info
         span.ranking-position 0{{ $index + 1 }}.
         img(class="ranking-photo" ng-src="{{ item.user.twitter.profile_image }}", alt="{{ item.user.twitter.displayName }}")
