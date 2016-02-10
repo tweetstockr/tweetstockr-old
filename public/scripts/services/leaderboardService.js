@@ -8,19 +8,16 @@
   function leaderboardService (CONFIG, networkService) {
     return {
       getRanking: function (onSuccess, onError) {
-
         networkService.get(
           CONFIG.apiUrl + '/ranking',
-          function successCallback(response){
+          function successCallback(response) {
             onSuccess(response);
           },
-          function errorCallback(response){
+          function errorCallback(response) {
             onError(response);
-          });
-
+          }
+        );
       }
-
-    }
+    };
   }
-
 })();

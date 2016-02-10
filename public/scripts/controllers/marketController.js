@@ -27,25 +27,27 @@
         'minutes': minutes,
         'seconds': seconds
       };
-    };
-
-    function initializeClock(endtime) {
-
-      function updateClock() {
-        var t = getTimeRemaining(endtime);
-        var timeString =
-          ('0' + t.minutes).slice(-2) + ':' + ('0' + t.seconds).slice(-2);
-
-        $scope.$apply(function(){ $scope.nextUpdateIn = timeString });
-
-        if (t.total <= 0)
-          clearInterval(timeinterval);
-      }
-      updateClock();
-      var timeinterval = setInterval(updateClock, 1000);
     }
 
-    socket.on('update-date', function(data){
+    function initializeClock(endtime) {
+      function updateClock() {
+        var t = getTimeRemaining(endtime);
+        var timeString = ('0' + t.minutes).slice(-2) + ':' + ('0' + t.seconds).slice(-2);
+
+        $scope.$apply(function() {
+          $scope.nextUpdateIn = timeString;
+        });
+
+        if (t.total <= 0) {
+          var timeinterval = setInterval(updateClock, 1000);
+          clearInterval(timeinterval);
+        }
+      }
+
+      updateClock();
+    }
+
+    socket.on('update-date', function(data) {
       var deadline = new Date(data.nextUpdate);
       initializeClock(deadline);
     });
@@ -58,8 +60,8 @@
         var stock = $scope.stocks[i];
         var dataLenght = stock.history.length;
 
-        if (stock.price > 0 && dataLenght > 1){
-          if (stock.history[1].price > 0){
+        if (stock.price > 0 && dataLenght > 1) {
+          if (stock.history[1].price > 0) {
             var variationNumber = (( stock.price / stock.history[1].price ) - 1) * 100;
             stock.variation = Math.round(variationNumber).toFixed(0) + '%';
             stock.lastMove = (variationNumber < 0) ? 'danger' : 'success';
@@ -71,7 +73,7 @@
         chartData.labels = [];
         chartData.series = [[]];
 
-        for (var j = dataLenght-1; j >= 0; j--){
+        for (var j = dataLenght-1; j >= 0; j--) {
           var time = new Date(stock.history[j].created);
           var label = time.getHours() + ':' + time.getMinutes();
 
@@ -82,7 +84,6 @@
         stock.chartData = chartData;
       }
 
-      console.log('Stocks: ', $scope.stocks);
       $scope.$apply();
     });
 
@@ -122,19 +123,19 @@
     $scope.sellShare = function(share) {
       marketService.sell(share.tradeId,
         function successCallback(response) {
-          alert(response.message); // You sell #blablabla
+          Notification.success(response.message);
           $scope.getPortfolio();
         },
         function errorCallback(response) {
-          alert(response.message); // You do not have enough points
+            Notification.error(response.message);
         }
       );
-    }
+    };
 
     $scope.buyShare = function(name, quantity) {
       marketService.buy(name, quantity,
         function successCallback(response) {
-          Notification.success('Success notification');
+          Notification.success(response);
           var audio = document.getElementById('audio');
           audio.play();
           $scope.getPortfolio();
@@ -143,7 +144,7 @@
           Notification.error(response.message);
         }
       );
-    }
+    };
 
     $scope.getPortfolio = function () {
       portfolioService.getPortfolio(
@@ -151,11 +152,10 @@
           $scope.portfolio = data;
         },
         function onError(data) {
-          Notification.error(response.message);
+          Notification.error(data.message);
           console.log('Portfolio Error: ' + data.message);
         }
-      )
-    }
-
+      );
+    };
   }
 })();

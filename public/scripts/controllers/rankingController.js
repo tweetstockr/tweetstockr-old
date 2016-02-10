@@ -6,13 +6,12 @@
     .controller('rankingController', rankingController);
 
   function rankingController ($scope, leaderboardService) {
-
     leaderboardService.getRanking(
-      function onSuccess(response){
+      function onSuccess(response) {
         $scope.rankingList = response;
       },
-      function onError(response){
-        alert("error >> " + JSON.stringify(response));
+      function onError(response) {
+        console.log('error: ', JSON.stringify(response));
       }
     );
   }

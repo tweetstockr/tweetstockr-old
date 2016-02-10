@@ -6,24 +6,22 @@
     .controller('walletController', walletController);
 
   function walletController ($scope, walletService) {
-
     walletService.getTransactions(
-      function successCallback(response){
+      function successCallback(response) {
         $scope.transactionList = response;
       },
-      function errorCallback(response){
-        alert("error >> " + JSON.stringify(response));
+      function errorCallback(response) {
+        console.log('error: ', JSON.stringify(response));
       }
     );
 
     walletService.getStats(
-      function successCallback(response){
+      function successCallback(response) {
         $scope.stats = response;
       },
-      function errorCallback(response){
-        alert("error >> " + JSON.stringify(response));
+      function errorCallback(response) {
+        console.log('error: ', JSON.stringify(response));
       }
     );
-
   }
 })();
