@@ -5,7 +5,7 @@
     .module('tweetstockr')
     .controller('marketController', marketController);
 
-  function marketController ($rootScope, $scope, portfolioService, networkService, marketService, CONFIG) {
+  function marketController ($rootScope, $scope, portfolioService, networkService, marketService, CONFIG, Notification) {
     var socket = io(CONFIG.apiUrl);
 
     socket.on('connect', function () {
@@ -119,36 +119,30 @@
       return tabUrl === $scope.currentTab;
     };
 
-    $scope.sellShare = function(share){
-
+    $scope.sellShare = function(share) {
       marketService.sell(share.tradeId,
-        function successCallback(response){
+        function successCallback(response) {
           alert(response.message); // You sell #blablabla
           $scope.getPortfolio();
         },
-        function errorCallback(response){
+        function errorCallback(response) {
           alert(response.message); // You do not have enough points
         }
       );
-
     }
 
     $scope.buyShare = function(name, quantity) {
-
       marketService.buy(name, quantity,
-        function successCallback(response){
-
+        function successCallback(response) {
+          Notification.success('Success notification');
           var audio = document.getElementById('audio');
           audio.play();
-          alert(response.message); // You have purchased #blablabla
           $scope.getPortfolio();
-
         },
-        function errorCallback(response){
-          alert(response.message); // You do not have enough points
+        function errorCallback(response) {
+          Notification.error(response.message);
         }
       );
-
     }
 
     $scope.getPortfolio = function () {
@@ -157,6 +151,7 @@
           $scope.portfolio = data;
         },
         function onError(data) {
+          Notification.error(response.message);
           console.log('Portfolio Error: ' + data.message);
         }
       )

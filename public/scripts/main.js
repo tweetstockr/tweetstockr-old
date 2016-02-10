@@ -2,11 +2,11 @@
   'use strict';
 
   angular
-    .module('tweetstockr', ['ngRoute', 'angular-chartist', 'angular-loading-bar'])
+    .module('tweetstockr', ['ngRoute', 'angular-chartist', 'angular-loading-bar', 'ui-notification'])
     .constant('CONFIG', {
       apiUrl: 'http://api.tweetstockr.com'
     })
-    .config(function ($routeProvider, $locationProvider) {
+    .config(function ($routeProvider, $locationProvider, NotificationProvider) {
 
       $routeProvider
 
@@ -52,6 +52,16 @@
 
       .otherwise({
         redirectTo: '/market'
+      });
+
+      NotificationProvider.setOptions({
+          delay: 1000
+        , startTop: 20
+        , startRight: 10
+        , verticalSpacing: 20
+        , horizontalSpacing: 20
+        , positionX: 'right'
+        , positionY: 'top'
       });
     });
 })();
