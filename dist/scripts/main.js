@@ -239,6 +239,31 @@
 (function() {
   'use strict';
 
+  tournamentService.$inject = ["CONFIG", "networkService"];
+  angular
+    .module('tweetstockr')
+    .factory('tournamentService', tournamentService);
+
+  function tournamentService (CONFIG, networkService) {
+    return {
+      getActiveTournaments: function (onSuccess, onError) {
+        networkService.getAuth(
+          CONFIG.apiUrl + '/tournaments',
+          function successCallback(response) {
+            onSuccess(response);
+          },
+          function errorCallback(response) {
+            onError(response);
+          }
+        );
+      }
+    };
+  }
+})();
+
+(function() {
+  'use strict';
+
   userService.$inject = ["$http", "$rootScope", "networkService", "CONFIG"];
   angular
     .module('tweetstockr')
@@ -399,19 +424,22 @@
     function initializeClock(endtime) {
       function updateClock() {
         var t = getTimeRemaining(endtime);
-        var timeString = ('0' + t.minutes).slice(-2) + ':' + ('0' + t.seconds).slice(-2);
 
-        $scope.$apply(function() {
-          $scope.nextUpdateIn = timeString;
-        });
-
-        if (t.total <= 0) {
-          var timeinterval = setInterval(updateClock, 1000);
+        if (t.total > 0) {
+          var timeString = ('0' + t.minutes).slice(-2) + ':' + ('0' + t.seconds).slice(-2);
+          $scope.$apply(function() {
+            $scope.nextUpdateIn = timeString;
+          });
+        } else {
+          $scope.$apply(function() {
+            $scope.nextUpdateIn = '00:00';
+          });
           clearInterval(timeinterval);
         }
       }
 
       updateClock();
+      var timeinterval = setInterval(updateClock, 1000);
     }
 
     socket.on('update-date', function(data) {
@@ -589,14 +617,23 @@
 (function() {
   'use strict';
 
+  tournamentsController.$inject = ["$scope", "tournamentService"];
   angular
     .module('tweetstockr')
     .controller('tournamentsController', tournamentsController);
 
-  function tournamentsController () {
-    
+  function tournamentsController ($scope, tournamentService) {
+    tournamentService.getActiveTournaments(
+      function onSuccess(response) {
+        $scope.tournamentsList = response;
+      },
+      function onError(response) {
+        console.log('error: ', JSON.stringify(response));
+      }
+    );
   }
 })();
+
 (function() {
   'use strict';
 

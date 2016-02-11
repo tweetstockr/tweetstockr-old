@@ -23,6 +23,7 @@
     "angular-route": "~1.4.9",
     "socket.io-client": "~1.4.5",
     "angular-chartist.js": "^3.3.13",
-    "angular-loading-bar": "^0.8.0"
+    "angular-loading-bar": "^0.8.0",
+    "angular-ui-notification": "^0.1.0"
   }
 }

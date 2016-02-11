@@ -32,19 +32,22 @@
     function initializeClock(endtime) {
       function updateClock() {
         var t = getTimeRemaining(endtime);
-        var timeString = ('0' + t.minutes).slice(-2) + ':' + ('0' + t.seconds).slice(-2);
 
-        $scope.$apply(function() {
-          $scope.nextUpdateIn = timeString;
-        });
-
-        if (t.total <= 0) {
-          var timeinterval = setInterval(updateClock, 1000);
+        if (t.total > 0) {
+          var timeString = ('0' + t.minutes).slice(-2) + ':' + ('0' + t.seconds).slice(-2);
+          $scope.$apply(function() {
+            $scope.nextUpdateIn = timeString;
+          });
+        } else {
+          $scope.$apply(function() {
+            $scope.nextUpdateIn = '00:00';
+          });
           clearInterval(timeinterval);
         }
       }
 
       updateClock();
+      var timeinterval = setInterval(updateClock, 1000);
     }
 
     socket.on('update-date', function(data) {
