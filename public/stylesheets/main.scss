@@ -14,3 +14,17 @@
 @import "pages/tournament";
 @import "pages/wallet";
 @import "pages/market";
+
+.ct-series-a {
+  .ct-area {
+    fill: $color-success;
+  }
+
+  .ct-line {
+    stroke: $color-success;
+  }
+
+  .ct-point {
+    stroke: $color-success;
+  }
+}

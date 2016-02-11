@@ -482,6 +482,10 @@
       $scope.$apply();
     });
 
+    $scope.chartOptions = {
+      showArea: true
+    }
+
     $scope.tabs = [{
         title: 'Shares'
       , url: 'components/shares.html'
