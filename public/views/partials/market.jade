@@ -10,6 +10,8 @@ section.market
       span {{ nextUpdateIn }}
 
   .market-content
+    include ./../components/loading
+    
     div(ng-include="currentTab")
     audio(class="market-audio" controls id="audio")
       source(src="assets/coin.mp3" type="audio/mpeg")

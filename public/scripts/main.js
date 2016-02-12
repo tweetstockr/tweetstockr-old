@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('tweetstockr', ['ngRoute', 'angular-chartist', 'angular-loading-bar', 'ui-notification'])
+    .module('tweetstockr', ['ngRoute', 'angular-chartist', 'ui-notification'])
     .constant('CONFIG', {
       apiUrl: 'http://api.tweetstockr.com'
     })

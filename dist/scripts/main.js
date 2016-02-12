@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('tweetstockr', ['ngRoute', 'angular-chartist', 'angular-loading-bar', 'ui-notification'])
+    .module('tweetstockr', ['ngRoute', 'angular-chartist', 'ui-notification'])
     .constant('CONFIG', {
       apiUrl: 'http://api.tweetstockr.com'
     })
@@ -399,10 +399,12 @@
 
   function marketController ($rootScope, $scope, portfolioService, networkService, marketService, CONFIG, Notification) {
     var socket = io(CONFIG.apiUrl);
+    $scope.loading = false;
 
     socket.on('connect', function () {
       console.log('connected!');
       socket.emit('update-me');
+      $scope.loading = true;
     });
 
     // Update Countdown ========================================================
@@ -549,6 +551,7 @@
       portfolioService.getPortfolio(
         function onSuccess(data) {
           $scope.portfolio = data;
+          $scope.loading = true;
         },
         function onError(data) {
           Notification.error(data.message);
@@ -569,10 +572,13 @@
 
   function profileController ($rootScope, $scope, userService, Notification) {
     $rootScope.updateCurrentUser();
+    $scope.loading = false;
 
     $scope.resetAccount = function () {
       userService.resetAccount(
         function successCallback(response) {
+          $scope.loading = true;
+          
           if (response.message) {
             Notification.success(response.message);
           }
@@ -596,9 +602,12 @@
     .controller('rankingController', rankingController);
 
   function rankingController ($scope, leaderboardService) {
+    $scope.loading = false;
+    
     leaderboardService.getRanking(
       function onSuccess(response) {
         $scope.rankingList = response;
+        $scope.loading = true;
       },
       function onError(response) {
         console.log('error: ', JSON.stringify(response));
@@ -627,9 +636,12 @@
     .controller('tournamentsController', tournamentsController);
 
   function tournamentsController ($scope, tournamentService) {
+    $scope.loading = false;
+
     tournamentService.getActiveTournaments(
       function onSuccess(response) {
         $scope.tournamentsList = response;
+        $scope.loading = true;
       },
       function onError(response) {
         console.log('error: ', JSON.stringify(response));
@@ -647,9 +659,12 @@
     .controller('walletController', walletController);
 
   function walletController ($scope, walletService) {
+    $scope.loading = false;
+
     walletService.getTransactions(
       function successCallback(response) {
         $scope.transactionList = response;
+        $scope.loading = true;
       },
       function errorCallback(response) {
         console.log('error: ', JSON.stringify(response));

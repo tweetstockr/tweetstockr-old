@@ -8,6 +8,7 @@
 
 @import "components/header";
 @import "components/subheader";
+@import "components/loading";
 
 @import "pages/ranking";
 @import "pages/profile";
@@ -27,4 +28,8 @@
   .ct-point {
     stroke: $color-success;
   }
+}
+
+.ct-label {
+  color: rgba($white, .4);
 }

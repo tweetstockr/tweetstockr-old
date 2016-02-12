@@ -7,10 +7,12 @@
 
   function marketController ($rootScope, $scope, portfolioService, networkService, marketService, CONFIG, Notification) {
     var socket = io(CONFIG.apiUrl);
+    $scope.loading = false;
 
     socket.on('connect', function () {
       console.log('connected!');
       socket.emit('update-me');
+      $scope.loading = true;
     });
 
     // Update Countdown ========================================================
@@ -157,6 +159,7 @@
       portfolioService.getPortfolio(
         function onSuccess(data) {
           $scope.portfolio = data;
+          $scope.loading = true;
         },
         function onError(data) {
           Notification.error(data.message);
