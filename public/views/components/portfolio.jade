@@ -25,4 +25,4 @@
             span.market-item-spaces__title Total
             label.market-item-spaces__info {{ trade.currentPrice * trade.amount }}
 
-        button.btn.btn-success.btn-block(ng-click="sellShare(trade)") Sell for {{ trade.currentPrice * trade.amount }}
+        button.btn.btn-success.btn-block(ng-click="sellShare(trade)" ng-disabled="stockBtn") Sell for {{ trade.currentPrice * trade.amount }}
