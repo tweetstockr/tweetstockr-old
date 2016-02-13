@@ -12,7 +12,9 @@ var gulp = require('gulp')
   , jshint = require('gulp-jshint')
   , stylish = require('jshint-stylish')
   , ngAnnotate = require('gulp-ng-annotate')
-  , ghPages= require('gulp-gh-pages');
+  , ghPages= require('gulp-gh-pages')
+  , wiredep = require('wiredep').stream
+  , del = require('del');
 
 var path = {
   views: {
@@ -40,12 +42,17 @@ var path = {
     , output: 'dist/assets'
   }
 
-  , deploy: 'dist/**/*'
+  , output: 'dist/**/*'
 }
 
 gulp.task('build:views', function() {
   return gulp.src(path.views.input)
     .pipe(plumber())
+    .pipe(wiredep({
+      directory: 'bower_components',
+      bowerJson: require('./bower.json'),
+      ignorePath: '../'
+    }))
     .pipe(jade())
     .pipe(gulp.dest(path.views.output))
     .pipe(browserSync.stream());
@@ -98,15 +105,26 @@ gulp.task('build:assets', function() {
 gulp.task('browserSync', function() {
   browserSync({
     server: {
-      baseDir: 'dist'
+      baseDir: ['./', './dist']
     },
     port: 9000,
     notify: false,
-    files: 'bower_components/**/*',
     options: {
       reloadDelay: 50
     }
   });
+});
+
+// Remove pre-existing content from output and test folders
+gulp.task('clean:dist', function () {
+  del.sync([
+    path.output
+  ]);
+});
+
+gulp.task('deploy', ['compile'], function () {
+  return gulp.src(path.output)
+    .pipe(ghPages());
 });
 
 gulp.task('compile', [
@@ -114,6 +132,7 @@ gulp.task('compile', [
   , 'build:stylesheets'
   , 'build:scripts'
   , 'build:assets'
+  , 'clean:dist'
 ]);
 
 gulp.task('watcher', function() {
@@ -132,8 +151,3 @@ gulp.task('default', [
   , 'lint:scripts'
   , 'server'
 ]);
-
-gulp.task('deploy', ['compile'], function () {
-  return gulp.src(paths.deploy)
-    .pipe(ghPages());
-});

@@ -1,6 +1,6 @@
 {
   "name": "tweetstockr",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "homepage": "https://github.com/tweetstockr/tweetstockr",
   "authors": [
     "Bu Kinoshita <bukinoshita@gmail.com>",
@@ -16,7 +16,7 @@
     "bower_components",
     "test",
     "tests",
-    "dist/bower/"
+    "bower_components"
   ],
   "dependencies": {
     "angular": "~1.4.9",
@@ -24,5 +24,10 @@
     "socket.io-client": "~1.4.5",
     "angular-chartist.js": "^3.3.13",
     "angular-ui-notification": "^0.1.0"
+  },
+  "overrides": {
+    "socket.io-client": {
+      "main": "socket.io.js"
+    }
   }
 }
