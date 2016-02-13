@@ -1,0 +1,139 @@
+.loading {
+	width: 84px;
+	height: 84px;
+	position: relative;
+	transform: rotateZ(45deg);
+  margin: 50px auto;
+  text-align: center;
+  display: block;
+}
+
+.loading-cube {
+	position: relative;
+  float: left;
+  width: 50%;
+  height: 50%;
+	transform: rotateZ(45deg);
+	transform: scale(1.1);
+
+  &:before {
+    content: "";
+  	position: absolute;
+  	top: 0;
+  	left: 0;
+  	width: 100%;
+  	height: 100%;
+  	background-color: rgb(38,43,53);
+  	animation: loading-cube 2.04s infinite linear both;
+  	transform-origin: 100% 100%;
+  }
+}
+
+.loading-2 {
+	transform: scale(1.1) rotateZ(90deg);
+
+  &:before {
+    animation-delay: 0.255s;
+  }
+}
+
+.loading-3 {
+	transform: scale(1.1) rotateZ(180deg);
+
+  &:before {
+    animation-delay: 0.51s;
+  }
+}
+
+.loading-4 {
+	transform: scale(1.1) rotateZ(270deg);
+
+  &:before {
+  	animation-delay: 0.765s;
+  }
+}
+
+@keyframes loading-cube {
+	0%, 10% {
+		transform: perspective(158px) rotateX(-180deg);
+		opacity: 0;
+	}
+	25%,
+				75% {
+		transform: perspective(158px) rotateX(0deg);
+		opacity: 1;
+	}
+	90%,
+				100% {
+		transform: perspective(158px) rotateY(180deg);
+		opacity: 0;
+	}
+}
+
+@-o-keyframes loading-cube {
+	0%, 10% {
+		-o-transform: perspective(158px) rotateX(-180deg);
+		opacity: 0;
+	}
+	25%,
+				75% {
+		-o-transform: perspective(158px) rotateX(0deg);
+		opacity: 1;
+	}
+	90%,
+				100% {
+		-o-transform: perspective(158px) rotateY(180deg);
+		opacity: 0;
+	}
+}
+
+@-ms-keyframes loading-cube {
+	0%, 10% {
+		-ms-transform: perspective(158px) rotateX(-180deg);
+		opacity: 0;
+	}
+	25%,
+				75% {
+		-ms-transform: perspective(158px) rotateX(0deg);
+		opacity: 1;
+	}
+	90%,
+				100% {
+		-ms-transform: perspective(158px) rotateY(180deg);
+		opacity: 0;
+	}
+}
+
+@-webkit-keyframes loading-cube {
+	0%, 10% {
+		-webkit-transform: perspective(158px) rotateX(-180deg);
+		opacity: 0;
+	}
+	25%,
+				75% {
+		-webkit-transform: perspective(158px) rotateX(0deg);
+		opacity: 1;
+	}
+	90%,
+				100% {
+		-webkit-transform: perspective(158px) rotateY(180deg);
+		opacity: 0;
+	}
+}
+
+@-moz-keyframes loading-cube {
+	0%, 10% {
+		-moz-transform: perspective(158px) rotateX(-180deg);
+		opacity: 0;
+	}
+	25%,
+				75% {
+		-moz-transform: perspective(158px) rotateX(0deg);
+		opacity: 1;
+	}
+	90%,
+				100% {
+		-moz-transform: perspective(158px) rotateY(180deg);
+		opacity: 0;
+	}
+}

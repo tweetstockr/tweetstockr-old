@@ -8,9 +8,28 @@
 
 @import "components/header";
 @import "components/subheader";
+@import "components/loading";
 
 @import "pages/ranking";
 @import "pages/profile";
 @import "pages/tournament";
 @import "pages/wallet";
 @import "pages/market";
+
+.ct-series-a {
+  .ct-area {
+    fill: $color-success;
+  }
+
+  .ct-line {
+    stroke: $color-success;
+  }
+
+  .ct-point {
+    stroke: $color-success;
+  }
+}
+
+.ct-label {
+  color: rgba($white, .4);
+}

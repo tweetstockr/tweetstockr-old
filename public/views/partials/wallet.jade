@@ -1,4 +1,6 @@
-.wallet-box
+include ./../components/loading
+
+.wallet-box(ng-show="loading")
   .col-md-4.wallet-content
     h2 Amount Points
     h3 {{ balance }} pts
@@ -12,7 +14,7 @@
     h3 {{ stats.totalSells }} pts
 
 
-section.transactions
+section.transactions(ng-show="loading")
   header.transactions-header
     h1 Transactions
 

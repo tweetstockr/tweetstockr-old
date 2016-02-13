@@ -7,10 +7,12 @@
 
   function marketController ($rootScope, $scope, portfolioService, networkService, marketService, CONFIG, Notification) {
     var socket = io(CONFIG.apiUrl);
+    $scope.loading = false;
 
     socket.on('connect', function () {
       console.log('connected!');
       socket.emit('update-me');
+      $scope.loading = true;
     });
 
     // Update Countdown ========================================================
@@ -32,19 +34,22 @@
     function initializeClock(endtime) {
       function updateClock() {
         var t = getTimeRemaining(endtime);
-        var timeString = ('0' + t.minutes).slice(-2) + ':' + ('0' + t.seconds).slice(-2);
 
-        $scope.$apply(function() {
-          $scope.nextUpdateIn = timeString;
-        });
-
-        if (t.total <= 0) {
-          var timeinterval = setInterval(updateClock, 1000);
+        if (t.total > 0) {
+          var timeString = ('0' + t.minutes).slice(-2) + ':' + ('0' + t.seconds).slice(-2);
+          $scope.$apply(function() {
+            $scope.nextUpdateIn = timeString;
+          });
+        } else {
+          $scope.$apply(function() {
+            $scope.nextUpdateIn = '00:00';
+          });
           clearInterval(timeinterval);
         }
       }
 
       updateClock();
+      var timeinterval = setInterval(updateClock, 1000);
     }
 
     socket.on('update-date', function(data) {
@@ -87,6 +92,10 @@
       $scope.$apply();
     });
 
+    $scope.chartOptions = {
+      showArea: true
+    }
+
     $scope.tabs = [{
         title: 'Shares'
       , url: 'components/shares.html'
@@ -121,10 +130,12 @@
     };
 
     $scope.sellShare = function(share) {
+      $scope.stockBtn = true;
+
       marketService.sell(share.tradeId,
         function successCallback(response) {
-          Notification.success(response.message);
           $scope.getPortfolio();
+          Notification.success(response.message);
         },
         function errorCallback(response) {
             Notification.error(response.message);
@@ -133,6 +144,8 @@
     };
 
     $scope.buyShare = function(name, quantity) {
+      $scope.stockBtn = true;
+
       marketService.buy(name, quantity,
         function successCallback(response) {
           Notification.success(response);
@@ -150,6 +163,8 @@
       portfolioService.getPortfolio(
         function onSuccess(data) {
           $scope.portfolio = data;
+          $scope.loading = true;
+          $scope.stockBtn = false;
         },
         function onError(data) {
           Notification.error(data.message);

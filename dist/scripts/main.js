@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('tweetstockr', ['ngRoute', 'angular-chartist', 'angular-loading-bar', 'ui-notification'])
+    .module('tweetstockr', ['ngRoute', 'angular-chartist', 'ui-notification'])
     .constant('CONFIG', {
       apiUrl: 'http://api.tweetstockr.com'
     })
@@ -239,6 +239,31 @@
 (function() {
   'use strict';
 
+  tournamentService.$inject = ["CONFIG", "networkService"];
+  angular
+    .module('tweetstockr')
+    .factory('tournamentService', tournamentService);
+
+  function tournamentService (CONFIG, networkService) {
+    return {
+      getActiveTournaments: function (onSuccess, onError) {
+        networkService.getAuth(
+          CONFIG.apiUrl + '/tournaments',
+          function successCallback(response) {
+            onSuccess(response);
+          },
+          function errorCallback(response) {
+            onError(response);
+          }
+        );
+      }
+    };
+  }
+})();
+
+(function() {
+  'use strict';
+
   userService.$inject = ["$http", "$rootScope", "networkService", "CONFIG"];
   angular
     .module('tweetstockr')
@@ -349,6 +374,7 @@
           $scope.twitterUser = response.user.twitter.username;
           $scope.balance = response.balance;
           $scope.ranking = response.ranking;
+          $scope.tokens = response.user.tokens;
           // These are not being used yet...
           $scope.profileImage = response.user.twitter.profile_image;
           $scope.profileImageThumb = response.user.twitter.profile_image_normal;
@@ -374,10 +400,12 @@
 
   function marketController ($rootScope, $scope, portfolioService, networkService, marketService, CONFIG, Notification) {
     var socket = io(CONFIG.apiUrl);
+    $scope.loading = false;
 
     socket.on('connect', function () {
       console.log('connected!');
       socket.emit('update-me');
+      $scope.loading = true;
     });
 
     // Update Countdown ========================================================
@@ -399,19 +427,22 @@
     function initializeClock(endtime) {
       function updateClock() {
         var t = getTimeRemaining(endtime);
-        var timeString = ('0' + t.minutes).slice(-2) + ':' + ('0' + t.seconds).slice(-2);
 
-        $scope.$apply(function() {
-          $scope.nextUpdateIn = timeString;
-        });
-
-        if (t.total <= 0) {
-          var timeinterval = setInterval(updateClock, 1000);
+        if (t.total > 0) {
+          var timeString = ('0' + t.minutes).slice(-2) + ':' + ('0' + t.seconds).slice(-2);
+          $scope.$apply(function() {
+            $scope.nextUpdateIn = timeString;
+          });
+        } else {
+          $scope.$apply(function() {
+            $scope.nextUpdateIn = '00:00';
+          });
           clearInterval(timeinterval);
         }
       }
 
       updateClock();
+      var timeinterval = setInterval(updateClock, 1000);
     }
 
     socket.on('update-date', function(data) {
@@ -454,6 +485,10 @@
       $scope.$apply();
     });
 
+    $scope.chartOptions = {
+      showArea: true
+    }
+
     $scope.tabs = [{
         title: 'Shares'
       , url: 'components/shares.html'
@@ -488,10 +523,12 @@
     };
 
     $scope.sellShare = function(share) {
+      $scope.stockBtn = true;
+
       marketService.sell(share.tradeId,
         function successCallback(response) {
-          Notification.success(response.message);
           $scope.getPortfolio();
+          Notification.success(response.message);
         },
         function errorCallback(response) {
             Notification.error(response.message);
@@ -500,6 +537,8 @@
     };
 
     $scope.buyShare = function(name, quantity) {
+      $scope.stockBtn = true;
+
       marketService.buy(name, quantity,
         function successCallback(response) {
           Notification.success(response);
@@ -517,6 +556,8 @@
       portfolioService.getPortfolio(
         function onSuccess(data) {
           $scope.portfolio = data;
+          $scope.loading = true;
+          $scope.stockBtn = false;
         },
         function onError(data) {
           Notification.error(data.message);
@@ -537,10 +578,13 @@
 
   function profileController ($rootScope, $scope, userService, Notification) {
     $rootScope.updateCurrentUser();
+    $scope.loading = false;
 
     $scope.resetAccount = function () {
       userService.resetAccount(
         function successCallback(response) {
+          $scope.loading = true;
+          
           if (response.message) {
             Notification.success(response.message);
           }
@@ -564,9 +608,12 @@
     .controller('rankingController', rankingController);
 
   function rankingController ($scope, leaderboardService) {
+    $scope.loading = false;
+    
     leaderboardService.getRanking(
       function onSuccess(response) {
         $scope.rankingList = response;
+        $scope.loading = true;
       },
       function onError(response) {
         console.log('error: ', JSON.stringify(response));
@@ -589,14 +636,26 @@
 (function() {
   'use strict';
 
+  tournamentsController.$inject = ["$scope", "tournamentService"];
   angular
     .module('tweetstockr')
     .controller('tournamentsController', tournamentsController);
 
-  function tournamentsController () {
-    
+  function tournamentsController ($scope, tournamentService) {
+    $scope.loading = false;
+
+    tournamentService.getActiveTournaments(
+      function onSuccess(response) {
+        $scope.tournamentsList = response;
+        $scope.loading = true;
+      },
+      function onError(response) {
+        console.log('error: ', JSON.stringify(response));
+      }
+    );
   }
 })();
+
 (function() {
   'use strict';
 
@@ -606,9 +665,12 @@
     .controller('walletController', walletController);
 
   function walletController ($scope, walletService) {
+    $scope.loading = false;
+
     walletService.getTransactions(
       function successCallback(response) {
         $scope.transactionList = response;
+        $scope.loading = true;
       },
       function errorCallback(response) {
         console.log('error: ', JSON.stringify(response));

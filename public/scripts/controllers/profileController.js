@@ -7,10 +7,13 @@
 
   function profileController ($rootScope, $scope, userService, Notification) {
     $rootScope.updateCurrentUser();
+    $scope.loading = false;
 
     $scope.resetAccount = function () {
       userService.resetAccount(
         function successCallback(response) {
+          $scope.loading = true;
+          
           if (response.message) {
             Notification.success(response.message);
           }

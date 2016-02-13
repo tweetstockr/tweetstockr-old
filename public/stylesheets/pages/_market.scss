@@ -96,46 +96,54 @@
 }
 
 .market-item {
-  border-radius: 3px;
+  border-radius: 5px;
   overflow: hidden;
   margin-bottom: 30px;
 }
 
 .market-item-header {
   padding: 15px;
-  border: 1px solid $gray-light;
+  background-color: $color-primary;
 }
 
 .market-item-header__title {
   margin-bottom: 0;
   font-weight: 300;
-  color: $color-primary;
+  color: $white;
   font-size: 16px;
 }
 
 .market-item-body {
-  border-right: 1px solid $gray-light;
-  border-left: 1px solid $gray-light;
+  background-color: $color-primary;
 }
 
 .market-item-footer {
-  border-top: 1px solid $gray-light;
-
   .btn {
     border-radius: 0;
+    height: 55px;
   }
 }
 
 .market-item-spaces {
   display: inline-block;
   text-align: center;
-  width: 25%;
+  width: 33.333%;
   border-right: 1px solid $gray-light;
-  min-height: 55px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  background-color: $snow;
+
+  input {
+    background-color: transparent;
+  }
 
   &:first-child {
     border-left: 1px solid $gray-light;
   }
+}
+
+.market-item-spaces--portfolio {
+  width: 25%;
 }
 
 .market-item-spaces__title {

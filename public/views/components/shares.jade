@@ -18,11 +18,7 @@
             label.market-item-spaces__info {{ share.price }}
 
           li.market-item-spaces
-            span.market-item-spaces__title Variation
-            label.market-item-spaces__info {{ share.variation }}
-
-          li.market-item-spaces
             span.market-item-spaces__title Total
             label.market-item-spaces__info {{ share.price * shareAmount }}
 
-        button.btn.btn-success.btn-block(ng-click="buyShare(share.name, shareAmount)") Buy Share
+        button.btn.btn-success.btn-block(ng-click="buyShare(share.name, shareAmount)" ng-disabled="stockBtn") Buy Share
