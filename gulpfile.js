@@ -11,7 +11,8 @@ var gulp = require('gulp')
   , concat = require('gulp-concat')
   , jshint = require('gulp-jshint')
   , stylish = require('jshint-stylish')
-  , ngAnnotate = require('gulp-ng-annotate');
+  , ngAnnotate = require('gulp-ng-annotate')
+  , ghPages= require('gulp-gh-pages');
 
 var path = {
   views: {
@@ -38,6 +39,8 @@ var path = {
       input: 'public/assets/**/*'
     , output: 'dist/assets'
   }
+
+  , deploy: 'dist/**/*'
 }
 
 gulp.task('build:views', function() {
@@ -129,3 +132,8 @@ gulp.task('default', [
   , 'lint:scripts'
   , 'server'
 ]);
+
+gulp.task('deploy', ['compile'], function () {
+  return gulp.src(paths.deploy)
+    .pipe(ghPages());
+});
