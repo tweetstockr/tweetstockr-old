@@ -3,13 +3,13 @@ html(lang="en" ng-app="tweetstockr")
   head
     meta(charset="UTF-8")
     title Tweetstockr
+    
+    link(rel="stylesheet", href="stylesheets/vendors/angular-ui-notification.min.css")
+    link(rel="stylesheet", href="stylesheets/vendors/chartist.min.css")
+    link(rel="stylesheet", href="stylesheets/main.css")
 
     meta(name="viewport" content="width=device-width, initial-scale=1")
     
-    // bower:css
-    // endbower
-    link(rel="stylesheet" href="stylesheets/main.css")
-
   body
     navbar
     include ./components/subheader
@@ -18,6 +18,10 @@ html(lang="en" ng-app="tweetstockr")
       .content
         main(ng-view)
 
-    // bower:js
-    // endbower
+    script(src="scripts/vendors/angular.min.js")
+    script(src="scripts/vendors/socket.io.js")
+    script(src="scripts/vendors/angular-route.min.js")
+    script(src="scripts/vendors/angular-ui-notification.min.js")
+    script(src="scripts/vendors/chartist.min.js")
+    script(src="scripts/vendors/angular-chartist.min.js")
     script(src="scripts/main.js")
