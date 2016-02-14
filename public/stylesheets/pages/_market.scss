@@ -125,7 +125,8 @@
 }
 
 .market-item-spaces {
-  display: inline-block;
+  float: left;
+  list-style: none;
   text-align: center;
   width: 33.333%;
   border-right: 1px solid $gray-light;
