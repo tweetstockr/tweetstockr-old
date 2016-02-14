@@ -1,111 +1,126 @@
 'use strict';
 
+/**
+ * Dependencies
+ */
 var gulp = require('gulp')
-  , plumber = require('gulp-plumber')
-  , browserSync = require('browser-sync')
   , jade = require('gulp-jade')
   , sass = require('gulp-sass')
-  , csscss = require('gulp-csscss')
-  , minify = require('gulp-cssnano')
+  , sourcemaps = require('gulp-sourcemaps')
   , prefix = require('gulp-autoprefixer')
+  , uglify = require('gulp-uglify')
   , concat = require('gulp-concat')
   , jshint = require('gulp-jshint')
   , stylish = require('jshint-stylish')
   , ngAnnotate = require('gulp-ng-annotate')
-  , ghPages= require('gulp-gh-pages')
-  , wiredep = require('wiredep').stream
-  , del = require('del');
+  , notify = require('gulp-notify')
+  , plumber = require('gulp-plumber')
+  , gulpif = require('gulp-if')
+  , browserSync = require('browser-sync')
+  , inject = require('gulp-inject')
+  , flatten = require('gulp-flatten')
+  , ghPages = require('gulp-gh-pages');
 
-var path = {
+/**
+ * Environment
+ */
+var env = process.env.NODE_ENV || 'development';
+
+/**
+ * Paths
+ */
+var paths = {
   views: {
-      input: 'public/views/**/*.jade'
-    , output: 'dist/'
+      input: './public/views/**/*.jade'
+    , dev: './development/'
+    , output: './dist'
   },
 
   stylesheets: {
-      input: 'public/stylesheets/**/*.scss'
-    , output: 'dist/stylesheets'
+      input: './public/stylesheets/**/*.scss'
+    , dev: './development/stylesheets/'
+    , output: './dist/stylesheets/'
   },
 
   scripts: {
       input: [
-          'public/scripts/main.js'
-        , 'public/scripts/services/**/*.js'
-        , 'public/scripts/directives/**/*.js'
-        , 'public/scripts/controllers/**/*.js'
+          './public/scripts/main.js'
+        , './public/scripts/services/**/*.js'
+        , './public/scripts/directives/**/*.js'
+        , './public/scripts/controllers/**/*.js'
       ]
-    , output: 'dist/scripts'
+    , dev: './development/scripts/'
+    , output: './dist/scripts/'
   },
 
-  assets: {
-      input: 'public/assets/**/*'
-    , output: 'dist/assets'
-  }
+  bower: {
+    css: {
+        input: './bower_components/**/*.min.css'
+      , dev: './development/stylesheets/vendors/'
+      , output: './dist/stylesheets/vendors/'
+    },
+    js: {
+        input: [
+            './bower_components/**/*.min.js'
+          , './bower_components/socket.io-client/socket.io.js'
+        ]
+      , dev: './development/scripts/vendors/'
+      , output: './dist/scripts/vendors/'
+    }
+  },
 
-  , output: 'dist/**/*'
+  deploy: {
+    input: './dist/**/*'
+  }
 }
 
-gulp.task('build:views', function() {
-  return gulp.src(path.views.input)
-    .pipe(plumber())
-    .pipe(wiredep({
-      directory: 'bower_components',
-      bowerJson: require('./bower.json'),
-      ignorePath: '../'
-    }))
-    .pipe(jade())
-    .pipe(gulp.dest(path.views.output))
-    .pipe(browserSync.stream());
+/**
+ * Builds
+ */
+gulp.task('build:views', function () {
+  return gulp.src(paths.views.input)
+    .pipe(plumber({errorHandler: notify.onError('Error Jade: <%= error.message %>')}))
+    .pipe(gulpif(env === 'development', jade({pretty: true})))
+    .pipe(gulpif(env === 'production', jade()))
+    .pipe(gulpif(env === 'development', gulp.dest(paths.views.dev)))
+    .pipe(gulpif(env === 'production', gulp.dest(paths.views.output)))
+    .pipe(notify('Jade Compiled'))
 });
 
-gulp.task('build:stylesheets', function() {
-  return gulp.src(path.stylesheets.input)
-    .pipe(plumber())
-    .pipe(sass({
-      outputStyle: 'expanded',
-      sourceComments: true
-    }))
-    .pipe(prefix({
-      browsers: ['last 2 version', '> 1%'],
-      cascade: true,
-      remove: true
-    }))
-    .pipe(minify({
-      discardComments: {
-        removeAll: true
-      }
-    }))
-    .pipe(gulp.dest(path.stylesheets.output))
-    // .pipe(csscss())
-    .pipe(browserSync.stream());
-})
+gulp.task('build:stylesheets', function () {
+  return gulp.src(paths.stylesheets.input)
+    .pipe(plumber({errorHandler: notify.onError('Error Sass: <%= error.message %>')}))
+    .pipe(gulpif(env === 'development', sourcemaps.init()))
+    .pipe(gulpif(env === 'development', sass()))
+    .pipe(gulpif(env === 'production', sass({outputStyle: 'compressed'})))
+    .pipe(gulpif(env === 'development', sourcemaps.write()))
+    .pipe(gulpif(env === 'development', gulp.dest(paths.stylesheets.dev)))
+    .pipe(gulpif(env === 'production', gulp.dest(paths.stylesheets.output)))
+    .pipe(notify('Sass Compiled'))
+});
 
-gulp.task('build:scripts', function() {
-  return gulp.src(path.scripts.input)
-    .pipe(plumber())
+gulp.task('build:scripts', function () {
+  return gulp.src(paths.scripts.input)
+    .pipe(plumber({errorHandler: notify.onError('Error JS: <%= error.message %>')}))
+    .pipe(gulpif(env === 'production', jshint('.jshintrc')))
+    .pipe(gulpif(env === 'production', jshint.reporter('jshint-stylish')))
+    .pipe(gulpif(env === 'development', sourcemaps.init()))
     .pipe(concat('main.js'))
-    .pipe(ngAnnotate())
-    .pipe(gulp.dest(path.scripts.output))
-    .pipe(browserSync.stream());
+    .pipe(gulpif(env === 'development', sourcemaps.write()))
+    .pipe(gulpif(env === 'production', ngAnnotate({single_quotes: true})))
+    .pipe(gulpif(env === 'production', uglify()))
+    .pipe(gulpif(env === 'development', gulp.dest(paths.scripts.dev)))
+    .pipe(gulpif(env === 'production', gulp.dest(paths.scripts.output)))
+    .pipe(notify('JS Compiled'))
 });
 
-gulp.task('lint:scripts', function () {
-  return gulp.src(path.scripts.input)
-    .pipe(plumber())
-    .pipe(jshint('.jshintrc'))
-    .pipe(jshint.reporter('jshint-stylish'));
-});
-
-gulp.task('build:assets', function() {
-  return gulp.src(path.assets.input)
-    .pipe(plumber())
-    .pipe(gulp.dest(path.assets.output));
-});
-
-gulp.task('browserSync', function() {
+/**
+ * Server
+ */
+gulp.task('server:browserSync', function() {
   browserSync({
     server: {
-      baseDir: ['./', './dist']
+      baseDir: ['./', './development']
     },
     port: 9000,
     notify: false,
@@ -115,39 +130,33 @@ gulp.task('browserSync', function() {
   });
 });
 
-// Remove pre-existing content from output and test folders
-gulp.task('clean:dist', function () {
-  del.sync([
-    path.output
-  ]);
+ /**
+  * Helpers
+  */
+gulp.task('helper:bowerComponentsCss', function () {
+  gulp.src(paths.bower.css.input)
+    .pipe(flatten())
+    .pipe(gulpif(env === 'development', gulp.dest(paths.bower.css.dev)))
+    .pipe(gulpif(env === 'production', gulp.dest(paths.bower.css.output)))
 });
 
-gulp.task('deploy', ['compile'], function () {
-  return gulp.src(path.output)
-    .pipe(ghPages());
+gulp.task('helper:bowerComponentsJs', function () {
+  gulp.src(paths.bower.js.input)
+    .pipe(flatten())
+    .pipe(gulpif(env === 'development', gulp.dest(paths.bower.js.dev)))
+    .pipe(gulpif(env === 'production', gulp.dest(paths.bower.js.output)))
 });
 
-gulp.task('compile', [
+gulp.task('deploy', ['default'], function () {
+  return gulp.src(paths.deploy.input)
+    .pipe(ghPages())
+});
+
+gulp.task('default', [
     'build:views'
   , 'build:stylesheets'
   , 'build:scripts'
-  , 'build:assets'
-  , 'clean:dist'
-]);
-
-gulp.task('watcher', function() {
-  gulp.watch(path.views.input, ['build:views']);
-  gulp.watch(path.stylesheets.input, ['build:stylesheets']);
-  gulp.watch(path.scripts.input, ['build:scripts']);
-});
-
-gulp.task('server', [
-    'browserSync'
-  , 'watcher'
-]);
-
-gulp.task('default', [
-    'compile'
-  , 'lint:scripts'
-  , 'server'
-]);
+  , 'helper:bowerComponentsCss'
+  , 'helper:bowerComponentsJs'
+  , 'server:browserSync'
+])
