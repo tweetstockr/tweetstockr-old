@@ -19,7 +19,8 @@ var gulp = require('gulp')
   , browserSync = require('browser-sync')
   , inject = require('gulp-inject')
   , flatten = require('gulp-flatten')
-  , ghPages = require('gulp-gh-pages');
+  , ghPages = require('gulp-gh-pages')
+  , del = require('del');
 
 /**
  * Environment
@@ -67,6 +68,11 @@ var paths = {
       , dev: './development/scripts/vendors/'
       , output: './dist/scripts/vendors/'
     }
+  },
+
+  clean: {
+      development: './development/'
+    , dist: './dist/'
   },
 
   deploy: {
@@ -147,13 +153,24 @@ gulp.task('helper:bowerComponentsJs', function () {
     .pipe(gulpif(env === 'production', gulp.dest(paths.bower.js.output)))
 });
 
+gulp.task('helper:clean', function () {
+  del.sync([
+    paths.clean.development
+  ])
+
+  del.sync([
+    paths.clean.dist
+  ])
+})
+
 gulp.task('deploy', ['default'], function () {
   return gulp.src(paths.deploy.input)
     .pipe(ghPages())
 });
 
 gulp.task('default', [
-    'build:views'
+    'helper:clean'
+  , 'build:views'
   , 'build:stylesheets'
   , 'build:scripts'
   , 'helper:bowerComponentsCss'
