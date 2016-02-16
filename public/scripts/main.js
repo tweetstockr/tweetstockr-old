@@ -55,7 +55,7 @@
       });
 
       NotificationProvider.setOptions({
-          delay: 1000000
+          delay: 1000
         , startTop: 20
         , startRight: 10
         , verticalSpacing: 20
