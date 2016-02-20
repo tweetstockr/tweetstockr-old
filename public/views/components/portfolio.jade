@@ -1,12 +1,18 @@
 .row(ng-init="getPortfolio()")
-  .col-md-4(ng-repeat="trade in portfolio")
+  .empty-state(ng-hide="portfolio.length > 0")
+    include ./../icons/empty-state-portfolio
+    
+    h2 You don't have any shares yet
+    a(href="#/market/shares" class="btn btn-success") Buy shares
+  
+  .col-md-4(ng-repeat="trade in portfolio" ng-hide="portfolio.length === 0")
     article.market-item
       header.market-item-header
         h2.market-item-header__title {{ trade.stock }}
-        
+      
       section.market-item-body
         chartist(class="ct-chart ct-golden-section" chartist-data="trade.chartData" chartist-chart-type="Line" chartist-chart-options="chartOptions" chartist-responsive-options="barResponsiveOptions")
-
+        
       footer.market-item-footer
         ul.market-item-controls
           li.market-item-spaces.market-item-spaces--portfolio

@@ -1,5 +1,6 @@
 @import "helpers/_variables";
 @import "vendors/bootstrap/bootstrap";
+@import "vendors/ui-notification/ui-notification";
 
 @import "helpers/_responsive";
 @import "helpers/_reset";
@@ -15,6 +16,19 @@
 @import "pages/tournament";
 @import "pages/wallet";
 @import "pages/market";
+
+.empty-state {
+  text-align: center;
+  padding-top: 50px;
+  padding-bottom: 50px;
+
+  h2 {
+    font-size: 30px;
+    font-weight: 400;
+    margin-bottom: 25px;
+    margin-top: 30px;
+  }
+}
 
 .ct-series-a {
   .ct-area {

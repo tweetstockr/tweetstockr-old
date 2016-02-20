@@ -4,7 +4,7 @@
   angular
     .module('tweetstockr', ['ngRoute', 'angular-chartist', 'ui-notification'])
     .constant('CONFIG', {
-      apiUrl: 'http://api.tweetstockr.com'
+      apiUrl: 'http://localhost:4000'
     })
     .config(function ($routeProvider, $locationProvider, NotificationProvider) {
 
@@ -30,10 +30,10 @@
         controller: 'walletController'
       })
 
-      .when('/shop', {
-        templateUrl: 'partials/shop.html',
-        controller: 'shopController'
-      })
+      // .when('/shop', {
+      //   templateUrl: 'partials/shop.html',
+      //   controller: 'shopController'
+      // })
 
       .when('/ranking', {
         templateUrl: 'partials/ranking.html',

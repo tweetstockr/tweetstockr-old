@@ -91,6 +91,7 @@ gulp.task('build:views', function () {
     .pipe(gulpif(env === 'development', gulp.dest(paths.views.dev)))
     .pipe(gulpif(env === 'production', gulp.dest(paths.views.output)))
     .pipe(notify('Jade Compiled'))
+    .pipe(browserSync.stream())
 });
 
 gulp.task('build:stylesheets', function () {
@@ -103,6 +104,7 @@ gulp.task('build:stylesheets', function () {
     .pipe(gulpif(env === 'development', gulp.dest(paths.stylesheets.dev)))
     .pipe(gulpif(env === 'production', gulp.dest(paths.stylesheets.output)))
     .pipe(notify('Sass Compiled'))
+    .pipe(browserSync.stream())
 });
 
 gulp.task('build:scripts', function () {
@@ -118,6 +120,7 @@ gulp.task('build:scripts', function () {
     .pipe(gulpif(env === 'development', gulp.dest(paths.scripts.dev)))
     .pipe(gulpif(env === 'production', gulp.dest(paths.scripts.output)))
     .pipe(notify('JS Compiled'))
+    .pipe(browserSync.stream())
 });
 
 /**
@@ -161,6 +164,12 @@ gulp.task('helper:clean', function () {
   del.sync([
     paths.clean.dist
   ])
+});
+
+gulp.task('helper:watcher', function() {
+  gulp.watch(paths.views.input, ['build:views']);
+  gulp.watch(paths.stylesheets.input, ['build:stylesheets']);
+  gulp.watch(paths.scripts.input, ['build:scripts']);
 })
 
 gulp.task('deploy', ['default'], function () {
@@ -176,4 +185,5 @@ gulp.task('default', [
   , 'helper:bowerComponentsCss'
   , 'helper:bowerComponentsJs'
   , 'server:browserSync'
+  , 'helper:watcher'
 ])
