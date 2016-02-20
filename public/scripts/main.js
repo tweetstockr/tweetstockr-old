@@ -30,10 +30,10 @@
         controller: 'walletController'
       })
 
-      .when('/shop', {
-        templateUrl: 'partials/shop.html',
-        controller: 'shopController'
-      })
+      // .when('/shop', {
+      //   templateUrl: 'partials/shop.html',
+      //   controller: 'shopController'
+      // })
 
       .when('/ranking', {
         templateUrl: 'partials/ranking.html',
