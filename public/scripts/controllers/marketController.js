@@ -89,6 +89,7 @@
         stock.chartData = chartData;
       }
 
+      $scope.getPortfolio();
       $scope.$apply();
     });
 
@@ -163,6 +164,20 @@
       portfolioService.getPortfolio(
         function onSuccess(data) {
           $scope.portfolio = data;
+
+          for (var i = 0; i < $scope.portfolio.length; i++) {
+            var portfolio = $scope.portfolio[i];
+            var chartData = {};
+            chartData.labels = [];
+            chartData.series = [[]];
+
+            chartData.series[0].push(portfolio.currentPrice);
+
+            portfolio.chartData = chartData;
+
+            console.log(portfolio);
+          }
+
           $scope.loading = true;
           $scope.stockBtn = false;
         },
