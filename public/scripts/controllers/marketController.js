@@ -167,11 +167,18 @@
 
           for (var i = 0; i < $scope.portfolio.length; i++) {
             var portfolio = $scope.portfolio[i];
+            var dataLenght = portfolio.history.length;
             var chartData = {};
             chartData.labels = [];
             chartData.series = [[]];
 
-            chartData.series[0].push(portfolio.currentPrice);
+            for (var j = dataLenght-1; j >= 0; j--) {
+              var time = new Date(portfolio.history[j].created);
+              var label = time.getHours() + ':' + time.getMinutes();
+
+              chartData.series[0].push(portfolio.history[j].price);
+              chartData.labels.push(label);
+            }
 
             portfolio.chartData = chartData;
 
