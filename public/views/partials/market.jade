@@ -5,9 +5,9 @@ section.market
         a(class="market-tabs-link" href="" ng-class="{'is-active': isActiveTab(tab.url)}")
           .tab-icon(ng-include="tab.icon")
           | {{ tab.title }}
-
-    span.countdown
-      span {{ nextUpdateIn }}
+          
+    canvas(class="countdown" width="200" height="200" countdown)
+    span.countdown-timer {{ nextUpdateIn }}
 
   .market-content
     include ./../components/loading
