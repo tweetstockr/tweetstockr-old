@@ -1,6 +1,6 @@
 .tournament
-  .row(ng-repeat="item in tournamentsList | orderBy: 'dateStart'")
-    .col-md-4
+  .row
+    .col-md-4(ng-repeat="item in tournamentsList | orderBy: 'dateStart'")
       .tournament-info
         h2  {{ item.name }}
         p  Date Start: {{ item.dateStart }}
