@@ -75,6 +75,11 @@ var paths = {
     , dist: './dist/'
   },
 
+  cname: {
+      input: './CNAME'
+    , dist: './dist/'
+  },
+
   deploy: {
     input: './dist/**/*'
   }
@@ -156,6 +161,12 @@ gulp.task('helper:bowerComponentsJs', function () {
     .pipe(gulpif(env === 'production', gulp.dest(paths.bower.js.output)))
 });
 
+gulp.task('helper:cname', function () {
+  return gulp.src(paths.cname.input)
+    .pipe(plumber())
+    .pipe(gulp.dest(paths.cname.dist))
+})
+
 gulp.task('helper:clean', function () {
   del.sync([
     paths.clean.development
@@ -184,6 +195,7 @@ gulp.task('default', [
   , 'build:scripts'
   , 'helper:bowerComponentsCss'
   , 'helper:bowerComponentsJs'
+  , 'helper:cname'
   , 'server:browserSync'
   , 'helper:watcher'
 ])
