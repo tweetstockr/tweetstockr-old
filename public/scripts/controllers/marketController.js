@@ -6,7 +6,7 @@
     .controller('marketController', marketController);
 
   function marketController ($rootScope, $scope, portfolioService, networkService, marketService, CONFIG, Notification) {
-    var socket = io(CONFIG.apiUrl, {transports: ['websocket']});
+    var socket = io(CONFIG.apiUrl);
     $scope.loading = false;
 
     socket.on('connect', function () {
