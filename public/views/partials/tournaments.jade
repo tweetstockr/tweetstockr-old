@@ -9,37 +9,13 @@
         
         section.tournament-players
           h3.tournament-players__title Players:
+
           ul
-            li.tournament-players-item
-              img(class="tournament-players__image" src="https://s3.amazonaws.com/uifaces/faces/twitter/brad_frost/128.jpg", alt="")
+            li(class="tournament-players-item" ng-repeat="player in item.players | orderBy: '-points'" ng-hide="player.length === 0")
+              img(class="tournament-players__image" src="player.user.profile_image_normal ", alt="")
               span.tournament-players-info
-                h4.tournament-players-info__name Brad Frost
-                h5.tournament-players-info__points 3000
-              
-            li.tournament-players-item  
-              img(class="tournament-players__image" src="https://s3.amazonaws.com/uifaces/faces/twitter/marcosmoralez/128.jpg", alt="")
-              span.tournament-players-info
-                h4.tournament-players-info__name Marcos Moralez
-                h5.tournament-players-info__points 3000
-                
-            li.tournament-players-item  
-              img(class="tournament-players__image" src="https://s3.amazonaws.com/uifaces/faces/twitter/csswizardry/128.jpg", alt="")
-              span.tournament-players-info
-                h4.tournament-players-info__name Marcos Moralez
-                h5.tournament-players-info__points 3000
-                
-            li.tournament-players-item  
-              img(class="tournament-players__image" src="https://s3.amazonaws.com/uifaces/faces/twitter/vladarbatov/128.jpg", alt="")
-              span.tournament-players-info
-                h4.tournament-players-info__name Marcos Moralez
-                h5.tournament-players-info__points 3000
-                
-            li.tournament-players-item  
-              img(class="tournament-players__image" src="https://s3.amazonaws.com/uifaces/faces/twitter/kastov_yury/128.jpg", alt="")
-              span.tournament-players-info
-                h4.tournament-players-info__name Marcos Moralez
-                h5.tournament-players-info__points 3000
-            
+                h4.tournament-players-info__name {{ player.user }}
+                h5.tournament-players-info__points {{ player.points }}
             
         section.tournament-rewards
           h3.tournament-rewards__title Rewards:
