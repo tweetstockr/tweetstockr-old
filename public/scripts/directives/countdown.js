@@ -3,9 +3,10 @@ angular
   .directive('countdown', ['$timeout', countdown]);
 
   function countdown(timer) {
+
     return {
       restrict: 'A',
-      link: function(scope, iElement) {
+      link: function(scope, iElement, attributes) {
         var context = iElement[0].getContext('2d');
         var x = iElement[0].width / 2;
         var y = iElement[0].height / 2;
@@ -25,7 +26,7 @@ angular
         }
 
         var getDeg = function(inPerc) {
-          inPerc = 30;
+          context.clearRect(0, 0, x*2, y*2);
           var aPerc = (inPerc * 0.02);
           endAngle = aPerc * Math.PI;
           context.beginPath();
@@ -35,7 +36,10 @@ angular
           context.stroke();
         }
 
-        timer(getDeg, 0);
+        scope.$watch('nextUpdatePerc', function(){
+          timer(getDeg(scope.nextUpdatePerc), 1);
+        });
       }
     }
+
   }

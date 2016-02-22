@@ -39,10 +39,12 @@
           var timeString = ('0' + t.minutes).slice(-2) + ':' + ('0' + t.seconds).slice(-2);
           $scope.$apply(function() {
             $scope.nextUpdateIn = timeString;
+            $scope.nextUpdatePerc = (t.total / $scope.roundDuration) * 100;
           });
         } else {
           $scope.$apply(function() {
             $scope.nextUpdateIn = '00:00';
+            $scope.nextUpdatePerc = 0;
           });
           clearInterval(timeinterval);
         }
@@ -53,6 +55,7 @@
     }
 
     socket.on('update-date', function(data) {
+      $scope.roundDuration = data.roundDuration;
       var deadline = new Date(data.nextUpdate);
       initializeClock(deadline);
     });
