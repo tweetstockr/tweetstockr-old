@@ -2,18 +2,47 @@
   .row
     .col-md-4(ng-repeat="item in tournamentsList | orderBy: 'dateStart'")
       .tournament-info
-        h2  {{ item.name }}
-        p  Date Start: {{ item.dateStart }}
-        p  Date End: {{ item.dateEnd }}
+        include ./../icons/tournament-icon
         
-        h3 Players:
-
-        ul
-          li(ng-repeat="player in item.players | orderBy: '-points'")
-            h4 {{ player.user }}:{{ player.points }}
+        h2.tournament-info__title  {{ item.name }}
+        label.tournament-info__date  From {{ item.dateStart | date: 'MMM dd, yyyy' }} To {{ item.dateEnd | date: 'MMM dd, yyyy' }}
+        
+        section.tournament-players
+          h3.tournament-players__title Players:
+          ul
+            li.tournament-players-item
+              img(class="tournament-players__image" src="https://s3.amazonaws.com/uifaces/faces/twitter/brad_frost/128.jpg", alt="")
+              span.tournament-players-info
+                h4.tournament-players-info__name Brad Frost
+                h5.tournament-players-info__points 3000
+              
+            li.tournament-players-item  
+              img(class="tournament-players__image" src="https://s3.amazonaws.com/uifaces/faces/twitter/marcosmoralez/128.jpg", alt="")
+              span.tournament-players-info
+                h4.tournament-players-info__name Marcos Moralez
+                h5.tournament-players-info__points 3000
+                
+            li.tournament-players-item  
+              img(class="tournament-players__image" src="https://s3.amazonaws.com/uifaces/faces/twitter/csswizardry/128.jpg", alt="")
+              span.tournament-players-info
+                h4.tournament-players-info__name Marcos Moralez
+                h5.tournament-players-info__points 3000
+                
+            li.tournament-players-item  
+              img(class="tournament-players__image" src="https://s3.amazonaws.com/uifaces/faces/twitter/vladarbatov/128.jpg", alt="")
+              span.tournament-players-info
+                h4.tournament-players-info__name Marcos Moralez
+                h5.tournament-players-info__points 3000
+                
+            li.tournament-players-item  
+              img(class="tournament-players__image" src="https://s3.amazonaws.com/uifaces/faces/twitter/kastov_yury/128.jpg", alt="")
+              span.tournament-players-info
+                h4.tournament-players-info__name Marcos Moralez
+                h5.tournament-players-info__points 3000
             
-        h3 Rewards:
-
-        ul
-          li(ng-repeat="reward in item.rewards | orderBy: '-place'")
-            h4 {{ reward.place + 1 }}th : {{ reward.tokens }} Tokens
+            
+        section.tournament-rewards
+          h3.tournament-rewards__title Rewards:
+          ul
+            li(class="tournament-rewards__item" ng-repeat="reward in item.rewards | orderBy: '-place'")
+              h4 {{ reward.place + 1 }}th : {{ reward.tokens }} Tokens
