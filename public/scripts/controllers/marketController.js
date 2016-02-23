@@ -6,7 +6,10 @@
     .controller('marketController', marketController);
 
   function marketController ($rootScope, $scope, portfolioService, networkService, marketService, CONFIG, Notification) {
-    var socket = io(CONFIG.apiUrl);
+    var socket = io.connect(CONFIG.apiUrl, {
+      secure: true,
+      transports: [ "flashsocket","polling","websocket" ]
+    });
     $scope.loading = false;
 
     socket.on('connect', function () {
