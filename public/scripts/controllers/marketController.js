@@ -5,18 +5,9 @@
     .module('tweetstockr')
     .controller('marketController', marketController);
 
-  function marketController ($rootScope, $scope, portfolioService, networkService, marketService, CONFIG, Notification) {
-    var socket = io.connect(CONFIG.apiUrl, {
-      secure: true,
-      transports: [ "flashsocket","polling","websocket" ]
-    });
-    $scope.loading = false;
+  function marketController ($rootScope, $scope, portfolioService, networkService, marketService, CONFIG, Notification, $timeout, $interval) {
 
-    socket.on('connect', function () {
-      console.log('connected!');
-      socket.emit('update-me');
-      $scope.loading = true;
-    });
+    $scope.loading = false;
 
     // Update Countdown ========================================================
     function getTimeRemaining(endtime) {
@@ -40,12 +31,12 @@
 
         if (t.total > 0) {
           var timeString = ('0' + t.minutes).slice(-2) + ':' + ('0' + t.seconds).slice(-2);
-          $scope.$apply(function() {
+          $timeout(function() {
             $scope.nextUpdateIn = timeString;
             $scope.nextUpdatePerc = (t.total / $scope.roundDuration) * 100;
           });
         } else {
-          $scope.$apply(function() {
+          $timeout(function() {
             $scope.nextUpdateIn = '00:00';
             $scope.nextUpdatePerc = 0;
           });
@@ -57,47 +48,63 @@
       var timeinterval = setInterval(updateClock, 1000);
     }
 
-    socket.on('update-date', function(data) {
-      $scope.roundDuration = data.roundDuration;
-      var deadline = new Date(data.nextUpdate);
-      initializeClock(deadline);
-    });
-    // =========================================================================
+    // Game loop ===============================================================
+    function getRoundData(){
 
-    socket.on('update', function (data) {
-      $scope.stocks = data;
+      marketService.getRound(
+        function successCallback(data) {
 
-      for (var i = 0; i < $scope.stocks.length; i++) {
-        var stock = $scope.stocks[i];
-        var dataLenght = stock.history.length;
+          var deadline = new Date(data.nextUpdate);
+          initializeClock(deadline);
 
-        if (stock.price > 0 && dataLenght > 1) {
-          if (stock.history[1].price > 0) {
-            var variationNumber = (( stock.price / stock.history[1].price ) - 1) * 100;
-            stock.variation = Math.round(variationNumber).toFixed(0) + '%';
-            stock.lastMove = (variationNumber < 0) ? 'danger' : 'success';
-            stock.icon = (variationNumber < 0) ? 'fa-caret-down' : 'fa-caret-up';
+          var formattedStocks = data.stocks;
+
+          for (var i = 0; i < formattedStocks.length; i++) {
+            var stock = formattedStocks[i];
+            var dataLenght = stock.history.length;
+
+            if (stock.price > 0 && dataLenght > 1) {
+              if (stock.history[1].price > 0) {
+                var variationNumber = (( stock.price / stock.history[1].price ) - 1) * 100;
+                stock.variation = Math.round(variationNumber).toFixed(0) + '%';
+                stock.lastMove = (variationNumber < 0) ? 'danger' : 'success';
+                stock.icon = (variationNumber < 0) ? 'fa-caret-down' : 'fa-caret-up';
+              }
+            }
+
+            var chartData = {};
+            chartData.labels = [];
+            chartData.series = [[]];
+
+            for (var j = dataLenght-1; j >= 0; j--) {
+              var time = new Date(stock.history[j].created);
+              var label = time.getHours() + ':' + time.getMinutes();
+
+              chartData.series[0].push(stock.history[j].price);
+              chartData.labels.push(label);
+            }
+
+            stock.chartData = chartData;
           }
+
+          $timeout(function(){
+            $scope.roundDuration = data.roundDuration;
+            $scope.stocks = formattedStocks;
+            $scope.getPortfolio();
+          });
+
+        },
+        function errorCallback(response) {
+            Notification.error(response.message);
         }
+      );
 
-        var chartData = {};
-        chartData.labels = [];
-        chartData.series = [[]];
+    };
+    getRoundData();
 
-        for (var j = dataLenght-1; j >= 0; j--) {
-          var time = new Date(stock.history[j].created);
-          var label = time.getHours() + ':' + time.getMinutes();
+    var roundInterval = $interval(getRoundData, 10000);
 
-          chartData.series[0].push(stock.history[j].price);
-          chartData.labels.push(label);
-        }
-
-        stock.chartData = chartData;
-      }
-
-      $scope.getPortfolio();
-      $scope.$apply();
-    });
+    // =========================================================================
 
     $scope.chartOptions = {
       showArea: true

@@ -32,6 +32,17 @@
             onError(response);
           }
         );
+      },
+      getRound: function(onSuccess, onError){
+        networkService.get(
+          CONFIG.apiUrl + '/round',
+          function successCallback(response){
+            onSuccess(response);
+          },
+          function errorCallback(response){
+            onError(response);
+          }
+        );
       }
     };
   }
