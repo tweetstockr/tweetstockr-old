@@ -1,40 +1,40 @@
 .row
   .col-md-7
     .profile
-      .profile-title
-        h2 Profile Information
-
-      .profile-content
-        img(ng-src="{{ profileImage }}", alt="username")
+      .profile-information-content
+        .col-md-4.profile-information__image
+          img(ng-src="{{ profileImage }}", alt="username")
             
-        h2
-          a(ng-href="http://www.twitter.com/{{ twitterUser }}")
-            | @{{ twitterUser }}
+        .col-md-8
+          h2.profile-information__user
+            a(ng-href="http://www.twitter.com/{{ twitterUser }}")
+              | @{{ twitterUser }}
 
-        h2
-          strong
-            | {{ balance }} pts
-          
-        h3
-          strong Rank: 
-          | {{ ranking }}th
-
-        button.btn.btn-primary(ng-click="resetAccount()")
-          | Reset Account
+          h3.profile-information__info
+            | Rank: {{ ranking }}th — {{ balance }} pts
+            
+          button.btn.btn-primary(ng-click="resetAccount()")
+            | Reset Account
+            
+          button.btn.btn-link(ng-click="logout()")
+            | Logout
 
   .col-md-5
-    .profile
-      .profile-title
-        h2 Joysticket Integration
+    .profile.profile-joysticket
+      header.profile-joysticket-header
+        img(src="https://joysticket.com/img/logo.png", alt="")
+      
+      section.profile-joysticket-content
+        h2.profile-joysticket__title
+          | Joysticket Integration
         
-      br
-      | Log in with your Joysticket account and redeem your pts for real rewards!
+        p.profile-joysticket__text
+          | Log in with your Joysticket account and redeem your points for real rewards!
+          
+        //- a(class="btn btn-primary" href="") View rewards
+        //- button.btn.btn-link
+        //-   | Logout Joysticket
       
-      br
-      br
-      
-      button.btn.btn-primary(ng-click="joysticketLogin()")
-        | Joysticket Login
-      
-      br
-      br
+        button.btn.btn-danger(ng-click="joysticketLogin()")
+          | Joysticket Login
+    

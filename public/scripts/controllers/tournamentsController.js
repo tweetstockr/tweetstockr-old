@@ -10,6 +10,7 @@
 
     tournamentService.getActiveTournaments(
       function onSuccess(response) {
+        console.log('tt', response);
         $scope.tournamentsList = response;
         $scope.loading = true;
       },
