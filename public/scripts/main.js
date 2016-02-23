@@ -4,7 +4,7 @@
   angular
     .module('tweetstockr', ['ngRoute', 'angular-chartist', 'ui-notification'])
     .constant('CONFIG', {
-      apiUrl: 'http://localhost:4000'
+      apiUrl: 'http://localhost:4000' || 'http://api.tweetstockr.com'
     })
     .config(function ($routeProvider, $locationProvider, NotificationProvider) {
 
