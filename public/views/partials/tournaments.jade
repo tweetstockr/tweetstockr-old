@@ -14,8 +14,11 @@
             li(class="tournament-players-item" ng-repeat="player in item.players | orderBy: '-points'" ng-hide="player.length === 0")
               img(class="tournament-players__image" ng-src="{{ player.user.profile_image }}", alt="")
               span.tournament-players-info
-                h4.tournament-players-info__name {{ player.user.name }}
-                h5.tournament-players-info__points {{ player.points }}
+                h4.tournament-players-info__name
+                  | Name: {{ player.user.name }}
+                  
+                h5.tournament-players-info__points
+                  | Points: {{ player.points }}
             
         section.tournament-rewards
           h3.tournament-rewards__title Rewards:
