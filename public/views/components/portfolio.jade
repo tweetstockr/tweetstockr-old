@@ -11,24 +11,24 @@
         h2.market-item-header__title {{ trade.stock }}
       
       section.market-item-body
-        chartist(class="ct-chart ct-golden-section" chartist-data="trade.chartData" chartist-chart-type="Line" chartist-chart-options="chartOptions" chartist-responsive-options="barResponsiveOptions")
+        chartist(class="ct-chart ct-golden-section" chartist-data="trade.chartData" chartist-chart-type="Line" chartist-chart-options="chartOptions" chartist-responsive-options="barResponsiveOptions" ng-if="responseReceived")
         
       footer.market-item-footer
         ul.market-item-controls
           li.market-item-spaces.market-item-spaces--portfolio
             span.market-item-spaces__title Amount
-            label.market-item-spaces__info {{ trade.amount }}
+            label.market-item-spaces__info {{ trade.amount | number }}
 
           li.market-item-spaces.market-item-spaces--portfolio
             span.market-item-spaces__title Purchase Price
-            label.market-item-spaces__info {{ trade.purchasePrice }}
+            label.market-item-spaces__info {{ trade.purchasePrice | number }}
 
           li.market-item-spaces.market-item-spaces--portfolio
             span.market-item-spaces__title Current Price
-            label.market-item-spaces__info {{ trade.currentPrice }}
+            label.market-item-spaces__info {{ trade.currentPrice | number }}
               
           li.market-item-spaces.market-item-spaces--portfolio
             span.market-item-spaces__title Total
-            label.market-item-spaces__info {{ trade.currentPrice * trade.amount }}
+            label.market-item-spaces__info {{ trade.currentPrice * trade.amount | number }}
 
-        button.btn.btn-success.btn-block(ng-click="sellShare(trade)" ng-disabled="stockBtn") Sell for {{ trade.currentPrice * trade.amount }}
+        button.btn.btn-success.btn-block(ng-click="sellShare(trade)" ng-disabled="stockBtn") Sell for {{ trade.currentPrice * trade.amount | number }}

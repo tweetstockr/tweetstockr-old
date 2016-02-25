@@ -69,7 +69,7 @@ var paths = {
     js: {
         input: [
             './bower_components/**/*.min.js'
-          , './bower_components/socket.io-client/socket.io.js'
+          , './bower_components/angularjs-ordinal-filter/ordinal-browser.js'
         ]
       , dev: './development/scripts/vendors/'
       , output: './dist/scripts/vendors/'

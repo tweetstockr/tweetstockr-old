@@ -6,8 +6,8 @@
     .controller('marketController', marketController);
 
   function marketController ($rootScope, $scope, portfolioService, networkService, marketService, CONFIG, Notification, $timeout, $interval) {
-
     $scope.loading = false;
+    $scope.responseReceived = false;
 
     // Update Countdown ========================================================
     function getTimeRemaining(endtime) {
@@ -49,11 +49,9 @@
     }
 
     // Game loop ===============================================================
-    function getRoundData(){
-
+    function getRoundData() {
       marketService.getRound(
         function successCallback(data) {
-
           var deadline = new Date(data.nextUpdate);
           initializeClock(deadline);
 
@@ -87,15 +85,16 @@
             stock.chartData = chartData;
           }
 
+          $scope.responseReceived = true;
+
           $timeout(function(){
             $scope.roundDuration = data.roundDuration;
             $scope.stocks = formattedStocks;
             $scope.getPortfolio();
           });
-
         },
         function errorCallback(response) {
-            Notification.error(response.message);
+          Notification.error(response.message);
         }
       );
 
@@ -148,11 +147,13 @@
 
       marketService.sell(share.tradeId,
         function successCallback(response) {
+          var audio = document.getElementById('audio2');
+          audio.play();
           $scope.getPortfolio();
           Notification.success(response.message);
         },
         function errorCallback(response) {
-            Notification.error(response.message);
+          Notification.error(response.message);
         }
       );
     };
@@ -194,10 +195,9 @@
             }
 
             portfolio.chartData = chartData;
-
-            console.log(portfolio);
           }
 
+          $scope.responseReceived = true;
           $scope.loading = true;
           $scope.stockBtn = false;
         },

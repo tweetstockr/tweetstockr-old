@@ -3,15 +3,15 @@ include ./../components/loading
 .wallet-box(ng-show="loading")
   .col-md-4.wallet-content
     h2 Amount Points
-    h3 {{ balance }} pts
+    h3 {{ balance | number }} pts
 
   .col-md-4.wallet-content
     h2 Total Spent
-    h3 {{ stats.totalPurchases }} pts
+    h3 {{ stats.totalPurchases | number }} pts
 
   .col-md-4.wallet-content
     h2 Total Earned
-    h3 {{ stats.totalSells }} pts
+    h3 {{ stats.totalSells | number }} pts
 
 
 section.transactions(ng-show="loading")
@@ -34,4 +34,4 @@ section.transactions(ng-show="loading")
       td.transaction-value(ng-class="{'sell': transaction.type=='Sell', 'buy': transaction.type=='Buy' }")
         span(ng-show="transaction.type=='Buy'") -
         span(ng-show=" transaction.type=='Sell'") +
-        | {{ transaction.price * transaction.amount }} pts
+        | {{ transaction.price * transaction.amount | number }} pts
