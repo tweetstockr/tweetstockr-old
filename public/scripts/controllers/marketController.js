@@ -6,8 +6,8 @@
     .controller('marketController', marketController);
 
   function marketController ($rootScope, $scope, portfolioService, networkService, marketService, CONFIG, Notification, $timeout, $interval) {
-
     $scope.loading = false;
+    $scope.responseReceived = false;
 
     // Update Countdown ========================================================
     function getTimeRemaining(endtime) {
@@ -49,11 +49,9 @@
     }
 
     // Game loop ===============================================================
-    function getRoundData(){
-
+    function getRoundData() {
       marketService.getRound(
         function successCallback(data) {
-
           var deadline = new Date(data.nextUpdate);
           initializeClock(deadline);
 
@@ -84,6 +82,7 @@
               chartData.labels.push(label);
             }
 
+            $scope.responseReceived = true;
             stock.chartData = chartData;
           }
 
@@ -95,7 +94,7 @@
 
         },
         function errorCallback(response) {
-            Notification.error(response.message);
+          Notification.error(response.message);
         }
       );
 

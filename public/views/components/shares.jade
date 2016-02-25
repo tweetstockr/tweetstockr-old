@@ -5,7 +5,7 @@
         h2.market-item-header__title {{ share.name}}
       
       section.market-item-body
-        chartist(class="ct-chart ct-golden-section" chartist-data="share.chartData" chartist-chart-type="Line" chartist-chart-options="chartOptions" chartist-responsive-options="barResponsiveOptions")
+        chartist(class="ct-chart ct-golden-section" chartist-data="share.chartData" chartist-chart-type="Line" chartist-chart-options="chartOptions" chartist-responsive-options="barResponsiveOptions" ng-if="responseReceived")
 
       footer.market-item-footer
         ul.market-item-controls
