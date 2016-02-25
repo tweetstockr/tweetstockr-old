@@ -15,10 +15,10 @@
 
           li.market-item-spaces
             span.market-item-spaces__title Price
-            label.market-item-spaces__info {{ share.price }}
+            label.market-item-spaces__info {{ share.price | number }}
 
           li.market-item-spaces
             span.market-item-spaces__title Total
-            label.market-item-spaces__info {{ share.price * shareAmount }}
+            label.market-item-spaces__info {{ share.price * shareAmount | number }}
 
-        button.btn.btn-success.btn-block(ng-click="buyShare(share.name, shareAmount)" ng-disabled="stockBtn") Buy Share
+        button.btn.btn-success.btn-block(ng-click="buyShare(share.name, shareAmount)" ng-disabled="stockBtn") Buy for {{ share.price * shareAmount | number }}

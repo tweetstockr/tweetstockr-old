@@ -148,6 +148,8 @@
 
       marketService.sell(share.tradeId,
         function successCallback(response) {
+          var audio = document.getElementById('audio2');
+          audio.play();
           $scope.getPortfolio();
           Notification.success(response.message);
         },
