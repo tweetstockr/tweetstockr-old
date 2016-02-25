@@ -82,16 +82,16 @@
               chartData.labels.push(label);
             }
 
-            $scope.responseReceived = true;
             stock.chartData = chartData;
           }
+
+          $scope.responseReceived = true;
 
           $timeout(function(){
             $scope.roundDuration = data.roundDuration;
             $scope.stocks = formattedStocks;
             $scope.getPortfolio();
           });
-
         },
         function errorCallback(response) {
           Notification.error(response.message);
@@ -153,7 +153,7 @@
           Notification.success(response.message);
         },
         function errorCallback(response) {
-            Notification.error(response.message);
+          Notification.error(response.message);
         }
       );
     };
@@ -195,10 +195,9 @@
             }
 
             portfolio.chartData = chartData;
-
-            console.log(portfolio);
           }
 
+          $scope.responseReceived = true;
           $scope.loading = true;
           $scope.stockBtn = false;
         },
