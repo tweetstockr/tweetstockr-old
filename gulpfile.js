@@ -54,6 +54,12 @@ var paths = {
     , output: './dist/scripts/'
   },
 
+  assets: {
+      input: './public/assets/*'
+    , dev: './development/assets/'
+    , output: './dist/assets/'
+  },
+
   bower: {
     css: {
         input: './bower_components/**/*.min.css'
@@ -128,6 +134,12 @@ gulp.task('build:scripts', function () {
     .pipe(browserSync.stream())
 });
 
+gulp.task('build:assets', function () {
+  return gulp.src(paths.assets.input)
+    .pipe(gulpif(env === 'development', gulp.dest(paths.assets.dev)))
+    .pipe(gulpif(env === 'production', gulp.dest(paths.assets.output)))
+});
+
 /**
  * Server
  */
@@ -165,7 +177,7 @@ gulp.task('helper:cname', function () {
   return gulp.src(paths.cname.input)
     .pipe(plumber())
     .pipe(gulp.dest(paths.cname.dist))
-})
+});
 
 gulp.task('helper:clean', function () {
   del.sync([
@@ -193,6 +205,7 @@ gulp.task('default', [
   , 'build:views'
   , 'build:stylesheets'
   , 'build:scripts'
+  , 'build:assets'
   , 'helper:bowerComponentsCss'
   , 'helper:bowerComponentsJs'
   , 'helper:cname'
