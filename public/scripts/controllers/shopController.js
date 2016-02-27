@@ -1,11 +1,3 @@
-(function() {
-  'use strict';
+module.exports = function () {
 
-  angular
-    .module('tweetstockr')
-    .controller('shopController', shopController);
-
-  function shopController () {
-    
-  }
-})();
+}

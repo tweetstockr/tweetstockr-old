@@ -1,0 +1,26 @@
+
+<div class="row">
+  <div class="col-md-7">
+    <div class="profile">
+      <div class="profile-information-content">
+        <div class="col-md-4 profile-information__image"><img ng-src="{{ profileImage }}" alt="username"/></div>
+        <div class="col-md-8">
+          <h2 class="profile-information__user"><a ng-href="http://www.twitter.com/{{ twitterUser }}">@{{ twitterUser }}</a></h2>
+          <h3 class="profile-information__info">Rank: {{ ranking }}th — {{ balance }} pts</h3>
+          <button ng-click="resetAccount()" class="btn btn-primary">Reset Account</button>
+          <button ng-click="logout()" class="btn btn-link">Logout</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-5">
+    <div class="profile profile-joysticket">
+      <header class="profile-joysticket-header"><img src="https://joysticket.com/img/logo.png" alt=""/></header>
+      <section class="profile-joysticket-content">
+        <h2 class="profile-joysticket__title">Joysticket Integration</h2>
+        <p class="profile-joysticket__text">Log in with your Joysticket account and redeem your points for real rewards!</p>
+        <button ng-click="joysticketLogin()" class="btn btn-danger">Joysticket Login</button>
+      </section>
+    </div>
+  </div>
+</div>
