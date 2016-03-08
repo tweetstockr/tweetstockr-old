@@ -40,6 +40,28 @@
             onError(response);
           }
         );
+      },
+      joysticketLogin : function(onSuccess, onError){
+        networkService.getAuth(
+          CONFIG.apiUrl + '/joylogin',
+          function successCallback(response) {
+            onSuccess(response);
+          },
+          function errorCallback(response) {
+            onError(response);
+          }
+        );
+      },
+      joysticketLogout : function(onSuccess, onError){
+        networkService.getAuth(
+          CONFIG.apiUrl + '/joylogout',
+          function successCallback(response) {
+            window.location.reload();
+          },
+          function errorCallback(response) {
+            onError(response);
+          }
+        );
       }
     };
   }

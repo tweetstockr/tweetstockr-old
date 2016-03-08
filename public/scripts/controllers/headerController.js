@@ -10,6 +10,12 @@
       userService.getProfile(
         function onSuccess(response) {
           $scope.username = response.user.twitter.displayName;
+          $scope.joysticket = response.user.joysticket;
+          if(response.user.joysticket){
+            $scope.joyUser = response.user.joysticket.username;
+          }else{
+            $scope.joyUser = false;
+          }
           $scope.twitterUser = response.user.twitter.username;
           $scope.balance = response.balance;
           $scope.ranking = response.ranking;

@@ -22,5 +22,31 @@
         }
       );
     };
+
+    $scope.joysticketLogin = function() {
+      userService.joysticketLogin(
+        function successCallback(response){
+          if(response.url){
+            window.location.href = response.url;
+          }
+        },
+        function errorCallback(response){
+          console.log(response);
+        }
+      );
+    };
+
+    $scope.joysticketLogout = function() {
+      userService.joysticketLogout(
+        function successCallback(response){
+          if(response.url){
+            window.location.href = response.url;
+          }
+        },
+        function errorCallback(response){
+          console.log(response);
+        }
+      );
+    };
   }
 })();
