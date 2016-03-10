@@ -16,6 +16,7 @@
 @import "pages/tournament";
 @import "pages/wallet";
 @import "pages/market";
+@import "pages/shop";
 
 .empty-state {
   text-align: center;
@@ -46,14 +47,4 @@
 
 .ct-label {
   color: rgba($white, .4);
-}
-
-.tournament-info-icon {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: -10%;
-  width: 50%;
-  margin-left: auto;
-  margin-right: auto;
 }

@@ -5,7 +5,7 @@
         h2.market-item-header__title {{ share.name}}
       
       section.market-item-body
-        chartist(class="ct-chart ct-golden-section" chartist-data="share.chartData" chartist-chart-type="Line" chartist-chart-options="chartOptions" chartist-responsive-options="barResponsiveOptions")
+        chartist(class="ct-chart ct-golden-section" chartist-data="share.chartData" chartist-chart-type="Line" chartist-chart-options="chartOptions" chartist-responsive-options="barResponsiveOptions" ng-if="responseReceived")
 
       footer.market-item-footer
         ul.market-item-controls
@@ -15,10 +15,10 @@
 
           li.market-item-spaces
             span.market-item-spaces__title Price
-            label.market-item-spaces__info {{ share.price }}
+            label.market-item-spaces__info {{ share.price | number }}
 
           li.market-item-spaces
             span.market-item-spaces__title Total
-            label.market-item-spaces__info {{ share.price * shareAmount }}
+            label.market-item-spaces__info {{ share.price * shareAmount | number }}
 
-        button.btn.btn-success.btn-block(ng-click="buyShare(share.name, shareAmount)" ng-disabled="stockBtn") Buy Share
+        button.btn.btn-success.btn-block(ng-click="buyShare(share.name, shareAmount)" ng-disabled="stockBtn") Buy for {{ share.price * shareAmount | number }}

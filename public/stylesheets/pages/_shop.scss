@@ -1,0 +1,48 @@
+
+.shop {
+  height: 200px;
+  width: 100%;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  box-shadow: 0 1 2px rgba($black, .1);
+}
+
+.shop-100-tickets {
+  background: url('../assets/100-tickets.png') center center;
+  background-size: cover;
+}
+
+.shop-300-tickets {
+  background: url('../assets/300-tickets.png') center center;
+  background-size: cover;
+}
+
+.shop-500-tickets {
+  background: url('../assets/500-tickets.png') center center;
+  background-size: cover;
+}
+
+.shop-content {
+  background-color: $white;
+  text-align: center;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  overflow: hidden;
+
+  .btn {
+    padding-top: 5px;
+    padding-bottom: 0;
+    font-weight: 500;
+    border-radius: 0;
+
+    svg {
+      margin-top: 7px;
+      margin-right: 10px;
+      width: 35px;
+
+      path {
+        fill: $white;
+      }
+    }
+  }
+}

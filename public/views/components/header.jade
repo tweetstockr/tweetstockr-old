@@ -3,11 +3,11 @@ header.header
     a(href="/")
       include ./../icons/logo
     
-    a(href="#/profile" class="user")
+    a(href="#/profile" class="user" ng-show="username")
       include ./../icons/user-icon
       span {{ username }}
     
-    span.wallet-total
+    span.wallet-total(ng-show="balance")
       include ./../icons/dollar-icon
-      span {{ balance }} pts &nbsp;&nbsp;
-      span {{ tokens }} tks
+      span {{ balance | number }} pts &nbsp;&nbsp;
+      span {{ tokens | number }} tks

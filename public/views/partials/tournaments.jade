@@ -8,17 +8,23 @@
         label.tournament-info__date  From {{ item.dateStart | date: 'MMM dd, yyyy' }} To {{ item.dateEnd | date: 'MMM dd, yyyy' }}
         
         section.tournament-players
-          h3.tournament-players__title Players:
+          h3(ng-show="item.players.length").tournament-players__title 
+            | Players:
+          h3(ng-show="!item.players.length").tournament-players__title 
+            | No players yet
 
           ul
             li(class="tournament-players-item" ng-repeat="player in item.players | orderBy: '-points'" ng-hide="player.length === 0")
-              img(class="tournament-players__image" src="player.user.profile_image_normal ", alt="")
+              img(class="tournament-players__image" ng-src="{{ player.user.profile_image }}", alt="")
               span.tournament-players-info
-                h4.tournament-players-info__name {{ player.user }}
-                h5.tournament-players-info__points {{ player.points }}
+                h4.tournament-players-info__name
+                  | Name: {{ player.user.name }}
+                  
+                h5.tournament-players-info__points
+                  | Points: {{ player.points }}
             
         section.tournament-rewards
           h3.tournament-rewards__title Rewards:
           ul
-            li(class="tournament-rewards__item" ng-repeat="reward in item.rewards | orderBy: '-place'")
-              h4 {{ reward.place + 1 }}th : {{ reward.tokens }} Tokens
+            li(class="tournament-rewards__item" ng-repeat="reward in item.rewards | orderBy: 'place'")
+              h4 {{ reward.place + 1 | ordinal }} : {{ reward.tokens }} Tokens
