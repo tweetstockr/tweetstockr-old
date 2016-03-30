@@ -22,5 +22,21 @@
         }
       );
     };
+
+    $scope.logout = function () {
+
+      userService.logout(
+        function successCallback(response) {
+
+        },
+        function errorCallback(response) {
+          if (response.message) {
+            Notification.error(response.message);
+          }
+        }
+      );
+
+    };
+
   }
 })();

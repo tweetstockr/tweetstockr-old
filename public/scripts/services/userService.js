@@ -40,7 +40,18 @@
             onError(response);
           }
         );
-      }
+      },
+      logout: function(onSuccess, onError) {
+        networkService.postAuth(
+          CONFIG.apiUrl + '/logout', {},
+          function successCallback(response) {
+            onSuccess(response);
+          },
+          function errorCallback(response) {
+            onError(response);
+          }
+        );
+      },
     };
   }
 })();
