@@ -41,6 +41,19 @@
           }
         );
       },
+
+      logout: function(onSuccess, onError) {
+        networkService.postAuth(
+          CONFIG.apiUrl + '/logout', {},
+          function successCallback(response) {
+            onSuccess(response);
+          },
+          function errorCallback(response) {
+            onError(response);
+          }
+        );
+      },
+
       joysticketLogin : function(onSuccess, onError){
         networkService.getAuth(
           CONFIG.apiUrl + '/joylogin',
@@ -52,6 +65,7 @@
           }
         );
       },
+
       joysticketLogout : function(onSuccess, onError){
         networkService.getAuth(
           CONFIG.apiUrl + '/joylogout',
@@ -63,6 +77,7 @@
           }
         );
       }
+
     };
   }
 })();

@@ -72,7 +72,8 @@
             onErrorCallback({'message':'Error: Could not connect to the server.'});
             console.log('GET error: ' + response);
           });
-        }
+        },
+
       };
     }
 })();
