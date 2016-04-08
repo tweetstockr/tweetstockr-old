@@ -1,11 +1,15 @@
-section.market
-  header.market-header
+section.market(scroll)
+  header.market-header(ng-class="{fixed:boolChangeClass}")
     ul.market-tabs
       li(class="market-tabs-item" ng-repeat="tab in tabs" ng-class="{ active:isActiveTab(tab.url) }" ng-click="onClickTab(tab)")
         a(class="market-tabs-link" href="" ng-class="{'is-active': isActiveTab(tab.url)}")
           .tab-icon(ng-include="tab.icon")
           | {{ tab.title }}
-          
+    
+    .market-points(ng-show="boolChangeClass")
+      include ./../icons/dollar-icon
+      span {{ balance | number }} pts
+    
     canvas(class="countdown" width="200" height="200" countdown)
     span.countdown-timer {{ nextUpdateIn }}
 

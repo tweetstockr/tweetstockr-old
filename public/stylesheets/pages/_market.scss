@@ -7,6 +7,14 @@
   border-bottom: 1px solid $gray-light;
   position: relative;
   @include clearfix();
+
+  &.fixed {
+    position: fixed;
+    top: 0;
+    width: calc(100% - 11.25rem);
+    z-index: 1000;
+    box-shadow: 0 1px 3px rgba($black, .1);
+  }
 }
 
 .market-tabs {
@@ -39,6 +47,12 @@
       fill: $color-primary;
     }
   }
+}
+
+.market-points {
+  position: absolute;
+  right: 125px;
+  top: 22px;
 }
 
 .tab-icon {

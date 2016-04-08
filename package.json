@@ -1,6 +1,6 @@
 {
   "name": "tweetstockr",
-  "version": "0.0.3",
+  "version": "0.3.0-beta",
   "description": "What's the next trend?",
   "main": "index.js",
   "scripts": {
