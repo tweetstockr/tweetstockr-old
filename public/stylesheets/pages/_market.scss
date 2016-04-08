@@ -11,25 +11,46 @@
   &.fixed {
     position: fixed;
     top: 0;
-    width: calc(100% - 11.25rem);
     z-index: 1000;
     box-shadow: 0 1px 3px rgba($black, .1);
+    width: calc(100% - 2rem);
+
+    @include breakpoint(desktop) {
+      width: calc(100% - 11.25rem);
+    }
   }
 }
 
 .market-tabs {
-  float: left;
+  float: none;
+  width: 100%;
+
+  @include breakpoint(tablet) {
+    float: left;
+    width: auto;
+  }
 }
 
 .market-tabs-item {
   display: inline-block;
+  width: 50%;
+
+  @include breakpoint(tablet) {
+    width: auto;
+  }
 }
 
 .market-tabs-link {
   color: #999;
   display: block;
-  padding: 30px;
+  padding: 10px;
+  text-align: center;
   transition: .25s ease-in-out;
+
+  @include breakpoint(tablet) {
+    padding: 30px;
+    text-align: left;
+  }
 
   &:hover {
     color: $color-primary;
@@ -53,6 +74,11 @@
   position: absolute;
   right: 125px;
   top: 22px;
+  display: none;
+
+  @include breakpoint(tablet) {
+    display: block;
+  }
 }
 
 .tab-icon {
@@ -79,12 +105,22 @@
   margin-right: 30px;
   margin-top: 15px;
   position: relative;
+  display: none;
+
+  @include breakpoint(tablet) {
+    display: block;
+  }
 }
 
 .countdown-timer {
   position: absolute;
   right: 40px;
   top: 34px;
+  display: none;
+
+  @include breakpoint(tablet) {
+    display: block;
+  }
 }
 
 .market-content {
