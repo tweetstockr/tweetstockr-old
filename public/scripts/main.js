@@ -4,9 +4,10 @@
   angular
     .module('tweetstockr', ['ngRoute', 'angular-chartist', 'ui-notification', 'ordinal'])
     .constant('CONFIG', {
-      apiUrl: 'http://localhost:4000'
+      apiUrl: 'http://api.tweetstockr.com'
     })
     .config(function ($routeProvider, $locationProvider, NotificationProvider) {
+
       $routeProvider
 
       .when('/market', {
