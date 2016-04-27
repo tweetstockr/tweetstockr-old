@@ -2,7 +2,13 @@
   ul
     li.col-md-4(ng-repeat="item in productsList")
       header(ng-class="'shop shop-' + item.code")
-      section.shop-content
-        button.btn.btn-primary.btn-block(ng-click="buyProduct(item.code)")
+      
+      section.shop-content(ng-show="!loading")
+        button.btn.btn-primary.btn-block(ng-click="buyProduct(item.code)" ng-disabled="loading")
           include ./../icons/ticket-icon
           | Buy for {{item.tokens}} Tokens
+
+      section.shop-content(ng-show="loading")
+        button.btn.btn-primary.btn-block(disabled)
+          include ./../icons/ticket-icon
+          | Processing...

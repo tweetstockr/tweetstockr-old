@@ -75,7 +75,7 @@
             chartData.series = [[]];
 
             for (var j = dataLenght-1; j >= 0; j--) {
-              var time = new Date(stock.history[j].created);
+              var time = new Date(stock.history[j].created_at);
               var label = time.getHours() + ':' + time.getMinutes();
 
               chartData.series[0].push(stock.history[j].price);
@@ -187,7 +187,7 @@
             chartData.series = [[]];
 
             for (var j = dataLenght-1; j >= 0; j--) {
-              var time = new Date(portfolio.history[j].created);
+              var time = new Date(portfolio.history[j].created_at);
               var label = time.getHours() + ':' + time.getMinutes();
 
               chartData.series[0].push(portfolio.history[j].price);

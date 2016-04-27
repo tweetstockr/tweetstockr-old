@@ -24,11 +24,11 @@ section.transactions(ng-show="loading")
     }
 
   table.transactions-table
-    tr.transaction-item(ng-repeat="transaction in transactionList | orderBy: '-created'",
+    tr.transaction-item(ng-repeat="transaction in transactionList | orderBy: '-created_at'",
                         ng-class="{'inactive':!transaction.active}")
       td.transaction-info
         h2 {{ transaction.stock }} (x{{ transaction.amount }})
-        span {{ transaction.created | date: "MMMM d, y 'at' h:mma"}}
+        span {{ transaction.created_at | date: "MMMM d, y 'at' h:mma"}}
 
 
       td.transaction-value(ng-class="{'sell': transaction.type=='Sell', 'buy': transaction.type=='Buy' }")

@@ -2,3 +2,4 @@ node_modules
 dist
 development
 bower_components
+.publish

@@ -1,4 +1,4 @@
-.row
+.row(ng-init="showResetButton=false")
   .col-md-7
     .profile
       .profile-information-content
@@ -13,7 +13,10 @@
           h3.profile-information__info
             | Rank: {{ ranking }}th — {{ balance }} pts
 
-          button.btn.btn-primary(ng-click="resetAccount()")
+          button.btn.btn-danger(ng-show="showResetButton" ng-click="resetAccount();toggleResetButton()")
+            | Click to RESET
+            
+          button.btn.btn-primary(ng-show="!showResetButton" ng-click="toggleResetButton()")
             | Reset Account
 
           button.btn.btn-link(ng-click="logout()")

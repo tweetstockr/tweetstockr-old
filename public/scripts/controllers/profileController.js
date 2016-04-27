@@ -8,6 +8,12 @@
   function profileController ($rootScope, $scope, userService, Notification) {
     $rootScope.updateCurrentUser();
 
+    $scope.showResetButton = false;
+
+    $scope.toggleResetButton = function() {
+      $scope.showResetButton = !$scope.showResetButton;
+    };
+
     $scope.resetAccount = function () {
       userService.resetAccount(
         function successCallback(response) {
