@@ -27,4 +27,4 @@
           h3.tournament-rewards__title Rewards:
           ul
             li(class="tournament-rewards__item" ng-repeat="reward in item.rewards | orderBy: 'place'")
-              h4 {{ reward.place + 1 | ordinal }} : {{ reward.tokens }} Tokens
+              h4 {{ reward.place | ordinal }} : {{ reward.tokens }} Tokens
