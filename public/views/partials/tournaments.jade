@@ -1,30 +1,37 @@
 .tournament
   .row
-    .col-md-4(ng-repeat="item in tournamentsList | orderBy: 'dateStart'")
-      .tournament-info
-        include ./../icons/tournament-icon
-        
-        h2.tournament-info__title  {{ item.name }}
-        label.tournament-info__date  From {{ item.dateStart | date: 'MMM dd, yyyy' }} To {{ item.dateEnd | date: 'MMM dd, yyyy' }}
-        
-        section.tournament-players
-          h3(ng-show="item.players.length").tournament-players__title 
+    .col-md-6(ng-repeat="item in tournamentsList | orderBy: 'dateStart'")
+      .tournament-card
+        header.tournament-card-header
+          h2.tournament-card-header__title
+            | #TheRootOfAllEvil
+          
+          label.tournament-card-header__date
+            strong Start: 
+            | {{ item.dateStart | date: 'MMMM dd, yyyy' }}
+          
+          label.tournament-card-header__date
+            strong End: 
+            | {{ item.dateEnd | date: 'MMMM dd, yyyy' }}
+          
+        section.tournament-card-players
+          h3(ng-show="item.players.length" class="tournament-card-players__title")
             | Players:
-          h3(ng-show="!item.players.length").tournament-players__title 
+            
+          h3(ng-show="!item.players.length" class="tournament-card-players__title--noplayer")
             | No players yet
 
           ul
-            li(class="tournament-players-item" ng-repeat="player in item.players | orderBy: '-points'" ng-hide="player.length === 0")
-              img(class="tournament-players__image" ng-src="{{ player.user.profile_image }}", alt="")
-              span.tournament-players-info
-                h4.tournament-players-info__name
-                  | Name: {{ player.user.name }}
-                  
-                //- h5.tournament-players-info__points
-                //-   | Points: {{ player.points }}
+            li(class="tournament-card-players-item" ng-repeat="player in item.players | orderBy: '-points'" ng-hide="player.length === 0")
+              img(class="tournament-card-players__image" ng-src="{{ player.user.profile_image }}", alt="")
             
-        section.tournament-rewards
-          h3.tournament-rewards__title Rewards:
+        footer.tournament-card-rewards
           ul
-            li(class="tournament-rewards__item" ng-repeat="reward in item.rewards | orderBy: 'place'")
-              h4 {{ reward.place | ordinal }} : {{ reward.tokens }} Tokens
+            li(class="tournament-card-rewards__item" ng-repeat="reward in item.rewards | orderBy: 'place'")
+              h5.tournament-card-rewards__subtitle
+                | {{ reward.place | ordinal }} place
+              
+              h4.tournament-card-rewards__title
+                | {{ reward.tokens }} Tokens
+
+              

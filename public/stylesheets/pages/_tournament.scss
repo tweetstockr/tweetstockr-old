@@ -1,99 +1,87 @@
-.tournament-info {
-  padding: 130px 25px 25px;
+.tournament-card {
   background-color: $white;
-  position: relative;
-  border-radius: 3px;
+  margin-bottom: 30px;
   box-shadow: 0 1px 2px rgba($black, .1);
-  margin-top: 50px;
-  margin-bottom: 30px;
+}
+
+.tournament-card-header {
+  height: 150px;
+  background-color: $color-primary;
   text-align: center;
+  padding-top: 30px;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
 }
 
-.tournament-info__title {
-  font-weight: 500;
-  font-size: 24px;
-  line-height: 35px;
-  color: $color-primary;
-  margin-bottom: 0;
+.tournament-card-header__title {
+  font-weight: 300;
+  color: $white;
+  font-size: 30px;
 }
 
-.tournament-info__date {
+.tournament-card-header__date {
+  display: block;
   font-size: 14px;
-  line-height: 25px;
-  color: #999;
-  font-weight: 400;
-  text-transform: uppercase;
-}
+  line-height: 14px;
+  color: rgba($white, .75);
 
-.tournament-players {
-  margin-top: 20px;
-  margin-bottom: 30px;
-}
-
-.tournament-players__title,
-.tournament-rewards__title {
-  font-weight: 500;
-}
-
-.tournament-players-item {
-  display: inline-block;
-  list-style: none;
-  position: relative;
-
-  &:hover {
-    .tournament-players-info {
-      display: block;
-    }
-
-    .tournament-players__image {
-      opacity: 1;
-    }
+  strong {
+    color: $white;
   }
 }
 
-.tournament-players-info {
-  position: absolute;
-  box-shadow: 0 0 2px rgba($black, .1);
-  top: -30px;
-  left: 40px;
-  background-color: $white;
-  padding: 5px 10px;
-  border-radius: 3px;
-  display: none;
-  border: 1px solid #ddd;
+.tournament-card-players {
+  text-align: center;
+  padding: 30px 20px;
+  max-height: 400px;
+  overflow: auto;
+}
+
+.tournament-card-players__title {
   text-align: left;
-  z-index: 1000;
+  margin-bottom: 20px;
 }
 
-.tournament-players-info__name {
-  white-space: nowrap;
-  margin-bottom: 0;
+.tournament-card-players__title--noplayer {
+  padding-top: 30px;
+  padding-bottom: 30px;
+  font-weight: 400;
+  color: $gray;
 }
 
-.tournament-players-info__points {
-  margin-bottom: 0;
+.tournament-card-players-item {
+  display: inline-block;
+  margin-bottom: 15px;
+  margin-right: 5px;
 }
 
-.tournament-players__image {
-  width: 40px;
-  height: 40px;
+.tournament-card-players__image {
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  opacity: .5;
-  transition: .25s ease-in-out;
-  margin-left: 2px;
-  margin-right: 2px;
 }
 
-.tournament-rewards__item {
-  list-style: none;
+.tournament-card-rewards {
+  background-color: $color-primary;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
 }
 
-.tournament-info-icon {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: -10%;
-  width: 50%;
-  margin-left: auto;
-  margin-right: auto;
+.tournament-card-rewards__item {
+  display: inline-block;
+  color: $white;
+  width: 33.33%;
+  text-align: center;
+  padding-top: 25px;
+  padding-bottom: 10px;
+}
+
+.tournament-card-rewards__subtitle {
+  font-weight: 400;
+  color: rgba($white, .75);
+}
+
+.tournament-card-rewards__title {
+  font-size: 22px;
+  font-weight: 500;
 }
